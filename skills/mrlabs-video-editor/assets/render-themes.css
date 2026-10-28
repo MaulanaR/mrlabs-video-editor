@@ -1,0 +1,64 @@
+/* One geometry source for both the gallery and the video builder. 1080 x 1920. */
+*{box-sizing:border-box}
+body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--background)}
+#main{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--foreground);font-family:var(--body-font)}
+video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:var(--grade)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,transparent 42%,#0002);z-index:1}
+.art-direction{position:absolute;inset:0;z-index:2;pointer-events:none}
+.brand{position:absolute;top:240px;left:65px;z-index:8;font:500 26px var(--label-font);letter-spacing:.12em;color:var(--foreground);background:var(--background);padding:14px 20px}
+.credit{position:absolute;top:1420px;left:65px;z-index:8;font:500 22px/1.2 var(--body-font);color:var(--foreground);background:var(--background);padding:8px 14px}
+.title{position:absolute;top:350px;left:65px;width:880px;font:var(--heading-weight) 112px/1.02 var(--heading-font);letter-spacing:-.045em;z-index:7;color:var(--foreground);background:var(--background);padding:24px 28px;overflow-wrap:anywhere;white-space:pre-line}
+.caption{position:absolute;left:65px;top:1180px;width:880px;z-index:9;text-align:left;font:var(--caption-weight) var(--caption-size)/1.2 var(--body-font);color:var(--caption-foreground);background:var(--caption-background);padding:24px 30px;border-radius:var(--radius);overflow-wrap:anywhere}
+.caption span{display:inline}.caption .active{color:var(--highlight)}
+.broll{position:absolute;left:90px;top:690px;width:810px;height:456px;border:3px solid var(--accent);border-radius:var(--radius);overflow:hidden;z-index:6;background:var(--background)}
+.broll img,.broll video{width:100%;height:100%;object-fit:cover}
+.broll-label{position:absolute;bottom:18px;left:18px;right:18px;font:500 24px var(--body-font);color:var(--foreground);background:var(--background);padding:10px 14px}
+.broll.full{inset:0;width:1080px;height:1920px;border:0;border-radius:0;z-index:4}
+.broll.full .broll-label{bottom:800px;left:65px;right:135px}
+.safe{position:absolute;inset:0;z-index:100;pointer-events:none;border-top:220px solid #ff000044;border-bottom:450px solid #ff000044;border-left:35px solid #ff000044;border-right:35px solid #ff000044}
+
+/* ATLAS / flush left, indexed red rule, square documentary insert. */
+[data-theme="signal-clean"] .art-direction{border-left:18px solid var(--accent)}
+[data-theme="signal-clean"] .art-direction::after{content:"";position:absolute;top:307px;left:65px;width:880px;border-top:3px solid var(--accent)}
+[data-theme="signal-clean"] .brand{padding-left:0;border-right:52px solid var(--accent)}
+[data-theme="signal-clean"] .title{border-left:12px solid var(--accent)}
+[data-theme="signal-clean"] .caption{border-top:8px solid var(--accent);box-shadow:0 12px 0 #20211F}
+[data-theme="signal-clean"] .broll:not(.full){border:12px solid var(--background);box-shadow:12px 12px 0 var(--accent)}
+[data-theme="signal-clean"] .broll-label{border-left:5px solid var(--accent)}
+
+/* VOLTAGE / cobalt poster, acid slab and offset insert. */
+[data-theme="kinetic-punch"] .art-direction{border-left:20px solid var(--accent);border-right:20px solid var(--accent)}
+[data-theme="kinetic-punch"] .brand{color:var(--ink);background:var(--accent);font-weight:700;rotate:-3deg}
+[data-theme="kinetic-punch"] .title{font-weight:800;letter-spacing:-.065em;rotate:var(--title-rotation);box-shadow:10px 10px 0 var(--accent)}
+[data-theme="kinetic-punch"] .caption{left:80px;width:850px;rotate:var(--caption-rotation);box-shadow:12px 12px 0 var(--panel);text-align:center}
+[data-theme="kinetic-punch"] .broll:not(.full){left:105px;width:780px;top:710px;height:420px;border:10px solid var(--accent);rotate:var(--broll-rotation);box-shadow:18px 18px 0 var(--panel)}
+[data-theme="kinetic-punch"] .broll-label{background:var(--accent);color:var(--ink);font-weight:800}
+[data-theme="kinetic-punch"] .credit{background:var(--accent);color:var(--ink)}
+
+/* MAISON / magazine masthead, centered serif and picture mat. */
+[data-theme="editorial-noir"] .art-direction{border:18px solid var(--background)}
+[data-theme="editorial-noir"] .brand{left:65px;width:880px;text-align:center;font-size:25px;letter-spacing:.3em;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:18px}
+[data-theme="editorial-noir"] .title{text-align:center;letter-spacing:-.025em;line-height:1.05;padding:18px 34px}
+[data-theme="editorial-noir"] .caption{text-align:center;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:24px 34px}
+[data-theme="editorial-noir"] .broll:not(.full){left:145px;width:710px;height:456px;padding:18px;border:2px solid var(--accent);box-shadow:0 0 0 12px var(--background)}
+[data-theme="editorial-noir"] .broll-label{left:28px;right:28px;bottom:28px;font-size:22px;text-align:center}
+[data-theme="editorial-noir"] .credit{left:65px;width:880px;text-align:center;font-size:23px;letter-spacing:.08em}
+
+/* PLAYROOM / rounded notes, lavender paper and an offset butter edge. */
+[data-theme="warm-story"] .art-direction{border-left:22px solid var(--panel);border-right:22px solid var(--panel)}
+[data-theme="warm-story"] .brand{border-radius:50%;font-size:34px;background:var(--panel);padding:14px 32px;rotate:-5deg}
+[data-theme="warm-story"] .title{border-radius:22px 90px 24px 24px;padding:24px 32px;letter-spacing:-.045em}
+[data-theme="warm-story"] .caption{border:3px solid var(--foreground);box-shadow:9px 10px 0 var(--background);text-align:center}
+[data-theme="warm-story"] .broll:not(.full){left:115px;width:770px;height:428px;top:704px;border:14px solid var(--panel);border-bottom-width:42px;rotate:var(--broll-rotation);box-shadow:-16px 14px 0 var(--accent);border-radius:36px}
+[data-theme="warm-story"] .broll-label{font-family:var(--label-font);font-size:30px;background:var(--panel);padding:4px 12px;border-radius:10px}
+[data-theme="warm-story"] .credit{border-radius:30px;background:var(--panel);rotate:-2deg}
+
+/* BLUEPRINT / drafting edge, clipped corners and terminal annotations. */
+[data-theme="tech-grid"] .art-direction{border:12px solid var(--accent)}
+[data-theme="tech-grid"] .art-direction::before{content:"";position:absolute;left:35px;top:220px;bottom:450px;width:15px;background:repeating-linear-gradient(0deg,transparent 0 39px,var(--accent) 39px 41px)}
+[data-theme="tech-grid"] .brand{border:2px solid var(--accent);font-size:24px;letter-spacing:.08em;color:var(--accent)}
+[data-theme="tech-grid"] .title{border-bottom:3px solid var(--accent);padding-left:24px;letter-spacing:-.045em;clip-path:polygon(0 0,96% 0,100% 12%,100% 100%,0 100%)}
+[data-theme="tech-grid"] .caption{border:2px solid var(--accent);border-left:14px solid var(--accent);padding-left:32px}
+[data-theme="tech-grid"] .broll:not(.full){border:3px solid var(--accent);padding:16px;clip-path:polygon(0 0,94% 0,100% 12%,100% 100%,6% 100%,0 88%)}
+[data-theme="tech-grid"] .broll-label{border-top:2px solid var(--accent);font-size:22px;color:var(--accent)}
+[data-theme="tech-grid"] .credit{border-bottom:2px solid var(--accent);color:var(--accent);font-size:22px}

@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.platform.json
+config.local.json
+projects/
+output/
+node_modules/
+.hyperframes/
+.pytest_cache/
+.playwright-cli/
+*.log

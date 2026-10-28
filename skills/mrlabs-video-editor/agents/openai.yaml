@@ -1,0 +1,4 @@
+interface:
+  display_name: "MR Labs Video Editor"
+  short_description: "Edit video ID/EN dengan 5 tema dan B-roll kontekstual"
+  default_prompt: "Gunakan $mrlabs-video-editor untuk meninjau rekaman saya, menyusun rencana edit bertimestamp, dan memilih paket visual yang sesuai."

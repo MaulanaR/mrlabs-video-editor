@@ -1,0 +1,436 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>MR Labs — Visual Directions 02</title><link rel="stylesheet" href="fonts/fonts.css"><link rel="stylesheet" href="gallery.css"></head><body><main><nav><a class="wordmark" href="#">MR<span>↗</span>LABS</a><span>VIDEO EDITOR / DESIGN LIBRARY</span><span class="edition">EDITION 02</span></nav><header><div><div class="kicker">LIMA ARAH. LIMA KARAKTER.</div><h1>Cerita yang sama.<br><span>Rasa yang berbeda.</span></h1><p>Temukan bahasa visual untuk idemu. Dari editorial yang tenang sampai poster yang berani — setiap tema punya tipografi, bingkai, subtitle, dan ritmenya sendiri.</p></div><div class="controls"><button id="language">Contoh: Indonesia</button><button id="replay">↻ Putar gerakan</button><small>Contoh ilustratif · 9:16<br>Geometri mengikuti preset render</small></div></header><section class="packages" aria-label="Lima pilihan tema"><article class="package" style="--accent:#BE3424"><div class="card-heading"><span>01</span><span>PRECISE</span></div><div class="screen"><iframe title="Atlas Studio — contoh komposisi" tabindex="-1" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;style&gt;@font-face{font-family:&quot;Plus Jakarta Sans&quot;;src:url(&quot;fonts/plusjakartasans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Manrope&quot;;src:url(&quot;fonts/manrope.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Space Grotesk&quot;;src:url(&quot;fonts/spacegrotesk.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;DM Sans&quot;;src:url(&quot;fonts/dmsans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Bricolage Grotesque&quot;;src:url(&quot;fonts/bricolagegrotesque.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Fraunces&quot;;src:url(&quot;fonts/fraunces.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Instrument Serif&quot;;src:url(&quot;fonts/instrumentserif.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;DM Serif Display&quot;;src:url(&quot;fonts/dmserifdisplay.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;IBM Plex Mono&quot;;src:url(&quot;fonts/ibmplexmono.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;Caveat&quot;;src:url(&quot;fonts/caveat.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+:root{--background:#F6F4EE;--panel:#DEDCD5;--foreground:#20211F;--muted:#686963;--accent:#BE3424;--ink:#FFFFFF;--caption-background:#F6F4EE;--caption-foreground:#20211F;--highlight:#BE3424;--grade:contrast(1.02) saturate(.98);--heading-font:&quot;Plus Jakarta Sans&quot;;--body-font:&quot;Plus Jakarta Sans&quot;;--label-font:&quot;IBM Plex Mono&quot;;--heading-weight:800;--caption-weight:700;--radius:0px;--caption-size:62px;--title-rotation:0deg;--caption-rotation:0deg;--broll-rotation:0deg}/* One geometry source for both the gallery and the video builder. 1080 x 1920. */
+*{box-sizing:border-box}
+body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--background)}
+#main{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--foreground);font-family:var(--body-font)}
+video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:var(--grade)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,transparent 42%,#0002);z-index:1}
+.art-direction{position:absolute;inset:0;z-index:2;pointer-events:none}
+.brand{position:absolute;top:240px;left:65px;z-index:8;font:500 26px var(--label-font);letter-spacing:.12em;color:var(--foreground);background:var(--background);padding:14px 20px}
+.credit{position:absolute;top:1420px;left:65px;z-index:8;font:500 22px/1.2 var(--body-font);color:var(--foreground);background:var(--background);padding:8px 14px}
+.title{position:absolute;top:350px;left:65px;width:880px;font:var(--heading-weight) 112px/1.02 var(--heading-font);letter-spacing:-.045em;z-index:7;color:var(--foreground);background:var(--background);padding:24px 28px;overflow-wrap:anywhere;white-space:pre-line}
+.caption{position:absolute;left:65px;top:1180px;width:880px;z-index:9;text-align:left;font:var(--caption-weight) var(--caption-size)/1.2 var(--body-font);color:var(--caption-foreground);background:var(--caption-background);padding:24px 30px;border-radius:var(--radius);overflow-wrap:anywhere}
+.caption span{display:inline}.caption .active{color:var(--highlight)}
+.broll{position:absolute;left:90px;top:690px;width:810px;height:456px;border:3px solid var(--accent);border-radius:var(--radius);overflow:hidden;z-index:6;background:var(--background)}
+.broll img,.broll video{width:100%;height:100%;object-fit:cover}
+.broll-label{position:absolute;bottom:18px;left:18px;right:18px;font:500 24px var(--body-font);color:var(--foreground);background:var(--background);padding:10px 14px}
+.broll.full{inset:0;width:1080px;height:1920px;border:0;border-radius:0;z-index:4}
+.broll.full .broll-label{bottom:800px;left:65px;right:135px}
+.safe{position:absolute;inset:0;z-index:100;pointer-events:none;border-top:220px solid #ff000044;border-bottom:450px solid #ff000044;border-left:35px solid #ff000044;border-right:35px solid #ff000044}
+
+/* ATLAS / flush left, indexed red rule, square documentary insert. */
+[data-theme=&quot;signal-clean&quot;] .art-direction{border-left:18px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .art-direction::after{content:&quot;&quot;;position:absolute;top:307px;left:65px;width:880px;border-top:3px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .brand{padding-left:0;border-right:52px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .title{border-left:12px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .caption{border-top:8px solid var(--accent);box-shadow:0 12px 0 #20211F}
+[data-theme=&quot;signal-clean&quot;] .broll:not(.full){border:12px solid var(--background);box-shadow:12px 12px 0 var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .broll-label{border-left:5px solid var(--accent)}
+
+/* VOLTAGE / cobalt poster, acid slab and offset insert. */
+[data-theme=&quot;kinetic-punch&quot;] .art-direction{border-left:20px solid var(--accent);border-right:20px solid var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .brand{color:var(--ink);background:var(--accent);font-weight:700;rotate:-3deg}
+[data-theme=&quot;kinetic-punch&quot;] .title{font-weight:800;letter-spacing:-.065em;rotate:var(--title-rotation);box-shadow:10px 10px 0 var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .caption{left:80px;width:850px;rotate:var(--caption-rotation);box-shadow:12px 12px 0 var(--panel);text-align:center}
+[data-theme=&quot;kinetic-punch&quot;] .broll:not(.full){left:105px;width:780px;top:710px;height:420px;border:10px solid var(--accent);rotate:var(--broll-rotation);box-shadow:18px 18px 0 var(--panel)}
+[data-theme=&quot;kinetic-punch&quot;] .broll-label{background:var(--accent);color:var(--ink);font-weight:800}
+[data-theme=&quot;kinetic-punch&quot;] .credit{background:var(--accent);color:var(--ink)}
+
+/* MAISON / magazine masthead, centered serif and picture mat. */
+[data-theme=&quot;editorial-noir&quot;] .art-direction{border:18px solid var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .brand{left:65px;width:880px;text-align:center;font-size:25px;letter-spacing:.3em;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:18px}
+[data-theme=&quot;editorial-noir&quot;] .title{text-align:center;letter-spacing:-.025em;line-height:1.05;padding:18px 34px}
+[data-theme=&quot;editorial-noir&quot;] .caption{text-align:center;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:24px 34px}
+[data-theme=&quot;editorial-noir&quot;] .broll:not(.full){left:145px;width:710px;height:456px;padding:18px;border:2px solid var(--accent);box-shadow:0 0 0 12px var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .broll-label{left:28px;right:28px;bottom:28px;font-size:22px;text-align:center}
+[data-theme=&quot;editorial-noir&quot;] .credit{left:65px;width:880px;text-align:center;font-size:23px;letter-spacing:.08em}
+
+/* PLAYROOM / rounded notes, lavender paper and an offset butter edge. */
+[data-theme=&quot;warm-story&quot;] .art-direction{border-left:22px solid var(--panel);border-right:22px solid var(--panel)}
+[data-theme=&quot;warm-story&quot;] .brand{border-radius:50%;font-size:34px;background:var(--panel);padding:14px 32px;rotate:-5deg}
+[data-theme=&quot;warm-story&quot;] .title{border-radius:22px 90px 24px 24px;padding:24px 32px;letter-spacing:-.045em}
+[data-theme=&quot;warm-story&quot;] .caption{border:3px solid var(--foreground);box-shadow:9px 10px 0 var(--background);text-align:center}
+[data-theme=&quot;warm-story&quot;] .broll:not(.full){left:115px;width:770px;height:428px;top:704px;border:14px solid var(--panel);border-bottom-width:42px;rotate:var(--broll-rotation);box-shadow:-16px 14px 0 var(--accent);border-radius:36px}
+[data-theme=&quot;warm-story&quot;] .broll-label{font-family:var(--label-font);font-size:30px;background:var(--panel);padding:4px 12px;border-radius:10px}
+[data-theme=&quot;warm-story&quot;] .credit{border-radius:30px;background:var(--panel);rotate:-2deg}
+
+/* BLUEPRINT / drafting edge, clipped corners and terminal annotations. */
+[data-theme=&quot;tech-grid&quot;] .art-direction{border:12px solid var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .art-direction::before{content:&quot;&quot;;position:absolute;left:35px;top:220px;bottom:450px;width:15px;background:repeating-linear-gradient(0deg,transparent 0 39px,var(--accent) 39px 41px)}
+[data-theme=&quot;tech-grid&quot;] .brand{border:2px solid var(--accent);font-size:24px;letter-spacing:.08em;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .title{border-bottom:3px solid var(--accent);padding-left:24px;letter-spacing:-.045em;clip-path:polygon(0 0,96% 0,100% 12%,100% 100%,0 100%)}
+[data-theme=&quot;tech-grid&quot;] .caption{border:2px solid var(--accent);border-left:14px solid var(--accent);padding-left:32px}
+[data-theme=&quot;tech-grid&quot;] .broll:not(.full){border:3px solid var(--accent);padding:16px;clip-path:polygon(0 0,94% 0,100% 12%,100% 100%,6% 100%,0 88%)}
+[data-theme=&quot;tech-grid&quot;] .broll-label{border-top:2px solid var(--accent);font-size:22px;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .credit{border-bottom:2px solid var(--accent);color:var(--accent);font-size:22px}
+
+    .preview-bg{position:absolute;inset:0;background:var(--background)}
+    .specimen-index{position:absolute;bottom:85px;right:85px;font:400 160px var(--heading-font);color:var(--accent);opacity:.22}
+    .specimen-note{position:absolute;bottom:120px;left:65px;font:400 23px var(--label-font);letter-spacing:.1em;color:var(--muted)}
+    .broll svg{display:block;width:100%;height:100%;object-fit:cover}
+    .caption{color:var(--highlight)}
+    .replay .title,.replay .caption,.replay .broll{animation:entrance 0.3s cubic-bezier(.2,.8,.2,1) both}
+    .replay .broll{animation-delay:.16s}.replay .caption{animation-delay:.3s}
+    @keyframes entrance{from{opacity:0;transform:translate(0px,36px) scale(1) rotate(0deg);filter:none}to{opacity:1;transform:translate(0,0) scale(1) rotate(0);filter:none}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=&quot;main&quot; data-theme=&quot;signal-clean&quot;&gt;&lt;div class=&quot;preview-bg&quot;&gt;&lt;/div&gt;&lt;div class=&quot;art-direction&quot;&gt;&lt;/div&gt;&lt;div class=&quot;brand&quot;&gt;MR LABS&lt;/div&gt;&lt;div class=&quot;title&quot; data-id=&quot;Ide besar.
+Mulai kecil.&quot; data-en=&quot;Big ideas.
+Small steps.&quot;&gt;Ide besar.
+Mulai kecil.&lt;/div&gt;&lt;div class=&quot;broll&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 810 456&quot; role=&quot;img&quot; aria-label=&quot;Ilustrasi grafis Atlas Studio&quot;&gt;&lt;rect width=&quot;810&quot; height=&quot;456&quot; fill=&quot;#DEDCD5&quot;/&gt;&lt;circle cx=&quot;570&quot; cy=&quot;195&quot; r=&quot;140&quot; fill=&quot;#BE3424&quot;/&gt;&lt;path d=&quot;M60 290V110H240V290ZM275 290V55H455V290Z&quot; fill=&quot;#F6F4EE&quot;/&gt;&lt;path d=&quot;M60 310H745&quot; stroke=&quot;#20211F&quot; stroke-width=&quot;3&quot;/&gt;&lt;text x=&quot;70&quot; y=&quot;170&quot; font-family=&quot;sans-serif&quot; font-size=&quot;40&quot; fill=&quot;#20211F&quot;&gt;A&lt;/text&gt;&lt;path d=&quot;M100 240H360L335 215M360 240L335 265&quot; stroke=&quot;#20211F&quot; stroke-width=&quot;8&quot; fill=&quot;none&quot;/&gt;&lt;/svg&gt;&lt;div class=&quot;broll-label&quot; data-id=&quot;ILUSTRASI / Atlas Studio&quot; data-en=&quot;ILLUSTRATION / Atlas Studio&quot;&gt;ILUSTRASI / Atlas Studio&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;caption atlas&quot; data-id=&quot;Satu ide, banyak kemungkinan.&quot; data-en=&quot;One idea, many possibilities.&quot;&gt;Satu ide, banyak kemungkinan.&lt;/div&gt;&lt;div class=&quot;credit&quot;&gt;by @maulanarahman_&lt;/div&gt;&lt;div class=&quot;specimen-index&quot;&gt;01&lt;/div&gt;&lt;div class=&quot;specimen-note&quot;&gt;VISUAL STUDY&lt;br&gt;EDITION 02&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"></iframe></div><div class="details"><h2>Atlas Studio</h2><p class="tagline">Ide jelas. Bentuk tegas.</p><p class="use">Edukasi, tutorial produk, penjelasan konsep</p><div class="swatches"><i style="background:#F6F4EE"></i><i style="background:#20211F"></i><i style="background:#BE3424"></i><span>Plus Jakarta Sans</span></div><button class="pick" data-theme="signal-clean" aria-pressed="true">Terpilih<span aria-hidden="true">↗</span></button></div></article><article class="package" style="--accent:#E9FF63"><div class="card-heading"><span>02</span><span>ELECTRIC</span></div><div class="screen"><iframe title="Voltage Pop — contoh komposisi" tabindex="-1" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;style&gt;@font-face{font-family:&quot;Plus Jakarta Sans&quot;;src:url(&quot;fonts/plusjakartasans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Manrope&quot;;src:url(&quot;fonts/manrope.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Space Grotesk&quot;;src:url(&quot;fonts/spacegrotesk.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;DM Sans&quot;;src:url(&quot;fonts/dmsans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Bricolage Grotesque&quot;;src:url(&quot;fonts/bricolagegrotesque.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Fraunces&quot;;src:url(&quot;fonts/fraunces.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Instrument Serif&quot;;src:url(&quot;fonts/instrumentserif.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;DM Serif Display&quot;;src:url(&quot;fonts/dmserifdisplay.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;IBM Plex Mono&quot;;src:url(&quot;fonts/ibmplexmono.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;Caveat&quot;;src:url(&quot;fonts/caveat.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+:root{--background:#213BE6;--panel:#142497;--foreground:#FFFFFF;--muted:#CDD5FF;--accent:#E9FF63;--ink:#1329B5;--caption-background:#E9FF63;--caption-foreground:#101952;--highlight:#213BE6;--grade:contrast(1.03) saturate(1.02);--heading-font:&quot;Bricolage Grotesque&quot;;--body-font:&quot;DM Sans&quot;;--label-font:&quot;IBM Plex Mono&quot;;--heading-weight:800;--caption-weight:800;--radius:0px;--caption-size:68px;--title-rotation:-2deg;--caption-rotation:-2deg;--broll-rotation:3deg}/* One geometry source for both the gallery and the video builder. 1080 x 1920. */
+*{box-sizing:border-box}
+body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--background)}
+#main{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--foreground);font-family:var(--body-font)}
+video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:var(--grade)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,transparent 42%,#0002);z-index:1}
+.art-direction{position:absolute;inset:0;z-index:2;pointer-events:none}
+.brand{position:absolute;top:240px;left:65px;z-index:8;font:500 26px var(--label-font);letter-spacing:.12em;color:var(--foreground);background:var(--background);padding:14px 20px}
+.credit{position:absolute;top:1420px;left:65px;z-index:8;font:500 22px/1.2 var(--body-font);color:var(--foreground);background:var(--background);padding:8px 14px}
+.title{position:absolute;top:350px;left:65px;width:880px;font:var(--heading-weight) 112px/1.02 var(--heading-font);letter-spacing:-.045em;z-index:7;color:var(--foreground);background:var(--background);padding:24px 28px;overflow-wrap:anywhere;white-space:pre-line}
+.caption{position:absolute;left:65px;top:1180px;width:880px;z-index:9;text-align:left;font:var(--caption-weight) var(--caption-size)/1.2 var(--body-font);color:var(--caption-foreground);background:var(--caption-background);padding:24px 30px;border-radius:var(--radius);overflow-wrap:anywhere}
+.caption span{display:inline}.caption .active{color:var(--highlight)}
+.broll{position:absolute;left:90px;top:690px;width:810px;height:456px;border:3px solid var(--accent);border-radius:var(--radius);overflow:hidden;z-index:6;background:var(--background)}
+.broll img,.broll video{width:100%;height:100%;object-fit:cover}
+.broll-label{position:absolute;bottom:18px;left:18px;right:18px;font:500 24px var(--body-font);color:var(--foreground);background:var(--background);padding:10px 14px}
+.broll.full{inset:0;width:1080px;height:1920px;border:0;border-radius:0;z-index:4}
+.broll.full .broll-label{bottom:800px;left:65px;right:135px}
+.safe{position:absolute;inset:0;z-index:100;pointer-events:none;border-top:220px solid #ff000044;border-bottom:450px solid #ff000044;border-left:35px solid #ff000044;border-right:35px solid #ff000044}
+
+/* ATLAS / flush left, indexed red rule, square documentary insert. */
+[data-theme=&quot;signal-clean&quot;] .art-direction{border-left:18px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .art-direction::after{content:&quot;&quot;;position:absolute;top:307px;left:65px;width:880px;border-top:3px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .brand{padding-left:0;border-right:52px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .title{border-left:12px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .caption{border-top:8px solid var(--accent);box-shadow:0 12px 0 #20211F}
+[data-theme=&quot;signal-clean&quot;] .broll:not(.full){border:12px solid var(--background);box-shadow:12px 12px 0 var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .broll-label{border-left:5px solid var(--accent)}
+
+/* VOLTAGE / cobalt poster, acid slab and offset insert. */
+[data-theme=&quot;kinetic-punch&quot;] .art-direction{border-left:20px solid var(--accent);border-right:20px solid var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .brand{color:var(--ink);background:var(--accent);font-weight:700;rotate:-3deg}
+[data-theme=&quot;kinetic-punch&quot;] .title{font-weight:800;letter-spacing:-.065em;rotate:var(--title-rotation);box-shadow:10px 10px 0 var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .caption{left:80px;width:850px;rotate:var(--caption-rotation);box-shadow:12px 12px 0 var(--panel);text-align:center}
+[data-theme=&quot;kinetic-punch&quot;] .broll:not(.full){left:105px;width:780px;top:710px;height:420px;border:10px solid var(--accent);rotate:var(--broll-rotation);box-shadow:18px 18px 0 var(--panel)}
+[data-theme=&quot;kinetic-punch&quot;] .broll-label{background:var(--accent);color:var(--ink);font-weight:800}
+[data-theme=&quot;kinetic-punch&quot;] .credit{background:var(--accent);color:var(--ink)}
+
+/* MAISON / magazine masthead, centered serif and picture mat. */
+[data-theme=&quot;editorial-noir&quot;] .art-direction{border:18px solid var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .brand{left:65px;width:880px;text-align:center;font-size:25px;letter-spacing:.3em;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:18px}
+[data-theme=&quot;editorial-noir&quot;] .title{text-align:center;letter-spacing:-.025em;line-height:1.05;padding:18px 34px}
+[data-theme=&quot;editorial-noir&quot;] .caption{text-align:center;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:24px 34px}
+[data-theme=&quot;editorial-noir&quot;] .broll:not(.full){left:145px;width:710px;height:456px;padding:18px;border:2px solid var(--accent);box-shadow:0 0 0 12px var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .broll-label{left:28px;right:28px;bottom:28px;font-size:22px;text-align:center}
+[data-theme=&quot;editorial-noir&quot;] .credit{left:65px;width:880px;text-align:center;font-size:23px;letter-spacing:.08em}
+
+/* PLAYROOM / rounded notes, lavender paper and an offset butter edge. */
+[data-theme=&quot;warm-story&quot;] .art-direction{border-left:22px solid var(--panel);border-right:22px solid var(--panel)}
+[data-theme=&quot;warm-story&quot;] .brand{border-radius:50%;font-size:34px;background:var(--panel);padding:14px 32px;rotate:-5deg}
+[data-theme=&quot;warm-story&quot;] .title{border-radius:22px 90px 24px 24px;padding:24px 32px;letter-spacing:-.045em}
+[data-theme=&quot;warm-story&quot;] .caption{border:3px solid var(--foreground);box-shadow:9px 10px 0 var(--background);text-align:center}
+[data-theme=&quot;warm-story&quot;] .broll:not(.full){left:115px;width:770px;height:428px;top:704px;border:14px solid var(--panel);border-bottom-width:42px;rotate:var(--broll-rotation);box-shadow:-16px 14px 0 var(--accent);border-radius:36px}
+[data-theme=&quot;warm-story&quot;] .broll-label{font-family:var(--label-font);font-size:30px;background:var(--panel);padding:4px 12px;border-radius:10px}
+[data-theme=&quot;warm-story&quot;] .credit{border-radius:30px;background:var(--panel);rotate:-2deg}
+
+/* BLUEPRINT / drafting edge, clipped corners and terminal annotations. */
+[data-theme=&quot;tech-grid&quot;] .art-direction{border:12px solid var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .art-direction::before{content:&quot;&quot;;position:absolute;left:35px;top:220px;bottom:450px;width:15px;background:repeating-linear-gradient(0deg,transparent 0 39px,var(--accent) 39px 41px)}
+[data-theme=&quot;tech-grid&quot;] .brand{border:2px solid var(--accent);font-size:24px;letter-spacing:.08em;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .title{border-bottom:3px solid var(--accent);padding-left:24px;letter-spacing:-.045em;clip-path:polygon(0 0,96% 0,100% 12%,100% 100%,0 100%)}
+[data-theme=&quot;tech-grid&quot;] .caption{border:2px solid var(--accent);border-left:14px solid var(--accent);padding-left:32px}
+[data-theme=&quot;tech-grid&quot;] .broll:not(.full){border:3px solid var(--accent);padding:16px;clip-path:polygon(0 0,94% 0,100% 12%,100% 100%,6% 100%,0 88%)}
+[data-theme=&quot;tech-grid&quot;] .broll-label{border-top:2px solid var(--accent);font-size:22px;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .credit{border-bottom:2px solid var(--accent);color:var(--accent);font-size:22px}
+
+    .preview-bg{position:absolute;inset:0;background:var(--background)}
+    .specimen-index{position:absolute;bottom:85px;right:85px;font:400 160px var(--heading-font);color:var(--accent);opacity:.22}
+    .specimen-note{position:absolute;bottom:120px;left:65px;font:400 23px var(--label-font);letter-spacing:.1em;color:var(--muted)}
+    .broll svg{display:block;width:100%;height:100%;object-fit:cover}
+    .caption{color:var(--highlight)}
+    .replay .title,.replay .caption,.replay .broll{animation:entrance 0.24s cubic-bezier(.2,.8,.2,1) both}
+    .replay .broll{animation-delay:.16s}.replay .caption{animation-delay:.3s}
+    @keyframes entrance{from{opacity:0;transform:translate(0px,0px) scale(0.82) rotate(-3deg);filter:none}to{opacity:1;transform:translate(0,0) scale(1) rotate(0);filter:none}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=&quot;main&quot; data-theme=&quot;kinetic-punch&quot;&gt;&lt;div class=&quot;preview-bg&quot;&gt;&lt;/div&gt;&lt;div class=&quot;art-direction&quot;&gt;&lt;/div&gt;&lt;div class=&quot;brand&quot;&gt;MR LABS&lt;/div&gt;&lt;div class=&quot;title&quot; data-id=&quot;BIKIN
+BEDA.&quot; data-en=&quot;MAKE
+IT BOLD.&quot;&gt;BIKIN
+BEDA.&lt;/div&gt;&lt;div class=&quot;broll&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 810 456&quot; role=&quot;img&quot; aria-label=&quot;Ilustrasi grafis Voltage Pop&quot;&gt;&lt;rect width=&quot;810&quot; height=&quot;456&quot; fill=&quot;#142497&quot;/&gt;&lt;path d=&quot;M410 10 445 110 535 55 510 155 625 160 545 230 625 300 510 295 535 400 445 345 410 445 375 345 285 400 310 295 195 300 275 230 195 160 310 155 285 55 375 110Z&quot; fill=&quot;#E9FF63&quot;/&gt;&lt;path d=&quot;M395 100 465 100 420 205 475 205 355 335 390 235 340 235Z&quot; fill=&quot;#213BE6&quot;/&gt;&lt;/svg&gt;&lt;div class=&quot;broll-label&quot; data-id=&quot;ILUSTRASI / Voltage Pop&quot; data-en=&quot;ILLUSTRATION / Voltage Pop&quot;&gt;ILUSTRASI / Voltage Pop&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;caption voltage&quot; data-id=&quot;Saatnya coba cara baru.&quot; data-en=&quot;Time to try something new.&quot;&gt;Saatnya coba cara baru.&lt;/div&gt;&lt;div class=&quot;credit&quot;&gt;by @maulanarahman_&lt;/div&gt;&lt;div class=&quot;specimen-index&quot;&gt;02&lt;/div&gt;&lt;div class=&quot;specimen-note&quot;&gt;VISUAL STUDY&lt;br&gt;EDITION 02&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"></iframe></div><div class="details"><h2>Voltage Pop</h2><p class="tagline">Berani tampil. Sulit terlewat.</p><p class="use">Hook, peluncuran, tips singkat yang energik</p><div class="swatches"><i style="background:#213BE6"></i><i style="background:#FFFFFF"></i><i style="background:#E9FF63"></i><span>Bricolage Grotesque</span></div><button class="pick" data-theme="kinetic-punch" aria-pressed="false">Pilih tema<span aria-hidden="true">↗</span></button></div></article><article class="package" style="--accent:#94485B"><div class="card-heading"><span>03</span><span>CONSIDERED</span></div><div class="screen"><iframe title="Maison Journal — contoh komposisi" tabindex="-1" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;style&gt;@font-face{font-family:&quot;Plus Jakarta Sans&quot;;src:url(&quot;fonts/plusjakartasans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Manrope&quot;;src:url(&quot;fonts/manrope.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Space Grotesk&quot;;src:url(&quot;fonts/spacegrotesk.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;DM Sans&quot;;src:url(&quot;fonts/dmsans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Bricolage Grotesque&quot;;src:url(&quot;fonts/bricolagegrotesque.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Fraunces&quot;;src:url(&quot;fonts/fraunces.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Instrument Serif&quot;;src:url(&quot;fonts/instrumentserif.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;DM Serif Display&quot;;src:url(&quot;fonts/dmserifdisplay.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;IBM Plex Mono&quot;;src:url(&quot;fonts/ibmplexmono.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;Caveat&quot;;src:url(&quot;fonts/caveat.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+:root{--background:#F5EDDF;--panel:#E2D1BE;--foreground:#562A3A;--muted:#7C625D;--accent:#94485B;--ink:#FFFFFF;--caption-background:#F5EDDF;--caption-foreground:#562A3A;--highlight:#94485B;--grade:contrast(1.01) saturate(.94);--heading-font:&quot;Instrument Serif&quot;;--body-font:&quot;Manrope&quot;;--label-font:&quot;Manrope&quot;;--heading-weight:400;--caption-weight:600;--radius:0px;--caption-size:58px;--title-rotation:0deg;--caption-rotation:0deg;--broll-rotation:0deg}/* One geometry source for both the gallery and the video builder. 1080 x 1920. */
+*{box-sizing:border-box}
+body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--background)}
+#main{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--foreground);font-family:var(--body-font)}
+video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:var(--grade)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,transparent 42%,#0002);z-index:1}
+.art-direction{position:absolute;inset:0;z-index:2;pointer-events:none}
+.brand{position:absolute;top:240px;left:65px;z-index:8;font:500 26px var(--label-font);letter-spacing:.12em;color:var(--foreground);background:var(--background);padding:14px 20px}
+.credit{position:absolute;top:1420px;left:65px;z-index:8;font:500 22px/1.2 var(--body-font);color:var(--foreground);background:var(--background);padding:8px 14px}
+.title{position:absolute;top:350px;left:65px;width:880px;font:var(--heading-weight) 112px/1.02 var(--heading-font);letter-spacing:-.045em;z-index:7;color:var(--foreground);background:var(--background);padding:24px 28px;overflow-wrap:anywhere;white-space:pre-line}
+.caption{position:absolute;left:65px;top:1180px;width:880px;z-index:9;text-align:left;font:var(--caption-weight) var(--caption-size)/1.2 var(--body-font);color:var(--caption-foreground);background:var(--caption-background);padding:24px 30px;border-radius:var(--radius);overflow-wrap:anywhere}
+.caption span{display:inline}.caption .active{color:var(--highlight)}
+.broll{position:absolute;left:90px;top:690px;width:810px;height:456px;border:3px solid var(--accent);border-radius:var(--radius);overflow:hidden;z-index:6;background:var(--background)}
+.broll img,.broll video{width:100%;height:100%;object-fit:cover}
+.broll-label{position:absolute;bottom:18px;left:18px;right:18px;font:500 24px var(--body-font);color:var(--foreground);background:var(--background);padding:10px 14px}
+.broll.full{inset:0;width:1080px;height:1920px;border:0;border-radius:0;z-index:4}
+.broll.full .broll-label{bottom:800px;left:65px;right:135px}
+.safe{position:absolute;inset:0;z-index:100;pointer-events:none;border-top:220px solid #ff000044;border-bottom:450px solid #ff000044;border-left:35px solid #ff000044;border-right:35px solid #ff000044}
+
+/* ATLAS / flush left, indexed red rule, square documentary insert. */
+[data-theme=&quot;signal-clean&quot;] .art-direction{border-left:18px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .art-direction::after{content:&quot;&quot;;position:absolute;top:307px;left:65px;width:880px;border-top:3px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .brand{padding-left:0;border-right:52px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .title{border-left:12px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .caption{border-top:8px solid var(--accent);box-shadow:0 12px 0 #20211F}
+[data-theme=&quot;signal-clean&quot;] .broll:not(.full){border:12px solid var(--background);box-shadow:12px 12px 0 var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .broll-label{border-left:5px solid var(--accent)}
+
+/* VOLTAGE / cobalt poster, acid slab and offset insert. */
+[data-theme=&quot;kinetic-punch&quot;] .art-direction{border-left:20px solid var(--accent);border-right:20px solid var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .brand{color:var(--ink);background:var(--accent);font-weight:700;rotate:-3deg}
+[data-theme=&quot;kinetic-punch&quot;] .title{font-weight:800;letter-spacing:-.065em;rotate:var(--title-rotation);box-shadow:10px 10px 0 var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .caption{left:80px;width:850px;rotate:var(--caption-rotation);box-shadow:12px 12px 0 var(--panel);text-align:center}
+[data-theme=&quot;kinetic-punch&quot;] .broll:not(.full){left:105px;width:780px;top:710px;height:420px;border:10px solid var(--accent);rotate:var(--broll-rotation);box-shadow:18px 18px 0 var(--panel)}
+[data-theme=&quot;kinetic-punch&quot;] .broll-label{background:var(--accent);color:var(--ink);font-weight:800}
+[data-theme=&quot;kinetic-punch&quot;] .credit{background:var(--accent);color:var(--ink)}
+
+/* MAISON / magazine masthead, centered serif and picture mat. */
+[data-theme=&quot;editorial-noir&quot;] .art-direction{border:18px solid var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .brand{left:65px;width:880px;text-align:center;font-size:25px;letter-spacing:.3em;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:18px}
+[data-theme=&quot;editorial-noir&quot;] .title{text-align:center;letter-spacing:-.025em;line-height:1.05;padding:18px 34px}
+[data-theme=&quot;editorial-noir&quot;] .caption{text-align:center;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:24px 34px}
+[data-theme=&quot;editorial-noir&quot;] .broll:not(.full){left:145px;width:710px;height:456px;padding:18px;border:2px solid var(--accent);box-shadow:0 0 0 12px var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .broll-label{left:28px;right:28px;bottom:28px;font-size:22px;text-align:center}
+[data-theme=&quot;editorial-noir&quot;] .credit{left:65px;width:880px;text-align:center;font-size:23px;letter-spacing:.08em}
+
+/* PLAYROOM / rounded notes, lavender paper and an offset butter edge. */
+[data-theme=&quot;warm-story&quot;] .art-direction{border-left:22px solid var(--panel);border-right:22px solid var(--panel)}
+[data-theme=&quot;warm-story&quot;] .brand{border-radius:50%;font-size:34px;background:var(--panel);padding:14px 32px;rotate:-5deg}
+[data-theme=&quot;warm-story&quot;] .title{border-radius:22px 90px 24px 24px;padding:24px 32px;letter-spacing:-.045em}
+[data-theme=&quot;warm-story&quot;] .caption{border:3px solid var(--foreground);box-shadow:9px 10px 0 var(--background);text-align:center}
+[data-theme=&quot;warm-story&quot;] .broll:not(.full){left:115px;width:770px;height:428px;top:704px;border:14px solid var(--panel);border-bottom-width:42px;rotate:var(--broll-rotation);box-shadow:-16px 14px 0 var(--accent);border-radius:36px}
+[data-theme=&quot;warm-story&quot;] .broll-label{font-family:var(--label-font);font-size:30px;background:var(--panel);padding:4px 12px;border-radius:10px}
+[data-theme=&quot;warm-story&quot;] .credit{border-radius:30px;background:var(--panel);rotate:-2deg}
+
+/* BLUEPRINT / drafting edge, clipped corners and terminal annotations. */
+[data-theme=&quot;tech-grid&quot;] .art-direction{border:12px solid var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .art-direction::before{content:&quot;&quot;;position:absolute;left:35px;top:220px;bottom:450px;width:15px;background:repeating-linear-gradient(0deg,transparent 0 39px,var(--accent) 39px 41px)}
+[data-theme=&quot;tech-grid&quot;] .brand{border:2px solid var(--accent);font-size:24px;letter-spacing:.08em;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .title{border-bottom:3px solid var(--accent);padding-left:24px;letter-spacing:-.045em;clip-path:polygon(0 0,96% 0,100% 12%,100% 100%,0 100%)}
+[data-theme=&quot;tech-grid&quot;] .caption{border:2px solid var(--accent);border-left:14px solid var(--accent);padding-left:32px}
+[data-theme=&quot;tech-grid&quot;] .broll:not(.full){border:3px solid var(--accent);padding:16px;clip-path:polygon(0 0,94% 0,100% 12%,100% 100%,6% 100%,0 88%)}
+[data-theme=&quot;tech-grid&quot;] .broll-label{border-top:2px solid var(--accent);font-size:22px;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .credit{border-bottom:2px solid var(--accent);color:var(--accent);font-size:22px}
+
+    .preview-bg{position:absolute;inset:0;background:var(--background)}
+    .specimen-index{position:absolute;bottom:85px;right:85px;font:400 160px var(--heading-font);color:var(--accent);opacity:.22}
+    .specimen-note{position:absolute;bottom:120px;left:65px;font:400 23px var(--label-font);letter-spacing:.1em;color:var(--muted)}
+    .broll svg{display:block;width:100%;height:100%;object-fit:cover}
+    .caption{color:var(--highlight)}
+    .replay .title,.replay .caption,.replay .broll{animation:entrance 0.55s cubic-bezier(.2,.8,.2,1) both}
+    .replay .broll{animation-delay:.16s}.replay .caption{animation-delay:.3s}
+    @keyframes entrance{from{opacity:0;transform:translate(0px,0px) scale(1.015) rotate(0deg);filter:blur(7px)}to{opacity:1;transform:translate(0,0) scale(1) rotate(0);filter:none}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=&quot;main&quot; data-theme=&quot;editorial-noir&quot;&gt;&lt;div class=&quot;preview-bg&quot;&gt;&lt;/div&gt;&lt;div class=&quot;art-direction&quot;&gt;&lt;/div&gt;&lt;div class=&quot;brand&quot;&gt;MR LABS&lt;/div&gt;&lt;div class=&quot;title&quot; data-id=&quot;Di balik
+sebuah ide.&quot; data-en=&quot;Behind
+every idea.&quot;&gt;Di balik
+sebuah ide.&lt;/div&gt;&lt;div class=&quot;broll&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 810 456&quot; role=&quot;img&quot; aria-label=&quot;Ilustrasi grafis Maison Journal&quot;&gt;&lt;rect width=&quot;810&quot; height=&quot;456&quot; fill=&quot;#E2D1BE&quot;/&gt;&lt;path d=&quot;M210 430V210A195 195 0 0 1 600 210V430Z&quot; fill=&quot;#94485B&quot;/&gt;&lt;circle cx=&quot;550&quot; cy=&quot;100&quot; r=&quot;57&quot; fill=&quot;#F5EDDF&quot;/&gt;&lt;path d=&quot;M120 350Q345 190 690 350V456H120Z&quot; fill=&quot;#562A3A&quot;/&gt;&lt;path d=&quot;M170 398Q370 275 650 386&quot; fill=&quot;none&quot; stroke=&quot;#F5EDDF&quot; stroke-width=&quot;2&quot;/&gt;&lt;/svg&gt;&lt;div class=&quot;broll-label&quot; data-id=&quot;ILUSTRASI / Maison Journal&quot; data-en=&quot;ILLUSTRATION / Maison Journal&quot;&gt;ILUSTRASI / Maison Journal&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;caption maison&quot; data-id=&quot;Ada cerita di setiap proses.&quot; data-en=&quot;Every process holds a story.&quot;&gt;Ada cerita di setiap proses.&lt;/div&gt;&lt;div class=&quot;credit&quot;&gt;by @maulanarahman_&lt;/div&gt;&lt;div class=&quot;specimen-index&quot;&gt;03&lt;/div&gt;&lt;div class=&quot;specimen-note&quot;&gt;VISUAL STUDY&lt;br&gt;EDITION 02&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"></iframe></div><div class="details"><h2>Maison Journal</h2><p class="tagline">Ruang untuk cerita yang berarti.</p><p class="use">Wawancara, opini, cerita personal yang reflektif</p><div class="swatches"><i style="background:#F5EDDF"></i><i style="background:#562A3A"></i><i style="background:#94485B"></i><span>Instrument Serif</span></div><button class="pick" data-theme="editorial-noir" aria-pressed="false">Pilih tema<span aria-hidden="true">↗</span></button></div></article><article class="package" style="--accent:#713CAF"><div class="card-heading"><span>04</span><span>PLAYFUL</span></div><div class="screen"><iframe title="Playroom — contoh komposisi" tabindex="-1" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;style&gt;@font-face{font-family:&quot;Plus Jakarta Sans&quot;;src:url(&quot;fonts/plusjakartasans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Manrope&quot;;src:url(&quot;fonts/manrope.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Space Grotesk&quot;;src:url(&quot;fonts/spacegrotesk.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;DM Sans&quot;;src:url(&quot;fonts/dmsans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Bricolage Grotesque&quot;;src:url(&quot;fonts/bricolagegrotesque.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Fraunces&quot;;src:url(&quot;fonts/fraunces.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Instrument Serif&quot;;src:url(&quot;fonts/instrumentserif.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;DM Serif Display&quot;;src:url(&quot;fonts/dmserifdisplay.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;IBM Plex Mono&quot;;src:url(&quot;fonts/ibmplexmono.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;Caveat&quot;;src:url(&quot;fonts/caveat.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+:root{--background:#DCD1F2;--panel:#FFF3AF;--foreground:#48266B;--muted:#66517C;--accent:#713CAF;--ink:#FFFFFF;--caption-background:#FFF3AF;--caption-foreground:#48266B;--highlight:#713CAF;--grade:saturate(1.01) brightness(1.01);--heading-font:&quot;Fraunces&quot;;--body-font:&quot;DM Sans&quot;;--label-font:&quot;Caveat&quot;;--heading-weight:700;--caption-weight:700;--radius:54px;--caption-size:64px;--title-rotation:0deg;--caption-rotation:0deg;--broll-rotation:2deg}/* One geometry source for both the gallery and the video builder. 1080 x 1920. */
+*{box-sizing:border-box}
+body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--background)}
+#main{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--foreground);font-family:var(--body-font)}
+video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:var(--grade)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,transparent 42%,#0002);z-index:1}
+.art-direction{position:absolute;inset:0;z-index:2;pointer-events:none}
+.brand{position:absolute;top:240px;left:65px;z-index:8;font:500 26px var(--label-font);letter-spacing:.12em;color:var(--foreground);background:var(--background);padding:14px 20px}
+.credit{position:absolute;top:1420px;left:65px;z-index:8;font:500 22px/1.2 var(--body-font);color:var(--foreground);background:var(--background);padding:8px 14px}
+.title{position:absolute;top:350px;left:65px;width:880px;font:var(--heading-weight) 112px/1.02 var(--heading-font);letter-spacing:-.045em;z-index:7;color:var(--foreground);background:var(--background);padding:24px 28px;overflow-wrap:anywhere;white-space:pre-line}
+.caption{position:absolute;left:65px;top:1180px;width:880px;z-index:9;text-align:left;font:var(--caption-weight) var(--caption-size)/1.2 var(--body-font);color:var(--caption-foreground);background:var(--caption-background);padding:24px 30px;border-radius:var(--radius);overflow-wrap:anywhere}
+.caption span{display:inline}.caption .active{color:var(--highlight)}
+.broll{position:absolute;left:90px;top:690px;width:810px;height:456px;border:3px solid var(--accent);border-radius:var(--radius);overflow:hidden;z-index:6;background:var(--background)}
+.broll img,.broll video{width:100%;height:100%;object-fit:cover}
+.broll-label{position:absolute;bottom:18px;left:18px;right:18px;font:500 24px var(--body-font);color:var(--foreground);background:var(--background);padding:10px 14px}
+.broll.full{inset:0;width:1080px;height:1920px;border:0;border-radius:0;z-index:4}
+.broll.full .broll-label{bottom:800px;left:65px;right:135px}
+.safe{position:absolute;inset:0;z-index:100;pointer-events:none;border-top:220px solid #ff000044;border-bottom:450px solid #ff000044;border-left:35px solid #ff000044;border-right:35px solid #ff000044}
+
+/* ATLAS / flush left, indexed red rule, square documentary insert. */
+[data-theme=&quot;signal-clean&quot;] .art-direction{border-left:18px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .art-direction::after{content:&quot;&quot;;position:absolute;top:307px;left:65px;width:880px;border-top:3px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .brand{padding-left:0;border-right:52px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .title{border-left:12px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .caption{border-top:8px solid var(--accent);box-shadow:0 12px 0 #20211F}
+[data-theme=&quot;signal-clean&quot;] .broll:not(.full){border:12px solid var(--background);box-shadow:12px 12px 0 var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .broll-label{border-left:5px solid var(--accent)}
+
+/* VOLTAGE / cobalt poster, acid slab and offset insert. */
+[data-theme=&quot;kinetic-punch&quot;] .art-direction{border-left:20px solid var(--accent);border-right:20px solid var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .brand{color:var(--ink);background:var(--accent);font-weight:700;rotate:-3deg}
+[data-theme=&quot;kinetic-punch&quot;] .title{font-weight:800;letter-spacing:-.065em;rotate:var(--title-rotation);box-shadow:10px 10px 0 var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .caption{left:80px;width:850px;rotate:var(--caption-rotation);box-shadow:12px 12px 0 var(--panel);text-align:center}
+[data-theme=&quot;kinetic-punch&quot;] .broll:not(.full){left:105px;width:780px;top:710px;height:420px;border:10px solid var(--accent);rotate:var(--broll-rotation);box-shadow:18px 18px 0 var(--panel)}
+[data-theme=&quot;kinetic-punch&quot;] .broll-label{background:var(--accent);color:var(--ink);font-weight:800}
+[data-theme=&quot;kinetic-punch&quot;] .credit{background:var(--accent);color:var(--ink)}
+
+/* MAISON / magazine masthead, centered serif and picture mat. */
+[data-theme=&quot;editorial-noir&quot;] .art-direction{border:18px solid var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .brand{left:65px;width:880px;text-align:center;font-size:25px;letter-spacing:.3em;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:18px}
+[data-theme=&quot;editorial-noir&quot;] .title{text-align:center;letter-spacing:-.025em;line-height:1.05;padding:18px 34px}
+[data-theme=&quot;editorial-noir&quot;] .caption{text-align:center;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:24px 34px}
+[data-theme=&quot;editorial-noir&quot;] .broll:not(.full){left:145px;width:710px;height:456px;padding:18px;border:2px solid var(--accent);box-shadow:0 0 0 12px var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .broll-label{left:28px;right:28px;bottom:28px;font-size:22px;text-align:center}
+[data-theme=&quot;editorial-noir&quot;] .credit{left:65px;width:880px;text-align:center;font-size:23px;letter-spacing:.08em}
+
+/* PLAYROOM / rounded notes, lavender paper and an offset butter edge. */
+[data-theme=&quot;warm-story&quot;] .art-direction{border-left:22px solid var(--panel);border-right:22px solid var(--panel)}
+[data-theme=&quot;warm-story&quot;] .brand{border-radius:50%;font-size:34px;background:var(--panel);padding:14px 32px;rotate:-5deg}
+[data-theme=&quot;warm-story&quot;] .title{border-radius:22px 90px 24px 24px;padding:24px 32px;letter-spacing:-.045em}
+[data-theme=&quot;warm-story&quot;] .caption{border:3px solid var(--foreground);box-shadow:9px 10px 0 var(--background);text-align:center}
+[data-theme=&quot;warm-story&quot;] .broll:not(.full){left:115px;width:770px;height:428px;top:704px;border:14px solid var(--panel);border-bottom-width:42px;rotate:var(--broll-rotation);box-shadow:-16px 14px 0 var(--accent);border-radius:36px}
+[data-theme=&quot;warm-story&quot;] .broll-label{font-family:var(--label-font);font-size:30px;background:var(--panel);padding:4px 12px;border-radius:10px}
+[data-theme=&quot;warm-story&quot;] .credit{border-radius:30px;background:var(--panel);rotate:-2deg}
+
+/* BLUEPRINT / drafting edge, clipped corners and terminal annotations. */
+[data-theme=&quot;tech-grid&quot;] .art-direction{border:12px solid var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .art-direction::before{content:&quot;&quot;;position:absolute;left:35px;top:220px;bottom:450px;width:15px;background:repeating-linear-gradient(0deg,transparent 0 39px,var(--accent) 39px 41px)}
+[data-theme=&quot;tech-grid&quot;] .brand{border:2px solid var(--accent);font-size:24px;letter-spacing:.08em;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .title{border-bottom:3px solid var(--accent);padding-left:24px;letter-spacing:-.045em;clip-path:polygon(0 0,96% 0,100% 12%,100% 100%,0 100%)}
+[data-theme=&quot;tech-grid&quot;] .caption{border:2px solid var(--accent);border-left:14px solid var(--accent);padding-left:32px}
+[data-theme=&quot;tech-grid&quot;] .broll:not(.full){border:3px solid var(--accent);padding:16px;clip-path:polygon(0 0,94% 0,100% 12%,100% 100%,6% 100%,0 88%)}
+[data-theme=&quot;tech-grid&quot;] .broll-label{border-top:2px solid var(--accent);font-size:22px;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .credit{border-bottom:2px solid var(--accent);color:var(--accent);font-size:22px}
+
+    .preview-bg{position:absolute;inset:0;background:var(--background)}
+    .specimen-index{position:absolute;bottom:85px;right:85px;font:400 160px var(--heading-font);color:var(--accent);opacity:.22}
+    .specimen-note{position:absolute;bottom:120px;left:65px;font:400 23px var(--label-font);letter-spacing:.1em;color:var(--muted)}
+    .broll svg{display:block;width:100%;height:100%;object-fit:cover}
+    .caption{color:var(--highlight)}
+    .replay .title,.replay .caption,.replay .broll{animation:entrance 0.45s cubic-bezier(.2,.8,.2,1) both}
+    .replay .broll{animation-delay:.16s}.replay .caption{animation-delay:.3s}
+    @keyframes entrance{from{opacity:0;transform:translate(0px,46px) scale(1) rotate(2deg);filter:none}to{opacity:1;transform:translate(0,0) scale(1) rotate(0);filter:none}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=&quot;main&quot; data-theme=&quot;warm-story&quot;&gt;&lt;div class=&quot;preview-bg&quot;&gt;&lt;/div&gt;&lt;div class=&quot;art-direction&quot;&gt;&lt;/div&gt;&lt;div class=&quot;brand&quot;&gt;MR LABS&lt;/div&gt;&lt;div class=&quot;title&quot; data-id=&quot;Coba dulu,
+seru nanti.&quot; data-en=&quot;Try a little.
+Play a lot.&quot;&gt;Coba dulu,
+seru nanti.&lt;/div&gt;&lt;div class=&quot;broll&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 810 456&quot; role=&quot;img&quot; aria-label=&quot;Ilustrasi grafis Playroom&quot;&gt;&lt;rect width=&quot;810&quot; height=&quot;456&quot; fill=&quot;#DCD1F2&quot;/&gt;&lt;rect x=&quot;110&quot; y=&quot;55&quot; width=&quot;340&quot; height=&quot;275&quot; rx=&quot;40&quot; fill=&quot;#713CAF&quot; transform=&quot;rotate(-8 280 190)&quot;/&gt;&lt;rect x=&quot;360&quot; y=&quot;65&quot; width=&quot;310&quot; height=&quot;270&quot; rx=&quot;150&quot; fill=&quot;#FFF3AF&quot;/&gt;&lt;path d=&quot;M460 165Q500 200 540 165M590 165Q625 200 660 165M500 240Q560 295 625 240&quot; stroke=&quot;#48266B&quot; stroke-width=&quot;9&quot; fill=&quot;none&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;path d=&quot;M180 200H355M270 115V285&quot; stroke=&quot;#FFF3AF&quot; stroke-width=&quot;36&quot; stroke-linecap=&quot;round&quot;/&gt;&lt;/svg&gt;&lt;div class=&quot;broll-label&quot; data-id=&quot;ILUSTRASI / Playroom&quot; data-en=&quot;ILLUSTRATION / Playroom&quot;&gt;ILUSTRASI / Playroom&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;caption playroom&quot; data-id=&quot;Belajar boleh sambil bermain.&quot; data-en=&quot;Make room for a little play.&quot;&gt;Belajar boleh sambil bermain.&lt;/div&gt;&lt;div class=&quot;credit&quot;&gt;by @maulanarahman_&lt;/div&gt;&lt;div class=&quot;specimen-index&quot;&gt;04&lt;/div&gt;&lt;div class=&quot;specimen-note&quot;&gt;VISUAL STUDY&lt;br&gt;EDITION 02&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"></iframe></div><div class="details"><h2>Playroom</h2><p class="tagline">Belajar lewat rasa ingin tahu.</p><p class="use">Creator diary, edukasi ringan, cerita proses kreatif</p><div class="swatches"><i style="background:#DCD1F2"></i><i style="background:#48266B"></i><i style="background:#713CAF"></i><span>Fraunces</span></div><button class="pick" data-theme="warm-story" aria-pressed="false">Pilih tema<span aria-hidden="true">↗</span></button></div></article><article class="package" style="--accent:#78ECDE"><div class="card-heading"><span>05</span><span>TECHNICAL</span></div><div class="screen"><iframe title="Blueprint Lab — contoh komposisi" tabindex="-1" srcdoc="&lt;!doctype html&gt;&lt;html lang=&quot;id&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;style&gt;@font-face{font-family:&quot;Plus Jakarta Sans&quot;;src:url(&quot;fonts/plusjakartasans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Manrope&quot;;src:url(&quot;fonts/manrope.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Space Grotesk&quot;;src:url(&quot;fonts/spacegrotesk.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;DM Sans&quot;;src:url(&quot;fonts/dmsans.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Bricolage Grotesque&quot;;src:url(&quot;fonts/bricolagegrotesque.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Fraunces&quot;;src:url(&quot;fonts/fraunces.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+@font-face{font-family:&quot;Instrument Serif&quot;;src:url(&quot;fonts/instrumentserif.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;DM Serif Display&quot;;src:url(&quot;fonts/dmserifdisplay.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;IBM Plex Mono&quot;;src:url(&quot;fonts/ibmplexmono.ttf&quot;) format(&quot;truetype&quot;);font-weight:400;font-display:block;}
+@font-face{font-family:&quot;Caveat&quot;;src:url(&quot;fonts/caveat.ttf&quot;) format(&quot;truetype&quot;);font-weight:100 900;font-display:block;}
+:root{--background:#071E29;--panel:#103541;--foreground:#E4F6F4;--muted:#A1BEBE;--accent:#78ECDE;--ink:#071E29;--caption-background:#071E29;--caption-foreground:#E4F6F4;--highlight:#78ECDE;--grade:contrast(1.02) saturate(.97);--heading-font:&quot;Space Grotesk&quot;;--body-font:&quot;IBM Plex Mono&quot;;--label-font:&quot;IBM Plex Mono&quot;;--heading-weight:700;--caption-weight:500;--radius:0px;--caption-size:56px;--title-rotation:0deg;--caption-rotation:0deg;--broll-rotation:0deg}/* One geometry source for both the gallery and the video builder. 1080 x 1920. */
+*{box-sizing:border-box}
+body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--background)}
+#main{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--foreground);font-family:var(--body-font)}
+video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:var(--grade)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,transparent 42%,#0002);z-index:1}
+.art-direction{position:absolute;inset:0;z-index:2;pointer-events:none}
+.brand{position:absolute;top:240px;left:65px;z-index:8;font:500 26px var(--label-font);letter-spacing:.12em;color:var(--foreground);background:var(--background);padding:14px 20px}
+.credit{position:absolute;top:1420px;left:65px;z-index:8;font:500 22px/1.2 var(--body-font);color:var(--foreground);background:var(--background);padding:8px 14px}
+.title{position:absolute;top:350px;left:65px;width:880px;font:var(--heading-weight) 112px/1.02 var(--heading-font);letter-spacing:-.045em;z-index:7;color:var(--foreground);background:var(--background);padding:24px 28px;overflow-wrap:anywhere;white-space:pre-line}
+.caption{position:absolute;left:65px;top:1180px;width:880px;z-index:9;text-align:left;font:var(--caption-weight) var(--caption-size)/1.2 var(--body-font);color:var(--caption-foreground);background:var(--caption-background);padding:24px 30px;border-radius:var(--radius);overflow-wrap:anywhere}
+.caption span{display:inline}.caption .active{color:var(--highlight)}
+.broll{position:absolute;left:90px;top:690px;width:810px;height:456px;border:3px solid var(--accent);border-radius:var(--radius);overflow:hidden;z-index:6;background:var(--background)}
+.broll img,.broll video{width:100%;height:100%;object-fit:cover}
+.broll-label{position:absolute;bottom:18px;left:18px;right:18px;font:500 24px var(--body-font);color:var(--foreground);background:var(--background);padding:10px 14px}
+.broll.full{inset:0;width:1080px;height:1920px;border:0;border-radius:0;z-index:4}
+.broll.full .broll-label{bottom:800px;left:65px;right:135px}
+.safe{position:absolute;inset:0;z-index:100;pointer-events:none;border-top:220px solid #ff000044;border-bottom:450px solid #ff000044;border-left:35px solid #ff000044;border-right:35px solid #ff000044}
+
+/* ATLAS / flush left, indexed red rule, square documentary insert. */
+[data-theme=&quot;signal-clean&quot;] .art-direction{border-left:18px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .art-direction::after{content:&quot;&quot;;position:absolute;top:307px;left:65px;width:880px;border-top:3px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .brand{padding-left:0;border-right:52px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .title{border-left:12px solid var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .caption{border-top:8px solid var(--accent);box-shadow:0 12px 0 #20211F}
+[data-theme=&quot;signal-clean&quot;] .broll:not(.full){border:12px solid var(--background);box-shadow:12px 12px 0 var(--accent)}
+[data-theme=&quot;signal-clean&quot;] .broll-label{border-left:5px solid var(--accent)}
+
+/* VOLTAGE / cobalt poster, acid slab and offset insert. */
+[data-theme=&quot;kinetic-punch&quot;] .art-direction{border-left:20px solid var(--accent);border-right:20px solid var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .brand{color:var(--ink);background:var(--accent);font-weight:700;rotate:-3deg}
+[data-theme=&quot;kinetic-punch&quot;] .title{font-weight:800;letter-spacing:-.065em;rotate:var(--title-rotation);box-shadow:10px 10px 0 var(--accent)}
+[data-theme=&quot;kinetic-punch&quot;] .caption{left:80px;width:850px;rotate:var(--caption-rotation);box-shadow:12px 12px 0 var(--panel);text-align:center}
+[data-theme=&quot;kinetic-punch&quot;] .broll:not(.full){left:105px;width:780px;top:710px;height:420px;border:10px solid var(--accent);rotate:var(--broll-rotation);box-shadow:18px 18px 0 var(--panel)}
+[data-theme=&quot;kinetic-punch&quot;] .broll-label{background:var(--accent);color:var(--ink);font-weight:800}
+[data-theme=&quot;kinetic-punch&quot;] .credit{background:var(--accent);color:var(--ink)}
+
+/* MAISON / magazine masthead, centered serif and picture mat. */
+[data-theme=&quot;editorial-noir&quot;] .art-direction{border:18px solid var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .brand{left:65px;width:880px;text-align:center;font-size:25px;letter-spacing:.3em;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:18px}
+[data-theme=&quot;editorial-noir&quot;] .title{text-align:center;letter-spacing:-.025em;line-height:1.05;padding:18px 34px}
+[data-theme=&quot;editorial-noir&quot;] .caption{text-align:center;border-top:2px solid var(--accent);border-bottom:2px solid var(--accent);padding:24px 34px}
+[data-theme=&quot;editorial-noir&quot;] .broll:not(.full){left:145px;width:710px;height:456px;padding:18px;border:2px solid var(--accent);box-shadow:0 0 0 12px var(--background)}
+[data-theme=&quot;editorial-noir&quot;] .broll-label{left:28px;right:28px;bottom:28px;font-size:22px;text-align:center}
+[data-theme=&quot;editorial-noir&quot;] .credit{left:65px;width:880px;text-align:center;font-size:23px;letter-spacing:.08em}
+
+/* PLAYROOM / rounded notes, lavender paper and an offset butter edge. */
+[data-theme=&quot;warm-story&quot;] .art-direction{border-left:22px solid var(--panel);border-right:22px solid var(--panel)}
+[data-theme=&quot;warm-story&quot;] .brand{border-radius:50%;font-size:34px;background:var(--panel);padding:14px 32px;rotate:-5deg}
+[data-theme=&quot;warm-story&quot;] .title{border-radius:22px 90px 24px 24px;padding:24px 32px;letter-spacing:-.045em}
+[data-theme=&quot;warm-story&quot;] .caption{border:3px solid var(--foreground);box-shadow:9px 10px 0 var(--background);text-align:center}
+[data-theme=&quot;warm-story&quot;] .broll:not(.full){left:115px;width:770px;height:428px;top:704px;border:14px solid var(--panel);border-bottom-width:42px;rotate:var(--broll-rotation);box-shadow:-16px 14px 0 var(--accent);border-radius:36px}
+[data-theme=&quot;warm-story&quot;] .broll-label{font-family:var(--label-font);font-size:30px;background:var(--panel);padding:4px 12px;border-radius:10px}
+[data-theme=&quot;warm-story&quot;] .credit{border-radius:30px;background:var(--panel);rotate:-2deg}
+
+/* BLUEPRINT / drafting edge, clipped corners and terminal annotations. */
+[data-theme=&quot;tech-grid&quot;] .art-direction{border:12px solid var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .art-direction::before{content:&quot;&quot;;position:absolute;left:35px;top:220px;bottom:450px;width:15px;background:repeating-linear-gradient(0deg,transparent 0 39px,var(--accent) 39px 41px)}
+[data-theme=&quot;tech-grid&quot;] .brand{border:2px solid var(--accent);font-size:24px;letter-spacing:.08em;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .title{border-bottom:3px solid var(--accent);padding-left:24px;letter-spacing:-.045em;clip-path:polygon(0 0,96% 0,100% 12%,100% 100%,0 100%)}
+[data-theme=&quot;tech-grid&quot;] .caption{border:2px solid var(--accent);border-left:14px solid var(--accent);padding-left:32px}
+[data-theme=&quot;tech-grid&quot;] .broll:not(.full){border:3px solid var(--accent);padding:16px;clip-path:polygon(0 0,94% 0,100% 12%,100% 100%,6% 100%,0 88%)}
+[data-theme=&quot;tech-grid&quot;] .broll-label{border-top:2px solid var(--accent);font-size:22px;color:var(--accent)}
+[data-theme=&quot;tech-grid&quot;] .credit{border-bottom:2px solid var(--accent);color:var(--accent);font-size:22px}
+
+    .preview-bg{position:absolute;inset:0;background:var(--background)}
+    .specimen-index{position:absolute;bottom:85px;right:85px;font:400 160px var(--heading-font);color:var(--accent);opacity:.22}
+    .specimen-note{position:absolute;bottom:120px;left:65px;font:400 23px var(--label-font);letter-spacing:.1em;color:var(--muted)}
+    .broll svg{display:block;width:100%;height:100%;object-fit:cover}
+    .caption{color:var(--highlight)}
+    .replay .title,.replay .caption,.replay .broll{animation:entrance 0.32s cubic-bezier(.2,.8,.2,1) both}
+    .replay .broll{animation-delay:.16s}.replay .caption{animation-delay:.3s}
+    @keyframes entrance{from{opacity:0;transform:translate(-56px,0px) scale(1) rotate(0deg);filter:none}to{opacity:1;transform:translate(0,0) scale(1) rotate(0);filter:none}}
+    @media(prefers-reduced-motion:reduce){*{animation:none!important}}
+    &lt;/style&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=&quot;main&quot; data-theme=&quot;tech-grid&quot;&gt;&lt;div class=&quot;preview-bg&quot;&gt;&lt;/div&gt;&lt;div class=&quot;art-direction&quot;&gt;&lt;/div&gt;&lt;div class=&quot;brand&quot;&gt;MR LABS&lt;/div&gt;&lt;div class=&quot;title&quot; data-id=&quot;Rancang.
+Jalankan.&quot; data-en=&quot;Build it.
+Run it.&quot;&gt;Rancang.
+Jalankan.&lt;/div&gt;&lt;div class=&quot;broll&quot;&gt;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 810 456&quot; role=&quot;img&quot; aria-label=&quot;Ilustrasi grafis Blueprint Lab&quot;&gt;&lt;defs&gt;&lt;pattern id=&quot;grid&quot; width=&quot;40&quot; height=&quot;40&quot; patternUnits=&quot;userSpaceOnUse&quot;&gt;&lt;path d=&quot;M40 0H0V40&quot; stroke=&quot;#78ECDE&quot; opacity=&quot;.18&quot; fill=&quot;none&quot;/&gt;&lt;/pattern&gt;&lt;/defs&gt;&lt;rect width=&quot;810&quot; height=&quot;456&quot; fill=&quot;#071E29&quot;/&gt;&lt;rect width=&quot;810&quot; height=&quot;456&quot; fill=&quot;url(#grid)&quot;/&gt;&lt;g stroke=&quot;#78ECDE&quot; fill=&quot;#103541&quot; stroke-width=&quot;3&quot;&gt;&lt;path d=&quot;M180 215H405V110H625M405 215V300H625&quot; fill=&quot;none&quot;/&gt;&lt;rect x=&quot;65&quot; y=&quot;155&quot; width=&quot;180&quot; height=&quot;120&quot;/&gt;&lt;circle cx=&quot;405&quot; cy=&quot;215&quot; r=&quot;47&quot;/&gt;&lt;rect x=&quot;590&quot; y=&quot;55&quot; width=&quot;150&quot; height=&quot;105&quot;/&gt;&lt;rect x=&quot;590&quot; y=&quot;250&quot; width=&quot;150&quot; height=&quot;105&quot;/&gt;&lt;/g&gt;&lt;g fill=&quot;#78ECDE&quot; font-family=&quot;monospace&quot; font-size=&quot;28&quot;&gt;&lt;text x=&quot;105&quot; y=&quot;225&quot;&gt;IN&lt;/text&gt;&lt;text x=&quot;388&quot; y=&quot;225&quot;&gt;+&lt;/text&gt;&lt;text x=&quot;622&quot; y=&quot;120&quot;&gt;RUN&lt;/text&gt;&lt;text x=&quot;622&quot; y=&quot;315&quot;&gt;OUT&lt;/text&gt;&lt;/g&gt;&lt;/svg&gt;&lt;div class=&quot;broll-label&quot; data-id=&quot;ILUSTRASI / Blueprint Lab&quot; data-en=&quot;ILLUSTRATION / Blueprint Lab&quot;&gt;ILUSTRASI / Blueprint Lab&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;caption blueprint&quot; data-id=&quot;Dari input menuju hasil.&quot; data-en=&quot;From input to outcome.&quot;&gt;Dari input menuju hasil.&lt;/div&gt;&lt;div class=&quot;credit&quot;&gt;by @maulanarahman_&lt;/div&gt;&lt;div class=&quot;specimen-index&quot;&gt;05&lt;/div&gt;&lt;div class=&quot;specimen-note&quot;&gt;VISUAL STUDY&lt;br&gt;EDITION 02&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"></iframe></div><div class="details"><h2>Blueprint Lab</h2><p class="tagline">Bongkar logika. Lihat prosesnya.</p><p class="use">Coding, automation, sistem dan demonstrasi teknis</p><div class="swatches"><i style="background:#071E29"></i><i style="background:#E4F6F4"></i><i style="background:#78ECDE"></i><span>Space Grotesk</span></div><button class="pick" data-theme="tech-grid" aria-pressed="false">Pilih tema<span aria-hidden="true">↗</span></button></div></article></section><section class="selection" aria-label="Konfigurasi tema"><div><span class="kicker">PILIHANMU</span><p class="status" role="status" aria-live="polite">Atlas Studio terpilih</p></div><label for="config" class="sr-only">Konfigurasi pilihan</label><input id="config" readonly value='{"theme":"signal-clean","language":"id"}'><button id="copy">Salin konfigurasi ↗</button></section><div class="asset-header"><h2>Peralatan kreatif.</h2><p>Aset lokal. Siap dirangkai.</p></div><details class="asset-group"><summary>01 / Sepuluh keluarga font <span>+</span></summary><div class="font-shelf"><div class="font-specimen"><small>Plus Jakarta Sans · OFL</small><p style="font-family:'Plus Jakarta Sans'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>Manrope · OFL</small><p style="font-family:'Manrope'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>Space Grotesk · OFL</small><p style="font-family:'Space Grotesk'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>DM Sans · OFL</small><p style="font-family:'DM Sans'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>Bricolage Grotesque · OFL</small><p style="font-family:'Bricolage Grotesque'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>Fraunces · OFL</small><p style="font-family:'Fraunces'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>Instrument Serif · OFL</small><p style="font-family:'Instrument Serif'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>DM Serif Display · OFL</small><p style="font-family:'DM Serif Display'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>IBM Plex Mono · OFL</small><p style="font-family:'IBM Plex Mono'">Ide kecil. Dampak besar.</p></div><div class="font-specimen"><small>Caveat · OFL</small><p style="font-family:'Caveat'">Ide kecil. Dampak besar.</p></div></div></details><details class="asset-group"><summary>02 / Sepuluh aksen suara <span>+</span></summary><p class="asset-note">Kenney Interface Sounds · CC0. Efek mengikuti aksi dan tetap di bawah narasi.</p><div class="sound-shelf"><label class="sound"><span>click_001</span><audio controls preload="metadata" src="sfx/click_001.ogg"></audio></label><label class="sound"><span>confirmation_001</span><audio controls preload="metadata" src="sfx/confirmation_001.ogg"></audio></label><label class="sound"><span>open_001</span><audio controls preload="metadata" src="sfx/open_001.ogg"></audio></label><label class="sound"><span>close_001</span><audio controls preload="metadata" src="sfx/close_001.ogg"></audio></label><label class="sound"><span>maximize_001</span><audio controls preload="metadata" src="sfx/maximize_001.ogg"></audio></label><label class="sound"><span>minimize_001</span><audio controls preload="metadata" src="sfx/minimize_001.ogg"></audio></label><label class="sound"><span>glitch_001</span><audio controls preload="metadata" src="sfx/glitch_001.ogg"></audio></label><label class="sound"><span>pluck_001</span><audio controls preload="metadata" src="sfx/pluck_001.ogg"></audio></label><label class="sound"><span>scroll_001</span><audio controls preload="metadata" src="sfx/scroll_001.ogg"></audio></label><label class="sound"><span>switch_001</span><audio controls preload="metadata" src="sfx/switch_001.ogg"></audio></label></div></details><footer><span>MR LABS / MADE FOR YOUR NEXT IDEA.</span><p>Font <a href="https://github.com/google/fonts">Google Fonts / OFL</a> · SFX <a href="https://kenney.nl/assets/interface-sounds">Kenney / CC0</a> · <a href="catalog.json">Sumber & lisensi</a></p><p>Ilustrasi desain, bukan footage pengguna. ID tema tetap kompatibel dengan proyek sebelumnya.</p></footer></main><script src="gallery.js"></script></body></html>
