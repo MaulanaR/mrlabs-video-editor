@@ -1,4 +1,5 @@
 """Build the interactive theme studio, live effect preview (using creator.png), and AI prompt generator."""
+import hashlib
 import html
 import json
 from mrlabs_core import MRLABS_ROOT, mrlabs_read
@@ -69,6 +70,8 @@ def mrlabs_specimen(theme, number):
 
 
 def mrlabs_main():
+    # Refresh the prompt generator when its content changes, including cached gallery tabs.
+    script_version = hashlib.sha256((MRLABS_ROOT / 'assets/gallery.js').read_bytes()).hexdigest()[:12]
     themes = mrlabs_read(MRLABS_ROOT / 'assets/themes.json')['themes']
     assets = mrlabs_read(MRLABS_ROOT / 'assets/catalog.json')['assets']
     cards, fun_cards, pro_cards = [], [], []
@@ -215,6 +218,7 @@ def mrlabs_main():
         <span class="status" role="status" aria-live="polite">Siap disalin ke AI Agent</span>
       </div>
       <label for="prompt-output" class="sr-only">Prompt AI</label>
+      <p class="asset-note">Prompt mengikuti pilihan di atas. Isi lokasi video dan profil, lalu lampirkan gambar referensi saat mengirim prompt. Rencana edit perlu disetujui sebelum produksi.</p>
       <textarea id="prompt-output" rows="6" readonly></textarea>
       <div class="prompt-actions">
         <button type="button" id="copy-prompt" class="primary-btn">📋 Salin Prompt AI ↗</button>
@@ -240,7 +244,7 @@ def mrlabs_main():
 <footer><span>MR LABS / MADE FOR YOUR NEXT IDEA.</span><p>Font <a href="https://github.com/google/fonts">Google Fonts / OFL</a> · SFX <a href="https://kenney.nl/assets/interface-sounds">Kenney / CC0</a> · <a href="catalog.json">Sumber &amp; lisensi</a></p><p>Base foto kreator: <code>assets/previews/creator.png</code> + <code>creator-cutout.png</code>.</p></footer>
 </main>
 <script>window.__MRLABS_SPECIMENS={specimens_json};</script>
-<script src="gallery.js"></script></body></html>'''
+<script src="gallery.js?v={script_version}"></script></body></html>'''
     target = MRLABS_ROOT / 'assets/theme-gallery.html'
     target.write_text(document, encoding='utf-8')
     print(target)

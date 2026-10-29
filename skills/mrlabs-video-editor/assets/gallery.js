@@ -40,7 +40,7 @@ document.fonts.load('400 28px "Helvetica"').then(faces => {
 
 function syncFrameState(frame, isStudio = false) {
   const doc = frame.contentDocument;
-  if (!doc) return;
+  if (!doc?.documentElement) return;
   doc.documentElement.lang = language;
   doc.querySelectorAll('[data-id]').forEach(el => {
     el.textContent = el.dataset[language];
@@ -65,12 +65,18 @@ function syncAllFrames() {
 function buildPromptText() {
   const spec = (window.__MRLABS_SPECIMENS && window.__MRLABS_SPECIMENS[selected]) || { name: selected, background: '#0A0A0A' };
   const fxArray = [...activeEffects];
-  const fxDescriptions = fxArray.length
-    ? fxArray.map(fx => FX_LABELS[fx] || fx).join('; ')
-    : 'Tanpa efek tambahan (fokus pada tipografi tema & depth hook)';
-  const bgCondition = forceNonPortrait
-    ? `Paksa gunakan latar belakang tema (${spec.background}) di belakang cutout subjek`
-    : `Jika video sudah potrait (height > width), tidak perlu background tema; gunakan latar asli video dengan cutout subject.webm untuk efek depth`;
+  const creatorHook = selected === 'obsidian-studio';
+  const themeName = creatorHook ? 'Obsidian Studio' : spec.name;
+  const positions = {
+    id: { 'above-head': 'di atas kepala saya', 'below-face': 'di bawah muka saya / di depan dada', bottom: 'di bagian bawah frame' },
+    en: { 'above-head': 'above my head', 'below-face': 'below my face / across my chest', bottom: 'in the lower part of the frame' }
+  };
+  const effects = {
+    orbit: 'ORBIT 3D Cards', 'ui-world': 'UI World Window',
+    'digital-zoom': 'Digital Zoom Punch-In', 'headline-wall': 'Headline Wall',
+    'pull-back-reveal': 'Pull Back Reveal'
+  };
+  const effectNames = fxArray.map(fx => effects[fx] || fx).join(', ');
 
   const payload = {
     theme: selected,
@@ -91,22 +97,50 @@ function buildPromptText() {
 
   if (language === 'en') {
     return [
-      `Edit my talking-head video using the mrlabs-video-editor skill with these settings:`,
-      `- Visual Theme: ${spec.name} ("${selected}")`,
-      `- Caption Position: ${captionPos} (${POS_LABELS[captionPos]})`,
-      `- Active Video Effects: ${fxArray.length ? fxArray.join(', ') : 'none'} (${fxDescriptions})`,
-      `- Background Condition: ${forceNonPortrait ? `Use theme background (${spec.background}) behind subject cutout` : 'If source video is already portrait, skip theme background and keep original room with subject.webm depth cutout'}`,
-      `- Config JSON: ${JSON.stringify(payload)}`
+      'Edit my talking-head video using the `$mrlabs-video-editor` skill.',
+      '',
+      'Video file: [enter the video file path]',
+      'Instagram profile: [enter the profile image path, if available]',
+      'Visual reference: [attach the reference image, if available]',
+      '',
+      `Use the **${themeName}** theme (\`${selected}\`)${creatorHook ? ' with captions in the *Creator Hook* reference style' : ''}:`,
+      '',
+      `- Place bold, white conversational captions ${positions.en[captionPos]}. Use short, readable phrases timed to the actual speech.`,
+      `- At important moments, show **very large ${creatorHook ? 'yellow' : `theme-accent (${spec.accent || spec.background})`} keywords** below the conversational captions. Select words actually spoken; “EDIT AI”, “ORBIT”, and “FOLLOW” are examples only, and must not be inserted if absent from the speech.`,
+      '- Place the large keywords **behind my head and body** using a subject cutout, so my head naturally occludes part of the letters. Keep the keywords readable and preserve my original face and recorded voice. Check mask edges and movement in the final video.',
+      forceNonPortrait
+        ? `- Place the subject cutout over the selected theme background (${spec.background}).`
+        : '- Keep the original video background when the source is already vertical. For other aspect ratios, plan the reframing and theme background around the subject.',
+      '- Do not add numbers, statistics, or claims that I did not say. Treat preview text, metrics, and UI as illustrations, never as factual source material.',
+      `- Keep effects clear of my face and captions.${fxArray.length ? ` Use ${effectNames} when the corresponding feature is discussed; space the effects across relevant moments rather than showing all at once.` : ' Do not add optional effects; focus on typography and keyword depth.'}`,
+      '- Show the supplied Instagram profile during the follow call to action. If the image or call to action is absent, flag it in the plan instead of inventing profile details or speech.',
+      '- Use the attached reference image to check composition, relative text size, color, and occlusion. Adapt placement to my actual head position; the gallery preview alone does not guarantee an identical result.',
+      '',
+      'Review the transcript and propose a timestamped edit plan first, including the exact phrases, keywords, selected effects, and missing assets. Wait for my approval before production. Then deliver the full-quality video, a lightweight phone version, and an SRT subtitle file.'
     ].join('\n');
   }
 
   return [
-    `Tolong edit video talking-head saya menggunakan skill mrlabs-video-editor dengan pengaturan berikut:`,
-    `- Tema Visual: ${spec.name} ("${selected}")`,
-    `- Posisi Caption: ${POS_LABELS[captionPos]}`,
-    `- Efek Video: ${fxDescriptions}`,
-    `- Kondisi Latar: ${bgCondition}`,
-    `- Config JSON: ${JSON.stringify(payload)}`
+    'Edit video talking-head saya menggunakan skill `$mrlabs-video-editor`.',
+    '',
+    'File video: [masukkan lokasi file video]',
+    'Profil Instagram: [masukkan lokasi gambar profil, jika ada]',
+    'Referensi visual: [lampirkan gambar referensi, jika ada]',
+    '',
+    `Gunakan tema **${themeName}** (\`${selected}\`)${creatorHook ? ' dengan gaya caption seperti referensi *Creator Hook*' : ''}:`,
+    '',
+    `- Letakkan caption percakapan berwarna putih, tebal, ${positions.id[captionPos]}. Gunakan potongan frasa pendek yang mengikuti waktu ucapan dan mudah dibaca.`,
+    `- Pada bagian penting, tampilkan **kata kunci ${creatorHook ? 'berwarna kuning' : `berwarna aksen tema (${spec.accent || spec.background})`} dengan ukuran sangat besar** di bawah caption percakapan. Pilih kata kunci dari isi ucapan; “EDIT AI”, “ORBIT”, atau “FOLLOW” hanya contoh, jangan dimasukkan jika tidak diucapkan.`,
+    '- Tempatkan kata besar **di belakang kepala dan badan saya** menggunakan cutout subjek, sehingga sebagian huruf tertutup secara alami oleh kepala. Pastikan kata tetap terbaca dan pertahankan wajah serta suara asli. Periksa tepi cutout dan pergerakannya pada hasil video.',
+    forceNonPortrait
+      ? `- Gunakan latar belakang tema (${spec.background}) di belakang cutout subjek sesuai pilihan saya.`
+      : '- Gunakan latar asli video jika sumber sudah vertikal. Untuk rasio lain, rencanakan penyesuaian framing dan latar tema dengan memperhatikan posisi subjek.',
+    '- Jangan tambahkan angka, statistik, atau klaim yang tidak saya ucapkan. Teks, metrik, dan UI di preview hanya ilustrasi, bukan sumber fakta untuk video.',
+    `- Sesuaikan posisi efek agar tidak menutupi wajah atau bertabrakan dengan caption.${fxArray.length ? ` Gunakan efek ${effectNames} pada saat fitur tersebut dibahas; sebarkan pada momen yang relevan, bukan ditampilkan sekaligus.` : ' Tanpa efek tambahan; fokus pada tipografi dan kedalaman kata kunci.'}`,
+    '- Tampilkan profil Instagram yang saya berikan pada bagian ajakan follow. Jika gambar atau ajakan follow tidak tersedia, catat dalam rencana tanpa mengarang identitas profil atau ucapan.',
+    '- Gunakan gambar referensi yang dilampirkan untuk memeriksa komposisi, perbandingan ukuran teks, warna, dan bagian huruf yang tertutup subjek. Sesuaikan posisi dengan kepala saya di video; preview galeri saja tidak menjamin hasil identik.',
+    '',
+    'Tinjau transkrip dan susun rencana edit bertimestamp terlebih dahulu, termasuk frasa persis, kata kunci, efek terpilih, dan aset yang belum tersedia. Tunggu persetujuan saya sebelum produksi. Setelah saya setujui, lanjutkan produksi dan berikan video kualitas penuh, versi ringan untuk ponsel, serta file subtitle SRT.'
   ].join('\n');
 }
 
