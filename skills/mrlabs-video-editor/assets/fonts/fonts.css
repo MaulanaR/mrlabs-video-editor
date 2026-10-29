@@ -8,3 +8,6 @@
 @font-face{font-family:"DM Serif Display";src:url("dmserifdisplay.ttf") format("truetype");font-weight:400;font-display:block;}
 @font-face{font-family:"IBM Plex Mono";src:url("ibmplexmono.ttf") format("truetype");font-weight:400;font-display:block;}
 @font-face{font-family:"Caveat";src:url("caveat.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Poppins";src:url("poppins.ttf") format("truetype");font-weight:700;font-display:block;}
+@font-face{font-family:"Roboto";src:url("roboto.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Helvetica";src:local("Helvetica"),local("Helvetica-Regular");font-weight:400;font-display:swap;}

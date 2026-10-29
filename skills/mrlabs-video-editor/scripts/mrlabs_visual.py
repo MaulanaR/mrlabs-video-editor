@@ -44,12 +44,16 @@ def mrlabs_css(theme):
         tokens[key.replace("_", "-")] = theme[key]
     for key in ("heading_font", "body_font", "label_font"):
         tokens[key.replace("_", "-")] = '"' + theme[key] + '"'
+        if theme[key] == "Helvetica":
+            tokens[key.replace("_", "-")] += ',"Roboto",sans-serif'
     for key in ("heading_weight", "caption_weight"):
         tokens[key.replace("_", "-")] = str(theme[key])
     for key in ("radius", "caption_size"):
         tokens[key.replace("_", "-")] = str(theme[key]) + "px"
     for key in ("title_rotation", "caption_rotation", "broll_rotation"):
         tokens[key.replace("_", "-")] = str(theme[key]) + "deg"
+    tokens["pattern"] = theme.get("pattern", "none")
+    tokens["pattern-size"] = theme.get("pattern_size", "auto")
     variables = ":root{" + ";".join("--" + key + ":" + value for key, value in tokens.items()) + "}"
     return font_css + variables + (MRLABS_ROOT / "assets/render-themes.css").read_text(encoding="utf-8")
 
@@ -139,6 +143,6 @@ def mrlabs_build(project, theme_id=None, safe=False):
     <script>const tl=gsap.timeline({{paused:true}});{''.join(timeline)}window.__timelines={{main:tl}};</script></body></html>'''
     (project / "index.html").write_text(document, encoding="utf-8")
     mrlabs_write(project / "hyperframes.json", {"width":1080,"height":1920,"fps":30})
-    mrlabs_write(project / "build-report.json", {"theme": theme["id"], "theme_edition": 2, "duration": duration, "safe_guide": safe,
+    mrlabs_write(project / "build-report.json", {"theme": theme["id"], "theme_edition": theme.get("edition", 2), "duration": duration, "safe_guide": safe,
                                                  "broll": references, "captions": len(words), "needs_visual_audio_review": True})
     return project / "index.html"

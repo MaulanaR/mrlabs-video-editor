@@ -1,8 +1,10 @@
 # MR Labs Video Editor
 
-Skill editor video asli dengan bahasa Indonesia sebagai default, dukungan Inggris/campuran, B-roll kontekstual, lima paket visual, 10 keluarga font OFL, dan 10 SFX CC0.
+Skill editor video asli dengan bahasa Indonesia sebagai default, dukungan Inggris/campuran, B-roll kontekstual, 10 paket visual, 12 keluarga font OFL + opsi Helvetica lokal, dan 10 SFX CC0.
 
 Skill berada di [`skills/mrlabs-video-editor/SKILL.md`](skills/mrlabs-video-editor/SKILL.md). Buka [`theme-gallery.html`](skills/mrlabs-video-editor/assets/theme-gallery.html) di browser untuk membandingkan paket, melihat font dan mendengarkan SFX. File galeri bekerja lokal tanpa akun. GitHub menampilkan source HTML; unduh/clone repo lalu buka file tersebut.
+
+Snapshot koleksi Original (edisi 02); galeri HTML memuat seluruh 10 tema terbaru.
 
 ![Lima paket visual MR Labs — edisi 02](skills/mrlabs-video-editor/assets/previews/themes-v2.png)
 
@@ -15,8 +17,13 @@ Hasil dan batas pengujian lokal: [`VALIDATION.md`](VALIDATION.md).
 | Maison Journal | Majalah ivory/wine untuk opini dan wawancara |
 | Playroom | Kolase lilac/butter untuk cerita kreatif dan edukasi ringan |
 | Blueprint Lab | Diagram navy/cyan untuk coding dan automation |
+| Peach Doodle | Coretan peach dengan bingkai organik |
+| Bubble Pop | Gelembung lilac/pink dan kapsul bulat |
+| Groovy Mint | Gelombang retro mint/lavender |
+| Sunny Picnic | Pola bunga kuning dan bentuk kelopak |
+| Orbit Candy | Orbit dan bintang di latar ungu malam |
 
-Kelima tema merupakan remake edisi 02. Galeri dan video memakai CSS preset yang sama. ID konfigurasi sebelumnya tetap didukung; lihat [pemetaan tema dan perilaku render](skills/mrlabs-video-editor/references/visual-packs.md).
+Lima tema Original merupakan remake edisi 02; lima tema Fun berpola ditambahkan pada edisi 03. Galeri dan video memakai CSS preset yang sama. Poppins Bold (700), Roboto (400) dan Roboto Light (300) dibundel; Helvetica memakai font lokal berlisensi dengan fallback Roboto. ID konfigurasi sebelumnya tetap didukung; lihat [pemetaan tema dan perilaku render](skills/mrlabs-video-editor/references/visual-packs.md).
 
 Untuk Codex atau agen kompatibel, arahkan ke `SKILL.md`, atau salin folder skill ke direktori skill pribadi lalu invoke `$mrlabs-video-editor`. Penempatan repo tidak otomatis memasang skill ke semua aplikasi.
 

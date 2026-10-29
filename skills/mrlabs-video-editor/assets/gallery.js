@@ -1,6 +1,13 @@
 let selected='signal-clean',language='id';
 const config=document.querySelector('#config'),status=document.querySelector('.status');
 const frames=[...document.querySelectorAll('iframe')];
+document.fonts.load('400 28px "Helvetica"').then(faces=>{
+  document.querySelector('#helvetica-status').textContent=faces.length
+    ?'Helvetica lokal tersedia. File font tidak dibundel.'
+    :'Helvetica belum tersedia; contoh ini memakai Roboto.';
+}).catch(()=>{
+  document.querySelector('#helvetica-status').textContent='Helvetica belum tersedia; contoh ini memakai Roboto.';
+});
 function update(){config.value=JSON.stringify({theme:selected,language});}
 function translateFrame(frame){
   const doc=frame.contentDocument;

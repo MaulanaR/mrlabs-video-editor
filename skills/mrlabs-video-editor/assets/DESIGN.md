@@ -11,3 +11,18 @@ All five directions are a complete remake. Theme IDs stay stable for existing pr
 | Blueprint Lab | Technical navy canvas, thin cyan drafting lines, clipped-corner footage frame, monospaced annotations and a left-ruled caption panel. | Navy #071E29, cyan #78ECDE, fog #E4F6F4 | Space Grotesk + IBM Plex Mono | Horizontal reveal with decisive stop |
 
 Do not add film grain, fake metrics, fabricated profile data, or replace the source room. Decorative framing must not crop the original subject. B-roll labels, title, captions and attribution have separate conservative portrait zones. Synthetic gallery illustrations demonstrate graphic treatment only; they are not user footage or factual diagrams. Keep narration and timing unchanged when switching theme. Preview entrances are replayable; production uses the deterministic GSAP timeline.
+
+
+## Edition 03 — Fun collection
+
+Keep the original five token sets unchanged. New directions favor curved silhouettes, organic frames, repeat patterns and solid readable caption plates. Poppins Bold is the actual 700 face; Roboto Light is weight 300 of the bundled variable font. Helvetica is optional local-only, never silently represented as a bundled font.
+
+| Direction | Palette / pattern | Type / shapes |
+|---|---|---|
+| Peach Doodle | Peach #FFF1E6, coral #B3432C; loose scribbles and sparkles | Fraunces + DM Sans; dashed organic insert, speech-tail caption |
+| Bubble Pop | Lilac #F0E8FD, pink #FFC5E4, plum #43215F; bubbles and dots | Poppins Bold + Roboto; floating capsules and oval insert |
+| Groovy Mint | Mint #E1F5D0, lavender #C6A9EF, green #304F38; rolling waves | Bricolage + DM Sans; soft asymmetrical pebble shapes |
+| Sunny Picnic | Cream #FFF7D1, butter #FFCB66, brown #673B20; daisies and pollen | Poppins Bold + Roboto; petal curves and dotted edging |
+| Orbit Candy | Navy-purple #211B4B, lilac #3A3066, pink #FFB8CA; orbits and stars | Roboto 700 + 300; elliptical insert and rounded caption plate |
+
+Patterns are embedded vector tile assets, not generated example media. In the gallery they fill the background. On original footage decorative pattern overlays are restricted to top/bottom margins, leaving the presenter area clear. No production sample is requested for this edition.

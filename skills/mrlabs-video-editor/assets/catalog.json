@@ -280,6 +280,48 @@
       "publisher_page": "https://kenney.nl/assets/interface-sounds",
       "archive_entry": "Audio/switch_001.ogg",
       "archive_sha256": "f2193d072726d6758a5f7871b2dcc54dcce0d5c35c6f0a62f92549b327c81232"
+    },
+    {
+      "file": "assets/fonts/poppins.ttf",
+      "sha256": "983676516167748b74de6f4771fb384c664fd913acb8b471122ecacf5da5ea6c",
+      "bytes": 155996,
+      "kind": "font",
+      "family": "Poppins",
+      "id": "poppins",
+      "license": "OFL-1.1",
+      "license_file": "assets/fonts/poppins-OFL.txt",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/9862abc066c9b83bf84c3e8ed1fc2d8d48f9bbf0/ofl/poppins/Poppins-Bold.ttf",
+      "source_page": "https://github.com/google/fonts/tree/9862abc066c9b83bf84c3e8ed1fc2d8d48f9bbf0/ofl/poppins",
+      "upstream_filename": "Poppins-Bold.ttf",
+      "specimens": [
+        {
+          "label": "Poppins Bold",
+          "weight": 700
+        }
+      ]
+    },
+    {
+      "file": "assets/fonts/roboto.ttf",
+      "sha256": "d7598e12c5dbef095ff8272cfc55da0250bd07fbdecbac8a530b9b277872a134",
+      "bytes": 488584,
+      "kind": "font",
+      "family": "Roboto",
+      "id": "roboto",
+      "license": "OFL-1.1",
+      "license_file": "assets/fonts/roboto-OFL.txt",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/9862abc066c9b83bf84c3e8ed1fc2d8d48f9bbf0/ofl/roboto/Roboto%5Bwdth%2Cwght%5D.ttf",
+      "source_page": "https://github.com/google/fonts/tree/9862abc066c9b83bf84c3e8ed1fc2d8d48f9bbf0/ofl/roboto",
+      "upstream_filename": "Roboto[wdth,wght].ttf",
+      "specimens": [
+        {
+          "label": "Roboto",
+          "weight": 400
+        },
+        {
+          "label": "Roboto Light",
+          "weight": 300
+        }
+      ]
     }
   ]
 }

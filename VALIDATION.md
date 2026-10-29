@@ -1,3 +1,17 @@
+# Fun collection and fonts — 2026-10-29
+
+Scope: five additional theme definitions and gallery updates only. No image generation, example video, HyperFrames composition build or MP4 render was run for this addition, as requested.
+
+- Ten unique themes; the original five token objects match the committed edition 02 exactly.
+- New patterns and organic frame styles are shared CSS/token assets, displayed with typographic placeholders in the gallery.
+- Browser checked at desktop 1560px and mobile 390px; no horizontal overflow. New English sample title/insert/caption/credit regions remain separate and within the established safe area. Indonesian desktop gallery inspected visually.
+- Theme selection, ID/EN switch and replay work. Browser console: no errors or warnings.
+- Poppins Bold 700, Roboto 400 and Roboto Light 300 shown with the correct family/weight. Helvetica was unavailable locally; the explicit Roboto fallback notice displayed correctly. No proprietary font file was downloaded or redistributed.
+- 22 bundled assets (12 font families and 10 SFX) passed SHA-256/license checks. Poppins and Roboto use pinned Google Fonts sources and original OFL text.
+- Skill validator passed; 10 existing behavioral tests passed. Five new themes have not been verified in encoded video.
+
+Local-only QA screenshot: `output/verification/fun-gallery.png`. Earlier render evidence below applies only to the Original collection. This addition has not been committed or pushed.
+
 # Theme remake validation — 2026-10-29
 
 All five visual directions were remade: Atlas Studio, Voltage Pop, Maison Journal, Playroom and Blueprint Lab. Stable configuration IDs are preserved. The gallery and video builder share `assets/render-themes.css`; HTML gallery specimens are generated from the same palette/type catalog. Test footage is synthetic, not a user production video.

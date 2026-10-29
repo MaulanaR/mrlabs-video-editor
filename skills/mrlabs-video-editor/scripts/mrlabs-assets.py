@@ -16,6 +16,7 @@ FONTS = [
     ("bricolagegrotesque", "Bricolage Grotesque"), ("fraunces", "Fraunces"),
     ("instrumentserif", "Instrument Serif"), ("dmserifdisplay", "DM Serif Display"),
     ("ibmplexmono", "IBM Plex Mono"), ("caveat", "Caveat"),
+    ("poppins", "Poppins"), ("roboto", "Roboto"),
 ]
 SOUNDS = ["click_001", "confirmation_001", "open_001", "close_001", "maximize_001",
           "minimize_001", "glitch_001", "pluck_001", "scroll_001", "switch_001"]
@@ -44,6 +45,8 @@ def mrlabs_collect():
         if not candidates:
             raise ValueError(f"No upright TTF: {family}")
         selected = next((name for name in candidates if "Regular" in name or "[" in name), candidates[0])
+        if slug == "poppins":
+            selected = "Poppins-Bold.ttf"
         url = base + quote(selected)
         target = ROOT / "assets" / "fonts" / f"{slug}.ttf"
         data = mrlabs_fetch(url)
@@ -59,8 +62,11 @@ def mrlabs_collect():
                                       license_file=license_path.relative_to(ROOT).as_posix(), source_url=url,
                                       source_page=f"https://github.com/google/fonts/tree/{REF}/ofl/{slug}",
                                       upstream_filename=selected))
+        if slug in ("poppins", "roboto"):
+            records[-1]["specimens"] = ([{"label": "Poppins Bold", "weight": 700}] if slug == "poppins" else
+                                       [{"label": "Roboto", "weight": 400}, {"label": "Roboto Light", "weight": 300}])
         variable = "[" in selected
-        weight = "100 900" if variable else "400"
+        weight = "100 900" if variable else ("700" if slug == "poppins" else "400")
         css.append(f'@font-face{{font-family:"{family}";src:url("{slug}.ttf") format("truetype");font-weight:{weight};font-display:block;}}')
         print(f"FONT {family}", flush=True)
     archive_bytes = mrlabs_fetch(PACK)
@@ -79,6 +85,7 @@ def mrlabs_collect():
                                       source_page="https://opengameart.org/content/interface-sounds",
                                       publisher_page="https://kenney.nl/assets/interface-sounds",
                                       archive_entry=entry, archive_sha256=hashlib.sha256(archive_bytes).hexdigest()))
+    css.append('@font-face{font-family:"Helvetica";src:local("Helvetica"),local("Helvetica-Regular");font-weight:400;font-display:swap;}')
     (ROOT / "assets" / "fonts" / "fonts.css").write_text("\n".join(css) + "\n", encoding="utf-8")
     (ROOT / "assets" / "catalog.json").write_text(json.dumps({"schema": 1, "assets": records}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Collected {len(FONTS)} font families and {len(SOUNDS)} SFX.")

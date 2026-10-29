@@ -1,6 +1,6 @@
 ---
 name: mrlabs-video-editor
-description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, five MR Labs visual packs, local open-license fonts and SFX, and final-render verification. Use for original-video editing, subtitle styling, or choosing these visual packs; not for creating a faceless video from a topic alone.
+description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, ten MR Labs visual packs, local open-license fonts and SFX, and final-render verification. Use for original-video editing, subtitle styling, or choosing these visual packs; not for creating a faceless video from a topic alone.
 ---
 
 # MR Labs Video Editor
@@ -33,7 +33,7 @@ Use Python 3.10+, Node 22+, FFmpeg/ffprobe, faster-whisper and Pillow. Read [ref
 
 ## Visual choice
 
-Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs help choosing. The local gallery has ID/EN examples, five layouts, replayable motion, all ten fonts, and ten playable SFX. Edition 02 remakes all five directions while keeping existing configuration IDs. Theme tokens live in [assets/themes.json](assets/themes.json); the gallery and video builder share [assets/render-themes.css](assets/render-themes.css). Read [assets/DESIGN.md](assets/DESIGN.md) before changing these visual directions.
+Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs help choosing. The local gallery has ID/EN examples, ten layouts, replayable motion, twelve bundled font families plus optional local Helvetica, and ten playable SFX. Edition 03 adds five patterned Fun directions while preserving all five Original directions and configuration IDs. Theme tokens live in [assets/themes.json](assets/themes.json); the gallery and video builder share [assets/render-themes.css](assets/render-themes.css). Read [assets/DESIGN.md](assets/DESIGN.md) before changing these visual directions.
 
 | Theme | Use |
 |---|---|
@@ -42,6 +42,11 @@ Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs 
 | Maison Journal / `editorial-noir` | Opinions/interviews; ivory and wine, centered serif, gallery mat |
 | Playroom / `warm-story` | Creative stories; lilac and butter, rounded notes, playful collage |
 | Blueprint Lab / `tech-grid` | Coding/data/automation; navy and cyan, drafting lines, monospace captions |
+| Peach Doodle / `peach-doodle` | Peach doodles, soft speech-tail caption, dashed organic frame |
+| Bubble Pop / `bubble-pop` | Lilac bubbles, Poppins Bold headings, round capsules |
+| Groovy Mint / `groovy-mint` | Mint rolling waves, asymmetrical pebble shapes |
+| Sunny Picnic / `sunny-picnic` | Yellow floral pattern, petal-like curves, Poppins Bold |
+| Orbit Candy / `orbit-candy` | Purple orbital rings, ellipse frame, Roboto Light captions |
 
 Read [references/visual-packs.md](references/visual-packs.md) for treatment details. Choose one coherent pack unless the brief calls for a purposeful section change. Font, accent, geometry, caption and motion differ; do not present palette swaps as new themes.
 

@@ -62,3 +62,49 @@ video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;ob
 [data-theme="tech-grid"] .broll:not(.full){border:3px solid var(--accent);padding:16px;clip-path:polygon(0 0,94% 0,100% 12%,100% 100%,6% 100%,0 88%)}
 [data-theme="tech-grid"] .broll-label{border-top:2px solid var(--accent);font-size:22px;color:var(--accent)}
 [data-theme="tech-grid"] .credit{border-bottom:2px solid var(--accent);color:var(--accent);font-size:22px}
+
+/* FUN COLLECTION / organic shapes with locally embedded repeating patterns. */
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) {background-color:var(--background);background-image:var(--pattern);background-size:var(--pattern-size)}
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) .preview-bg{background:transparent}
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) .art-direction::after{content:"";position:absolute;inset:0;background-image:var(--pattern);background-size:var(--pattern-size);mask-image:linear-gradient(#000 0 190px,transparent 190px 1500px,#000 1500px)}
+.preview-bg ~ .art-direction::after{background-image:none}
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) .brand{border-radius:80px;padding:16px 32px;font-size:30px;letter-spacing:.05em;background:var(--panel)}
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) .title{border-radius:70px;rotate:var(--title-rotation);text-align:center;padding:24px 30px}
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) .caption{rotate:var(--caption-rotation);text-align:center;padding:22px 30px}
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) .broll:not(.full){rotate:var(--broll-rotation);border-width:10px}
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) .broll-label{border-radius:40px;text-align:center;left:40px;right:40px;bottom:20px;font-size:23px}
+:is([data-theme="peach-doodle"],[data-theme="bubble-pop"],[data-theme="groovy-mint"],[data-theme="sunny-picnic"],[data-theme="orbit-candy"]) .credit{border-radius:40px;padding:8px 20px}
+
+/* Peach: hand-drawn oval edges, little speech-tail and soft offset shadow. */
+[data-theme="peach-doodle"] .brand{rotate:-5deg;border:3px dashed var(--accent)}
+[data-theme="peach-doodle"] .title{border-radius:28% 20% 24% 18% / 26% 32% 20% 25%;border-bottom:6px solid var(--accent)}
+[data-theme="peach-doodle"] .broll:not(.full){border-radius:24% 16% 22% 19% / 30% 24% 26% 21%;border:8px dashed var(--accent);box-shadow:12px 12px 0 var(--panel)}
+[data-theme="peach-doodle"] .caption{border:3px solid var(--accent);border-radius:55px 75px 65px 20px;box-shadow:7px 9px 0 #E4AB8C}
+[data-theme="peach-doodle"] .caption::after{content:"";position:absolute;bottom:-17px;left:52px;width:30px;height:30px;background:var(--panel);border-right:3px solid var(--accent);border-bottom:3px solid var(--accent);rotate:35deg;border-radius:0 0 12px 0}
+
+/* Bubble: floating capsules and an elliptical insert. */
+[data-theme="bubble-pop"] .brand{border:4px solid var(--accent);box-shadow:0 7px 0 #D7ACDD}
+[data-theme="bubble-pop"] .title{border-radius:110px 110px 70px 110px;background:var(--panel);box-shadow:0 13px 0 #D7ACDD;letter-spacing:-.05em}
+[data-theme="bubble-pop"] .broll:not(.full){border-radius:48% 48% 42% 42% / 42% 48% 44% 46%;border-color:var(--accent);box-shadow:0 16px 0 #D7ACDD}
+[data-theme="bubble-pop"] .caption{border:4px solid var(--accent);box-shadow:0 10px 0 #D7ACDD}
+
+/* Groovy: asymmetrical soft pebble silhouettes and a broad flowing underline. */
+[data-theme="groovy-mint"] .brand{border-radius:40% 60% 45% 55%;rotate:-4deg;font-size:34px}
+[data-theme="groovy-mint"] .title{border-radius:100px 35px 100px 45px;border-bottom:10px solid var(--panel);line-height:1.08}
+[data-theme="groovy-mint"] .broll:not(.full){border-radius:110px 55px 125px 70px / 90px 75px 120px 60px;border-color:var(--accent);box-shadow:10px 13px 0 #B2CF9D}
+[data-theme="groovy-mint"] .caption{background:var(--background);border:4px solid var(--accent);border-radius:70px 25px 70px 25px;box-shadow:9px 9px 0 var(--panel)}
+
+/* Sunny: petal-like lobes, a gentle arch and a scalloped label edge. */
+[data-theme="sunny-picnic"] .brand{border:5px dotted var(--accent);font-size:34px;rotate:3deg}
+[data-theme="sunny-picnic"] .title{border-radius:100px 100px 45px 45px;border-bottom:6px dotted var(--accent)}
+[data-theme="sunny-picnic"] .broll:not(.full){border-radius:170px 170px 95px 95px / 130px 130px 80px 80px;border:12px solid var(--panel);box-shadow:0 0 0 4px var(--accent),10px 14px 0 #E7B953}
+[data-theme="sunny-picnic"] .caption{border:5px dotted var(--accent);border-radius:75px 40px 75px 40px}
+[data-theme="sunny-picnic"] .credit{background:var(--panel)}
+
+/* Orbit: planetary capsule, twin orbital outlines and soft comet-tail corners. */
+[data-theme="orbit-candy"] .brand{border:2px solid var(--accent);border-radius:50%;padding:22px 40px;rotate:-8deg}
+[data-theme="orbit-candy"] .title{border-radius:80px 140px 80px 140px;border:2px solid #756498;background:var(--panel);font-weight:700;letter-spacing:-.04em}
+[data-theme="orbit-candy"] .broll:not(.full){left:110px;width:770px;top:705px;height:420px;border-radius:50%;border:5px solid var(--accent);box-shadow:0 0 0 12px #211B4B,0 0 0 15px #8E76AC}
+[data-theme="orbit-candy"] .caption{border:2px solid var(--accent);box-shadow:0 10px 24px #110E30}
+[data-theme="orbit-candy"] .broll-label{bottom:32px;left:80px;right:80px}
+[data-theme="orbit-candy"] .credit{border:1px solid #8E76AC}
