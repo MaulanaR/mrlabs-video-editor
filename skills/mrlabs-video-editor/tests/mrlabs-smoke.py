@@ -55,7 +55,8 @@ def mrlabs_main():
                  "rights_verified":True,"status":"approved","role":"illustration","mode":"full"}]})
     mrlabs_write(project / "visual.json", {"titles":[{"text":"Contoh sintetis / Synthetic demo","start":.15,"end":1.4}],
                                           "sfx":[{"id":"click_001","time":.7,"gain":.1}]})
-    for theme in mrlabs_read(SKILL / "assets/themes.json")["themes"]:
+    themes = mrlabs_read(SKILL / "assets/themes.json")["themes"]
+    for theme in themes:
         config = {**MRLABS_DEFAULTS,"theme":theme["id"]}
         mrlabs_write(project / "project.json", config)
         mrlabs_build(project)
@@ -64,7 +65,7 @@ def mrlabs_main():
         print(f"BUILT {theme['id']}", flush=True)
     mrlabs_write(project / "project.json", MRLABS_DEFAULTS)
     mrlabs_build(project)
-    result = {"synthetic_source_unchanged":mrlabs_hash(source)==original_hash,"theme_count":5,
+    result = {"synthetic_source_unchanged":mrlabs_hash(source)==original_hash,"theme_count":len(themes),
               "broll_modes_tested":["image-pip","video-full"],"assembly_segments":2}
     if args.asr:
         result["asr"] = {}

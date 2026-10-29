@@ -1,20 +1,48 @@
 /* One geometry source for both the gallery and the video builder. 1080 x 1920. */
 *{box-sizing:border-box}
-body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--background)}
-#main{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--foreground);font-family:var(--body-font)}
-video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:var(--grade)}
-.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,transparent 42%,#0002);z-index:1}
+body{margin:0;width:1080px;height:1920px;overflow:hidden;background:var(--canvas-background,var(--background))}
+#main{position:relative;width:1080px;height:1920px;overflow:hidden;color:var(--foreground);font-family:var(--body-font);perspective:1200px}
+video.base,video.subject,img.base,img.subject{position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:var(--grade);transform-origin:50% 42%;transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .3s ease}
+video.base,img.base{z-index:1}
+video.subject,img.subject{z-index:3;pointer-events:none}
+
+/* Portrait condition: when source video already supports portrait, skip the theme background canvas. */
+#main[data-portrait="true"]{background:transparent!important;background-image:none!important}
+#main[data-portrait="true"] .art-direction::after{background-image:none!important;content:none}
+#main[data-portrait="true"] video.base,#main[data-portrait="true"] img.base{inset:0;width:1080px;height:1920px;object-fit:cover;opacity:1}
+#main[data-portrait="false"]{background-color:var(--background)}
+#main[data-portrait="false"] video.base{object-fit:contain}
+/* In preview mode, toggling non-portrait hides the original room background so the cutout stands on the White/Black/Theme background */
+#main[data-portrait="false"] img.base{opacity:0}
+
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,#0003,transparent 42%,#0004);z-index:1;pointer-events:none}
 .art-direction{position:absolute;inset:0;z-index:2;pointer-events:none}
 .brand{position:absolute;top:240px;left:65px;z-index:8;font:500 26px var(--label-font);letter-spacing:.12em;color:var(--foreground);background:var(--background);padding:14px 20px}
 .credit{position:absolute;top:1420px;left:65px;z-index:8;font:500 22px/1.2 var(--body-font);color:var(--foreground);background:var(--background);padding:8px 14px}
 .title{position:absolute;top:350px;left:65px;width:880px;font:var(--heading-weight) 112px/1.02 var(--heading-font);letter-spacing:-.045em;z-index:7;color:var(--foreground);background:var(--background);padding:24px 28px;overflow-wrap:anywhere;white-space:pre-line}
-.caption{position:absolute;left:65px;top:1180px;width:880px;z-index:9;text-align:left;font:var(--caption-weight) var(--caption-size)/1.2 var(--body-font);color:var(--caption-foreground);background:var(--caption-background);padding:24px 30px;border-radius:var(--radius);overflow-wrap:anywhere}
+.title-kicker,.title-hero{display:block}
+.caption{position:absolute;left:65px;top:1180px;width:880px;z-index:9;text-align:left;font:var(--caption-weight) var(--caption-size)/1.2 var(--body-font);color:var(--caption-foreground);background:var(--caption-background);padding:24px 30px;border-radius:var(--radius);overflow-wrap:anywhere;transition:top .3s cubic-bezier(.22,1,.36,1)}
 .caption span{display:inline}.caption .active{color:var(--highlight)}
 .broll{position:absolute;left:90px;top:690px;width:810px;height:456px;border:3px solid var(--accent);border-radius:var(--radius);overflow:hidden;z-index:6;background:var(--background)}
 .broll img,.broll video{width:100%;height:100%;object-fit:cover}
 .broll-label{position:absolute;bottom:18px;left:18px;right:18px;font:500 24px var(--body-font);color:var(--foreground);background:var(--background);padding:10px 14px}
 .broll.full{inset:0;width:1080px;height:1920px;border:0;border-radius:0;z-index:4}
 .broll.full .broll-label{bottom:800px;left:65px;right:135px}
+
+/* CAPTION POSITION OPTIONS:
+   1. above-head: Di atas kepala presenter (top: ~310px)
+   2. below-face / chest-float: Di bawah muka / di depan dada presenter (top: ~1050px)
+   3. bottom: Di bagian bawah layar (top: ~1250px) */
+#main[data-caption-pos="above-head"] .brand{top:215px}
+#main[data-caption-pos="above-head"] .caption{top:var(--caption-top,310px)!important;left:65px;width:950px;text-align:center}
+#main[data-caption-pos="above-head"] .broll:not(.full){top:885px;height:280px}
+#main[data-caption-pos="above-head"]:not([data-talking-head="true"]) .title{top:1195px;font-size:66px;line-height:1.06;padding:18px 26px}
+#main[data-caption-pos="above-head"][data-talking-head="true"] .title{top:435px}
+#main[data-caption-pos="above-head"][data-talking-head="true"] .title-kicker{display:none}
+
+#main:is([data-caption-pos="below-face"],[data-caption-pos="chest-float"]) .caption{top:1050px!important;left:50px;width:980px;text-align:center}
+#main[data-caption-pos="bottom"] .caption{top:1265px!important;left:65px;width:950px;text-align:center}
+
 .safe{position:absolute;inset:0;z-index:100;pointer-events:none;border-top:220px solid #ff000044;border-bottom:450px solid #ff000044;border-left:35px solid #ff000044;border-right:35px solid #ff000044}
 
 /* ATLAS / flush left, indexed red rule, square documentary insert. */
@@ -108,3 +136,110 @@ video.base,video.subject{position:absolute;inset:0;width:1080px;height:1920px;ob
 [data-theme="orbit-candy"] .caption{border:2px solid var(--accent);box-shadow:0 10px 24px #110E30}
 [data-theme="orbit-candy"] .broll-label{bottom:32px;left:80px;right:80px}
 [data-theme="orbit-candy"] .credit{border:1px solid #8E76AC}
+
+/* PRO TALKING-HEAD COLLECTION:
+   - Setup line above head + massive hero metric/word behind the subject's head (z-index: 2 under subject z-index: 3).
+   - Frameless floating caption below face / across the chest (top: 1050px, no box).
+   - White/Black studio background when video is non-portrait; transparent when video is already portrait. */
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .shade{background:linear-gradient(180deg,#0000004d 0%,transparent 34%,transparent 62%,#00000080 100%)}
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .brand{top:215px;left:65px;width:950px;text-align:center;background:transparent;border:0;box-shadow:none;padding:0;font-size:21px;letter-spacing:.22em;color:#ffffff8c;text-shadow:0 2px 12px #0009}
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .title{top:410px;left:40px;width:1000px;z-index:2;text-align:center;background:transparent;border:0;box-shadow:none;padding:0;color:var(--accent);font-size:212px;line-height:.92;letter-spacing:-.055em;text-shadow:0 10px 36px #00000059}
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .title-kicker{font:700 54px/1.12 var(--body-font);letter-spacing:-.035em;color:#FFFFFF;margin-bottom:6px;text-shadow:0 4px 20px #00000099}
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .title-hero{font:var(--heading-weight) 220px/.9 var(--heading-font);letter-spacing:-.055em;color:var(--accent);text-shadow:0 12px 36px #00000066}
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .caption{top:1050px;left:50px;width:980px;z-index:9;text-align:center;background:transparent;border:0;box-shadow:none;padding:0 20px;font:var(--caption-weight) var(--caption-size)/1.12 var(--body-font);letter-spacing:-.035em;color:#FFFFFF;text-shadow:0 5px 24px #000000cc,0 2px 8px #000000a6}
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .credit{top:1430px;left:65px;width:950px;text-align:center;background:transparent;border:0;box-shadow:none;padding:0;color:#ffffff80;font-size:21px;letter-spacing:.05em;text-shadow:0 2px 10px #0009}
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .broll:not(.full){top:1140px;left:140px;width:800px;height:260px;border:1px solid #ffffff33;border-radius:20px;box-shadow:0 20px 44px #00000080}
+:is([data-theme="obsidian-studio"],[data-theme="verge-glass"],[data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .broll-label{background:#0a0a0acc;border-radius:10px;color:#FFFFFF;font-size:20px}
+
+/* Per-theme typographic tuning & non-portrait White/Black background contrast */
+[data-theme="verge-glass"] .title-hero{font-size:186px;letter-spacing:-.05em}
+[data-theme="monocle-brief"] .title-hero{font-size:214px;letter-spacing:-.03em}
+[data-theme="kinfolk-linen"] .title-hero{font-size:202px;letter-spacing:-.02em}
+[data-theme="founder-slate"] .title-hero{font-size:194px;letter-spacing:-.05em}
+#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .title-kicker,
+#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .brand,
+#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .credit{color:var(--ink);text-shadow:none}
+#main[data-portrait="false"][data-caption-pos="above-head"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"]) .caption{color:var(--ink);text-shadow:0 2px 12px #ffffffcc}
+#main[data-portrait="false"][data-theme="monocle-brief"] .title-hero{color:#14532D;text-shadow:none}
+#main[data-portrait="false"][data-theme="kinfolk-linen"] .title-hero{color:#8C5238;text-shadow:none}
+#main[data-portrait="false"][data-theme="founder-slate"] .title-hero{color:#2563EB;text-shadow:none}
+
+/* ==========================================================================
+   5 VIRAL TALKING-HEAD EFFECTS:
+   1. ORBIT (data-fx-orbit="true")
+   2. UI WORLD (data-fx-ui-world="true")
+   3. DIGITAL ZOOM (data-fx-digital-zoom="true")
+   4. HEADLINE WALL (data-fx-headline-wall="true")
+   5. PULL BACK REVEAL (data-fx-pull-back-reveal="true")
+   ========================================================================== */
+.fx-layer{display:contents}
+.fx-item{display:none;pointer-events:none}
+
+/* 1. ORBIT: 3D cards circling behind (z-index: 2) and in front of (z-index: 8) the speaker (z-index: 3) */
+#main[data-fx-orbit="true"] .fx-orbit-card,.fx-orbit-card.fx-active{display:flex;flex-direction:column;justify-content:space-between;position:absolute;top:760px;left:350px;width:380px;height:210px;padding:22px 26px;border-radius:24px;background:rgba(14,16,22,.88);backdrop-filter:blur(14px);border:2px solid var(--accent);color:#FFFFFF;box-shadow:0 24px 48px rgba(0,0,0,.55);animation:fxOrbitLoop 7.5s cubic-bezier(.42,0,.58,1) infinite}
+.fx-orbit-card.card-2{animation-delay:-2.5s}
+.fx-orbit-card.card-3{animation-delay:-5s}
+.fx-orbit-card .orb-tag{display:inline-flex;align-items:center;gap:8px;font:700 18px var(--label-font);letter-spacing:.12em;color:var(--accent);text-transform:uppercase}
+.fx-orbit-card .orb-val{font:800 54px/1 var(--heading-font);letter-spacing:-.04em;color:#FFFFFF}
+.fx-orbit-card .orb-sub{font:500 22px/1.2 var(--body-font);color:#d4d4d8}
+@keyframes fxOrbitLoop{
+  0%{transform:translate3d(-350px,-20px,0) scale(.86) rotateY(-18deg);z-index:2;filter:brightness(.82)}
+  24%{transform:translate3d(0,-135px,-160px) scale(.7) rotateY(0deg);z-index:2;filter:brightness(.65) blur(1px)}
+  49%{transform:translate3d(350px,-20px,0) scale(.86) rotateY(18deg);z-index:2;filter:brightness(.85)}
+  50%{transform:translate3d(350px,-15px,0) scale(.88) rotateY(18deg);z-index:8;filter:brightness(.95)}
+  75%{transform:translate3d(0,130px,160px) scale(1.08) rotateY(0deg);z-index:8;filter:brightness(1.06)}
+  99%{transform:translate3d(-350px,-15px,0) scale(.88) rotateY(-18deg);z-index:8;filter:brightness(.9)}
+  100%{transform:translate3d(-350px,-20px,0) scale(.86) rotateY(-18deg);z-index:2;filter:brightness(.82)}
+}
+
+/* 2. UI WORLD: Top-half interactive AI / Claude workflow window acting out the process */
+#main[data-fx-ui-world="true"] .fx-ui-world,.fx-ui-world.fx-active{display:flex;flex-direction:column;gap:16px;position:absolute;top:150px;left:60px;width:960px;padding:24px 28px 28px;border-radius:30px;background:rgba(12,14,19,.9);backdrop-filter:blur(18px);border:2px solid rgba(255,255,255,.18);box-shadow:0 28px 70px rgba(0,0,0,.65);z-index:7;color:#F8FAFC;animation:fxUiFloat 4s ease-in-out infinite alternate}
+#main[data-fx-ui-world="true"] .title,#main[data-fx-ui-world="true"] .brand{opacity:0;pointer-events:none}
+.fx-ui-bar{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.12);font:600 20px var(--label-font);color:#94A3B8}
+.fx-ui-dots{display:flex;gap:10px}.fx-ui-dots i{width:14px;height:14px;border-radius:50%;display:inline-block}
+.fx-ui-dots i:nth-child(1){background:#EF4444}.fx-ui-dots i:nth-child(2){background:#F59E0B}.fx-ui-dots i:nth-child(3){background:#10B981}
+.fx-ui-badge{padding:6px 14px;border-radius:99px;background:rgba(16,185,129,.18);color:#34D399;font:700 17px var(--label-font);letter-spacing:.08em}
+.fx-ui-prompt{padding:16px 20px;border-radius:18px;background:rgba(255,255,255,.07);border-left:5px solid var(--accent);font:600 24px/1.3 var(--body-font);color:#FFFFFF}
+.fx-ui-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.fx-ui-step{padding:16px 18px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.fx-ui-step b{display:block;font:700 19px var(--label-font);color:var(--accent);margin-bottom:6px}
+.fx-ui-step span{font:600 21px/1.25 var(--body-font);color:#E2E8F0}
+@keyframes fxUiFloat{from{transform:translateY(0)}to{transform:translateY(-10px)}}
+
+/* 3. DIGITAL ZOOM: Dynamic punch-in scale on presenter & background + focus HUD */
+#main[data-fx-digital-zoom="true"] video.base,
+#main[data-fx-digital-zoom="true"] video.subject,
+#main[data-fx-digital-zoom="true"] img.base,
+#main[data-fx-digital-zoom="true"] img.subject{animation:fxDigitalZoom 4.2s cubic-bezier(.22,1,.36,1) infinite}
+#main[data-fx-digital-zoom="true"] .fx-zoom-hud,.fx-zoom-hud.fx-active{display:flex;align-items:center; justify-content:space-between;position:absolute;inset:125px 45px 420px 45px;border:2px dashed rgba(255,255,255,.28);border-radius:28px;z-index:8;padding:20px 26px;align-items:flex-start}
+.fx-zoom-pill{background:var(--accent);color:var(--ink,#0A0A0A);font:800 20px var(--label-font);letter-spacing:.12em;padding:8px 18px;border-radius:99px;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+@keyframes fxDigitalZoom{
+  0%,15%{transform:scale(1) translateY(0)}
+  35%,72%{transform:scale(1.24) translateY(42px)}
+  92%,100%{transform:scale(1) translateY(0)}
+}
+
+/* 4. HEADLINE WALL: Newspaper & editorial clippings sticking to the wall BEHIND the speaker (z-index: 2) */
+#main[data-fx-headline-wall="true"] .fx-headline-card,.fx-headline-card.fx-active{display:block;position:absolute;width:445px;padding:20px 24px;background:#F6F2E7;color:#141413;border:2px solid #262522;box-shadow:0 18px 38px rgba(0,0,0,.45);z-index:2;animation:fxWallPop .55s cubic-bezier(.2,.9,.25,1) both}
+.fx-headline-card.hw-1{top:385px;left:42px;rotate:-5deg;animation-delay:.05s}
+.fx-headline-card.hw-2{top:375px;right:42px;rotate:4.5deg;animation-delay:.18s}
+.fx-headline-card.hw-3{top:635px;left:38px;rotate:3.5deg;animation-delay:.32s}
+.fx-headline-card.hw-4{top:625px;right:38px;rotate:-4deg;animation-delay:.46s}
+.fx-headline-card small{display:block;font:800 16px var(--label-font);letter-spacing:.16em;color:#57534E;border-bottom:2px solid #141413;padding-bottom:6px;margin-bottom:10px}
+.fx-headline-card strong{display:inline;font:800 28px/1.18 var(--heading-font);color:#141413;background:linear-gradient(180deg,transparent 55%,var(--accent) 55% 92%,transparent 92%)}
+@keyframes fxWallPop{from{opacity:0;transform:scale(1.28) translateY(-24px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+/* 5. PULL BACK REVEAL: Camera pulls back into a desktop NLE video editor interface */
+#main[data-fx-pull-back-reveal="true"] .fx-pullback,.fx-pullback.fx-active{display:flex;flex-direction:column;justify-content:space-between;position:absolute;inset:0;z-index:10;pointer-events:none;border:28px solid #0B0D12;background:linear-gradient(180deg,#0B0D12 0 118px,transparent 118px 1470px,#0B0D12 1470px 1920px)}
+#main[data-fx-pull-back-reveal="true"] video.base,
+#main[data-fx-pull-back-reveal="true"] video.subject,
+#main[data-fx-pull-back-reveal="true"] img.base,
+#main[data-fx-pull-back-reveal="true"] img.subject{transform:scale(.82) translateY(-60px);border-radius:24px}
+.fx-pb-top{height:92px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;background:#11141C;border-bottom:1px solid #262B38;color:#E2E8F0;font:600 21px var(--label-font)}
+.fx-pb-rec{color:#EF4444;font-weight:800;letter-spacing:.1em}
+.fx-pb-timeline{height:420px;padding:22px 28px;background:#0F1219;border-top:2px solid #262B38;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
+.fx-pb-ruler{display:flex;justify-content:space-between;font:500 17px var(--label-font);color:#64748B;padding-bottom:8px;border-bottom:1px solid #1E2430}
+.fx-pb-track{display:flex;align-items:center;gap:16px;height:62px;padding:0 18px;border-radius:12px;background:#171B26;border-left:6px solid var(--accent);color:#F1F5F9;font:700 20px var(--label-font)}
+.fx-pb-track span{color:#94A3B8;font-weight:500;margin-left:auto}
+.fx-pb-playhead{position:absolute;top:0;bottom:0;left:45%;width:3px;background:#EF4444;box-shadow:0 0 14px #EF4444;animation:fxPlayhead 5s linear infinite}
+@keyframes fxPlayhead{from{left:18%}to{left:84%}}

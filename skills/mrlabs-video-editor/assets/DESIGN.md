@@ -26,3 +26,18 @@ Keep the original five token sets unchanged. New directions favor curved silhoue
 | Orbit Candy | Navy-purple #211B4B, lilac #3A3066, pink #FFB8CA; orbits and stars | Roboto 700 + 300; elliptical insert and rounded caption plate |
 
 Patterns are embedded vector tile assets, not generated example media. In the gallery they fill the background. On original footage decorative pattern overlays are restricted to top/bottom margins, leaving the presenter area clear. No production sample is requested for this edition.
+
+
+## Edition 04 — Pro Influencer collection (White & Black backgrounds + Portrait condition)
+
+Keep all ten earlier token sets unchanged. Five professional creator directions use clean **White (`#FFFFFF`)** and **Black (`#0A0A0C` / `#0A0A0A`)** backgrounds, architectural restraint, hairline geometry, zero rotation, and high-trust editorial typography suited to thought leaders, executives, founders, and domain experts.
+
+**Portrait condition:** When the source video already supports portrait (`height > width`), the theme background is skipped (`--canvas-background: transparent`, `data-portrait="true"`, and no background padding in `mrlabs-assemble.py`) so the portrait video fills the 1080×1920 frame directly. When the source video is non-portrait (`width >= height`), the White or Black theme background is applied automatically.
+
+| Direction | Style prompt | Colors | Typography | Motion |
+|---|---|---|---|---|
+| Verge Glass | Dark keynote bento cards on black background, 1px specular border, ice-blue top rule and floating dock caption bar. | Black #0A0A0C, slate #14171F, white #FFFFFF, ice #38BDF8 | Plus Jakarta Sans + Manrope + IBM Plex Mono | Crisp upward bento reveal |
+| Monocle Brief | Broadsheet white canvas, double press rules, racing-green column frame and executive briefing bar. | White #FFFFFF, stone #F4F4F0, black #111111, emerald #14532D | DM Serif Display + Plus Jakarta Sans + IBM Plex Mono | Composed focus reveal |
+| Kinfolk Linen | Quiet luxury gallery white mat, warm alabaster border, centered serif headline and terracotta top rule. | White #FFFFFF, alabaster #F5F3EE, charcoal #171715, bronze #8C5238 | Instrument Serif + DM Sans + Manrope | Calm dissolve reveal |
+| Obsidian Studio | Matte studio black, champagne gold L-rule, letterbox documentary insert and lower-third subtitle plate. | Black #0A0A0A, graphite #171717, white #FAFAFA, champagne #D4AF7A | Fraunces + Manrope + Space Grotesk | Decisive horizontal cinema slide |
+| Founder Slate | Executive pitch-deck white canvas, cobalt accent bar, clean slate elevation plates and monospace labels. | White #FFFFFF, slate #F1F5F9, carbon #0F172A, cobalt #2563EB | Space Grotesk + DM Sans + IBM Plex Mono | Fast structured deck rise |

@@ -1,6 +1,6 @@
 ---
 name: mrlabs-video-editor
-description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, ten MR Labs visual packs, local open-license fonts and SFX, and final-render verification. Use for original-video editing, subtitle styling, or choosing these visual packs; not for creating a faceless video from a topic alone.
+description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, fifteen MR Labs visual packs, local open-license fonts and SFX, and final-render verification. Use for original-video editing, subtitle styling, or choosing these visual packs; not for creating a faceless video from a topic alone.
 ---
 
 # MR Labs Video Editor
@@ -33,7 +33,7 @@ Use Python 3.10+, Node 22+, FFmpeg/ffprobe, faster-whisper and Pillow. Read [ref
 
 ## Visual choice
 
-Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs help choosing. The local gallery has ID/EN examples, ten layouts, replayable motion, twelve bundled font families plus optional local Helvetica, and ten playable SFX. Edition 03 adds five patterned Fun directions while preserving all five Original directions and configuration IDs. Theme tokens live in [assets/themes.json](assets/themes.json); the gallery and video builder share [assets/render-themes.css](assets/render-themes.css). Read [assets/DESIGN.md](assets/DESIGN.md) before changing these visual directions.
+Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs help choosing. The local gallery has ID/EN examples, fifteen layouts, replayable motion, twelve bundled font families plus optional local Helvetica, and ten playable SFX. Edition 04 adds five restrained Pro Influencer directions with pure White (`#FFFFFF`) and Black (`#0A0A0C` / `#0A0A0A`) backgrounds while preserving the five Fun directions (Edition 03) and five Original directions (Edition 02) and their configuration IDs. If the source video already supports portrait (`height > width`), the theme background is skipped automatically (`--canvas-background: transparent`, `data-portrait="true"`). Theme tokens live in [assets/themes.json](assets/themes.json); the gallery and video builder share [assets/render-themes.css](assets/render-themes.css). Read [assets/DESIGN.md](assets/DESIGN.md) before changing these visual directions.
 
 | Theme | Use |
 |---|---|
@@ -47,8 +47,25 @@ Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs 
 | Groovy Mint / `groovy-mint` | Mint rolling waves, asymmetrical pebble shapes |
 | Sunny Picnic / `sunny-picnic` | Yellow floral pattern, petal-like curves, Poppins Bold |
 | Orbit Candy / `orbit-candy` | Purple orbital rings, ellipse frame, Roboto Light captions |
+| Verge Glass / `verge-glass` | Pro tech/productivity reviews; black `#0A0A0C` background, bento glass, ice-blue rule |
+| Monocle Brief / `monocle-brief` | Executive business/finance; white `#FFFFFF` background, DM Serif Display, racing green |
+| Kinfolk Linen / `kinfolk-linen` | Quiet luxury/lifestyle/wellness; white `#FFFFFF` background, Instrument Serif, bronze rule |
+| Obsidian Studio / `obsidian-studio` | Cinema/podcast/masterclass; black `#0A0A0A` background, Fraunces, champagne gold L-frame |
+| Founder Slate / `founder-slate` | Startup/AI/founder updates; white `#FFFFFF` background, Space Grotesk, cobalt bar |
 
 Read [references/visual-packs.md](references/visual-packs.md) for treatment details. Choose one coherent pack unless the brief calls for a purposeful section change. Font, accent, geometry, caption and motion differ; do not present palette swaps as new themes.
+
+## Viral Talking-Head Effects (`effects` in `visual.json` or `project.json`)
+
+| Effect ID | Behavior | Depth / Cutout |
+|---|---|---|
+| `orbit` | **ORBIT 3D Cards** — floating UI/metric cards orbit 360° around the speaker, passing behind (`z-index: 2`) and in front (`z-index: 8`) | Uses `subject.webm` (`z-index: 3`) |
+| `ui-world` | **UI World Window** — top half of the vertical frame becomes an interactive AI/Claude workflow window while speaker talks below | Foreground (`z-index: 7`) |
+| `digital-zoom` | **Digital Zoom Punch-In** — smooth programmatic `1.24×` camera punch-in onto speaker's face/gestures on emphasis cues | Scales `aroll` + `subject` |
+| `headline-wall` | **Headline Wall** — angled newspaper clippings and highlighted headlines stick onto the wall behind the speaker one by one | Uses `subject.webm` (`z-index: 2` behind `3`) |
+| `pull-back-reveal` | **Pull Back Reveal** — camera zooms out to reveal the vertical video playing inside a desktop NLE video editor timeline interface | NLE frame (`z-index: 10`) |
+
+Caption positions (`caption_position` in `visual.json` or `project.json`): `"below-face"` / `"chest-float"` (below face / across chest at `y=1050`), `"above-head"` (above head at `y=310`), or `"bottom"` (lower third at `y=1265`).
 
 ## Edit workflow
 

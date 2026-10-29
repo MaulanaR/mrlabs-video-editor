@@ -1,10 +1,10 @@
 # MR Labs Video Editor
 
-Skill editor video asli dengan bahasa Indonesia sebagai default, dukungan Inggris/campuran, B-roll kontekstual, 10 paket visual, 12 keluarga font OFL + opsi Helvetica lokal, dan 10 SFX CC0.
+Skill editor video asli dengan bahasa Indonesia sebagai default, dukungan Inggris/campuran, B-roll kontekstual, 15 paket visual, 12 keluarga font OFL + opsi Helvetica lokal, dan 10 SFX CC0.
 
 Skill berada di [`skills/mrlabs-video-editor/SKILL.md`](skills/mrlabs-video-editor/SKILL.md). Buka [`theme-gallery.html`](skills/mrlabs-video-editor/assets/theme-gallery.html) di browser untuk membandingkan paket, melihat font dan mendengarkan SFX. File galeri bekerja lokal tanpa akun. GitHub menampilkan source HTML; unduh/clone repo lalu buka file tersebut.
 
-Snapshot koleksi Original (edisi 02); galeri HTML memuat seluruh 10 tema terbaru.
+Snapshot koleksi Original (edisi 02); galeri HTML memuat seluruh 15 tema terbaru.
 
 ![Lima paket visual MR Labs — edisi 02](skills/mrlabs-video-editor/assets/previews/themes-v2.png)
 
@@ -22,8 +22,13 @@ Hasil dan batas pengujian lokal: [`VALIDATION.md`](VALIDATION.md).
 | Groovy Mint | Gelombang retro mint/lavender |
 | Sunny Picnic | Pola bunga kuning dan bentuk kelopak |
 | Orbit Candy | Orbit dan bintang di latar ungu malam |
+| Verge Glass | Latar hitam `#0A0A0C` & bento beraksen biru es untuk review tech & produktivitas |
+| Monocle Brief | Latar putih `#FFFFFF` & kolom pers hijau emerald untuk bisnis & finansial |
+| Kinfolk Linen | Latar putih `#FFFFFF` & serif tenang untuk quiet luxury & lifestyle |
+| Obsidian Studio | Latar hitam `#0A0A0A` & emas sampanye untuk podcast & personal brand |
+| Founder Slate | Latar putih `#FFFFFF` & kartu pitch-deck kobalt untuk founder, AI & studi kasus |
 
-Lima tema Original merupakan remake edisi 02; lima tema Fun berpola ditambahkan pada edisi 03. Galeri dan video memakai CSS preset yang sama. Poppins Bold (700), Roboto (400) dan Roboto Light (300) dibundel; Helvetica memakai font lokal berlisensi dengan fallback Roboto. ID konfigurasi sebelumnya tetap didukung; lihat [pemetaan tema dan perilaku render](skills/mrlabs-video-editor/references/visual-packs.md).
+Lima tema Original merupakan remake edisi 02; lima tema Fun berpola ditambahkan pada edisi 03; lima tema Pro Influencer berlatar putih dan hitam ditambahkan pada edisi 04. Jika video sumber sudah mendukung format potrait (`height > width`), latar belakang tema otomatis dilewati sehingga video potrait langsung tampil penuh tanpa latar tambahan. Galeri dan video memakai CSS preset yang sama. Poppins Bold (700), Roboto (400) dan Roboto Light (300) dibundel; Helvetica memakai font lokal berlisensi dengan fallback Roboto. ID konfigurasi sebelumnya tetap didukung; lihat [pemetaan tema dan perilaku render](skills/mrlabs-video-editor/references/visual-packs.md).
 
 Untuk Codex atau agen kompatibel, arahkan ke `SKILL.md`, atau salin folder skill ke direktori skill pribadi lalu invoke `$mrlabs-video-editor`. Penempatan repo tidak otomatis memasang skill ke semua aplikasi.
 

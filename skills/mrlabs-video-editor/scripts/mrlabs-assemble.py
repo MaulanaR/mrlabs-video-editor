@@ -2,7 +2,7 @@
 import argparse
 import math
 from pathlib import Path
-from mrlabs_core import (mrlabs_read, mrlabs_write, mrlabs_config, mrlabs_run,
+from mrlabs_core import (MRLABS_ROOT, mrlabs_read, mrlabs_write, mrlabs_config, mrlabs_run,
                          mrlabs_tool, mrlabs_probe, mrlabs_frames, mrlabs_hash)
 
 
@@ -21,6 +21,12 @@ def mrlabs_validate_edl(edl, sources):
             raise ValueError(f"Invalid EDL range: {segment}")
         if end - start < 0.10:
             raise ValueError("Segment terlalu pendek (<0.10s)")
+
+
+def mrlabs_theme_bg(theme_id):
+    themes = mrlabs_read(MRLABS_ROOT / "assets/themes.json")["themes"]
+    theme = next((t for t in themes if t["id"] == theme_id), themes[0])
+    return theme["background"].lstrip("#")
 
 
 def mrlabs_main():
@@ -44,6 +50,7 @@ def mrlabs_main():
     work.mkdir(parents=True, exist_ok=True)
     assets.mkdir(exist_ok=True)
     ffmpeg = mrlabs_tool("ffmpeg")
+    bg_hex = mrlabs_theme_bg(config.get("theme", "signal-clean"))
     parts, segments, frame = [], [], 0
     for index, segment in enumerate(edl):
         source = sources[segment["clip"]]
@@ -52,14 +59,19 @@ def mrlabs_main():
             raise ValueError(f"Source audio missing: {source_path.name}")
         start, end = segment["in"], segment["out"]
         duration, zoom = end - start, segment.get("zoom", 1)
+        sw, sh = int(source["width"]), int(source["height"])
+        is_portrait = sh > sw if config.get("portrait") is None else bool(config["portrait"])
         crop = ""
         if zoom > 1:
-            sw, sh = source["width"], source["height"]
             cw, ch = max(2, round(sw / zoom / 2) * 2), max(2, round(sh / zoom / 2) * 2)
             cx, cy = segment.get("cx", 0.5), segment.get("cy", 0.5)
             x, y = min(max(round(cx * sw - cw / 2), 0), sw - cw), min(max(round(cy * sh - ch / 2), 0), sh - ch)
             crop = f"crop={cw}:{ch}:{x}:{y},"
-        vf = crop + f"scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height},fps={fps},setpts=N/{fps}/TB"
+        # Condition: if source video already supports portrait, fill directly without background pad.
+        if is_portrait:
+            vf = crop + f"scale={width}:{height}:force_original_aspect_ratio=increase,crop={width}:{height},fps={fps},setpts=N/{fps}/TB"
+        else:
+            vf = crop + f"scale={width}:{height}:force_original_aspect_ratio=decrease,pad={width}:{height}:(ow-iw)/2:(oh-ih)/2:color=0x{bg_hex},fps={fps},setpts=N/{fps}/TB"
         part = work / f"part-{index:03}.mkv"
         mrlabs_run([ffmpeg, "-v", "error", "-y", "-ss", start, "-i", source_path, "-t", duration,
                     "-map", "0:v:0", "-map", "0:a:0", "-vf", vf, "-af",
@@ -67,7 +79,7 @@ def mrlabs_main():
                     "-c:v", "libx264", "-preset", "fast", "-crf", "16", "-pix_fmt", "yuv420p",
                     "-c:a", "pcm_s16le", "-ar", "48000", part])
         count = mrlabs_frames(part)
-        segments.append({**segment, "src_in": start, "src_out": end, "frame": frame, "frames": count})
+        segments.append({**segment, "src_in": start, "src_out": end, "portrait": is_portrait, "frame": frame, "frames": count})
         frame += count
         parts.append(part)
     concat = work / "concat.txt"

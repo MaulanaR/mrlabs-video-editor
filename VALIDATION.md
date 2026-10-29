@@ -1,3 +1,12 @@
+# Pro Influencer collection (White & Black backgrounds + Portrait condition) — 2026-10-29
+
+Scope: five restrained Pro Influencer themes (`verge-glass`, `monocle-brief`, `kinfolk-linen`, `obsidian-studio`, `founder-slate`) with pure White (`#FFFFFF`) and Black (`#0A0A0C` / `#0A0A0A`) backgrounds, plus automatic portrait detection (`mrlabs_is_portrait`) that skips the theme background whenever the source video already supports portrait (`height > width`).
+
+- Fifteen unique themes across three collections: Pro Influencer (11–15), Fun (06–10), and Original (01–05).
+- Portrait condition verified in unit tests (`test_pro_themes_use_white_or_black_bg_and_skip_bg_when_video_is_portrait`): portrait sources (`height > width`) emit `--canvas-background:transparent` and `data-portrait="true"` without background padding, while non-portrait sources (`width >= height`) retain the White or Black theme background.
+- Gallery regenerated (`assets/theme-gallery.html`) with interactive portrait-mode toggle (`#portrait`).
+- 22 bundled assets verified; 11 unit tests passed.
+
 # Fun collection and fonts — 2026-10-29
 
 Scope: five additional theme definitions and gallery updates only. No image generation, example video, HyperFrames composition build or MP4 render was run for this addition, as requested.
