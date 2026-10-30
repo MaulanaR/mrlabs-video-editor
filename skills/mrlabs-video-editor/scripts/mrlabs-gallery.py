@@ -5,6 +5,14 @@ import json
 from mrlabs_core import MRLABS_ROOT, mrlabs_read
 from mrlabs_visual import MRLABS_EFFECTS, mrlabs_css, mrlabs_motion, mrlabs_effect_specimen_html
 
+DEFAULT_PRO_FX = {
+    "obsidian-studio": "orbit",
+    "verge-glass": "ui-world",
+    "monocle-brief": "headline-wall",
+    "kinfolk-linen": "digital-zoom",
+    "founder-slate": "pull-back-reveal",
+}
+
 
 def mrlabs_bilingual(tag, class_name, indonesian, english):
     return f'<{tag} class="{class_name}" data-id="{html.escape(indonesian, quote=True)}" data-en="{html.escape(english, quote=True)}">{html.escape(indonesian)}</{tag}>'
@@ -42,6 +50,8 @@ def mrlabs_specimen(theme, number):
     is_th = bool(theme.get('talking_head'))
     caption_pos = 'below-face' if theme.get('caption_position') in ('chest-float', 'below-face') else theme.get('caption_position', 'bottom')
     default_portrait = 'true'
+    default_fx = DEFAULT_PRO_FX.get(theme['id'], '')
+    fx_attr = f' data-default-fx="{default_fx}" data-fx-{default_fx}="true"' if default_fx else ''
     transform = f'translate({motion.get("x",0)}px,{motion.get("y",0)}px) scale({motion.get("scale",1)}) rotate({motion.get("rotation",0)}deg)'
     label = mrlabs_bilingual('div', 'broll-label', ('BINGKAI / ' if theme.get('collection')=='fun' else 'ILUSTRASI / ')+theme['name'], ('FRAME / ' if theme.get('collection')=='fun' else 'ILLUSTRATION / ')+theme['name'])
     title = mrlabs_bilingual_title(theme)
@@ -54,7 +64,6 @@ def mrlabs_specimen(theme, number):
     #main[data-portrait="false"] .preview-bg{{background:var(--background)!important;display:block!important}}
     /* Hide decorative B-roll card when any of the 5 talking-head effects are active so creator.png is unobstructed */
     #main:is([data-fx-orbit="true"],[data-fx-ui-world="true"],[data-fx-digital-zoom="true"],[data-fx-headline-wall="true"],[data-fx-pull-back-reveal="true"]) .broll{{display:none!important}}
-    /* On non-talking-head themes, place title behind cutout when headline-wall or depth is tested, or keep clean */
     .specimen-index{{position:absolute;bottom:85px;right:85px;z-index:8;font:400 140px var(--heading-font);color:var(--accent);opacity:.22;pointer-events:none}}
     .specimen-note{{position:absolute;bottom:120px;left:65px;z-index:8;font:400 22px var(--label-font);letter-spacing:.1em;color:var(--muted);pointer-events:none}}
     .broll svg{{display:block;width:100%;height:100%;object-fit:cover}}
@@ -66,7 +75,7 @@ def mrlabs_specimen(theme, number):
     .replay .broll{{animation-delay:.16s}}.replay .caption{{animation-delay:.3s}}
     @keyframes entrance{{from{{opacity:0;transform:{transform};filter:{motion.get('filter','none')}}}to{{opacity:1;transform:translate(0,0) scale(1) rotate(0);filter:none}}}}
     @media(prefers-reduced-motion:reduce){{*{{animation:none!important}}}}
-    </style></head><body><div id="main" data-theme="{theme['id']}" data-talking-head="{'true' if is_th else 'false'}" data-portrait="{default_portrait}" data-default-portrait="{default_portrait}" data-caption-pos="{caption_pos}" data-default-caption-pos="{caption_pos}"><div class="preview-bg"></div><img class="base" src="previews/creator.png" alt="Foto kreator"><div class="shade"></div><div class="art-direction"></div><img class="subject" src="previews/creator-cutout.png" alt="Cutout kreator">{fx_html}<div class="brand">MR LABS</div>{title}{broll_block}{caption}<div class="credit">by @maulanarahman_</div><div class="specimen-index">{number:02d}</div><div class="specimen-note">VISUAL STUDY<br>EDITION {theme.get("edition", 2):02d}</div></div></body></html>'''
+    </style></head><body><div id="main" data-theme="{theme['id']}" data-talking-head="{'true' if is_th else 'false'}" data-portrait="{default_portrait}" data-default-portrait="{default_portrait}" data-caption-pos="{caption_pos}" data-default-caption-pos="{caption_pos}"{fx_attr}><div class="preview-bg"></div><img class="base" src="previews/creator.png" alt="Foto kreator"><div class="shade"></div><div class="art-direction"></div><img class="subject" src="previews/creator-cutout.png" alt="Cutout kreator">{fx_html}<div class="brand">MR LABS</div>{title}{broll_block}{caption}<div class="credit">by @maulanarahman_</div><div class="specimen-index">{number:02d}</div><div class="specimen-note">VISUAL STUDY<br>EDITION {theme.get("edition", 2):02d}</div></div></body></html>'''
 
 
 def mrlabs_main():
@@ -78,8 +87,9 @@ def mrlabs_main():
     theme_pills = []
     specimens_map = {}
 
-    # Default studio theme: obsidian-studio (Creator Hook)
+    # Default studio theme: obsidian-studio (Creator Hook) with ORBIT pre-enabled
     default_theme_id = 'obsidian-studio'
+    default_active_fx = {'orbit'}
 
     for number, t in enumerate(themes, 1):
         raw_specimen = mrlabs_specimen(t, number)
@@ -91,6 +101,7 @@ def mrlabs_main():
             "background": t["background"],
             "accent": t["accent"],
             "talking_head": bool(t.get("talking_head")),
+            "default_fx": DEFAULT_PRO_FX.get(t["id"], ""),
             "caption_position": "below-face" if t.get("caption_position") in ("chest-float", "below-face") else t.get("caption_position", "bottom"),
             "srcdoc": raw_specimen,
         }
@@ -98,10 +109,12 @@ def mrlabs_main():
         swatches = ''.join(f'<i style="background:{t[key]}"></i>' for key in ('background', 'foreground', 'accent'))
         collection = t.get('collection')
         is_selected = (t['id'] == default_theme_id)
+        fx_badge = DEFAULT_PRO_FX.get(t['id'])
+        fx_label = f' · FX: {MRLABS_EFFECTS[fx_badge]["name"].upper()}' if fx_badge else ''
         target_cards = pro_cards if collection == 'pro' else (fun_cards if collection == 'fun' else cards)
         target_cards.append(
             f'<article class="package" data-card-theme="{t["id"]}" style="--accent:{t["accent"]}">'
-            f'<div class="card-heading"><span>{number:02d}</span><span>{t["energy"].upper()}</span></div>'
+            f'<div class="card-heading"><span>{number:02d}</span><span>{t["energy"].upper()}{fx_label}</span></div>'
             f'<div class="screen"><iframe title="{t["name"]} — contoh komposisi" tabindex="-1" srcdoc="{specimen}"></iframe></div>'
             f'<div class="details"><h2>{t["name"]}</h2><p class="tagline">{t["tagline"]}</p><p class="use">{t["use_for"]}</p>'
             f'<div class="swatches">{swatches}<span>{t["heading_font"]}</span></div>'
@@ -116,9 +129,10 @@ def mrlabs_main():
 
     effect_cards = []
     for fx_id, fx in MRLABS_EFFECTS.items():
+        is_checked = fx_id in default_active_fx
         effect_cards.append(
-            f'<label class="fx-chip" data-fx="{fx_id}">'
-            f'<input type="checkbox" value="{fx_id}" class="fx-toggle">'
+            f'<label class="fx-chip{" active" if is_checked else ""}" data-fx="{fx_id}">'
+            f'<input type="checkbox" value="{fx_id}" class="fx-toggle"{" checked" if is_checked else ""}>'
             f'<div class="fx-chip-body">'
             f'<div class="fx-chip-head"><strong>{fx["name"]}</strong><code>{fx_id}</code></div>'
             f'<p>{fx["summary_id"]}</p>'
@@ -157,7 +171,7 @@ def mrlabs_main():
   <div class="studio-preview-col">
     <div class="studio-monitor-head">
       <span class="kicker">LIVE PREVIEW · 1080×1920</span>
-      <span id="studio-badge">Creator Hook · Di Bawah Muka</span>
+      <span id="studio-badge">Creator Hook · Di Bawah Muka · +1 FX</span>
     </div>
     <div class="screen studio-screen">
       <iframe id="studio-frame" title="Live Interactive Studio Preview" srcdoc="{default_srcdoc}"></iframe>
@@ -207,7 +221,10 @@ def mrlabs_main():
     <div class="builder-group">
       <div class="builder-label">
         <span>04 / PILIH EFEK VIDEO (BISA PILIH BANYAK)</span>
-        <button type="button" id="clear-fx" class="mini-btn">Reset Efek</button>
+        <div style="display:flex;gap:8px">
+          <button type="button" id="all-fx" class="mini-btn">✨ Semua Efek</button>
+          <button type="button" id="clear-fx" class="mini-btn">Reset Efek</button>
+        </div>
       </div>
       <div class="fx-chip-grid">{''.join(effect_cards)}</div>
     </div>
@@ -222,14 +239,14 @@ def mrlabs_main():
       <textarea id="prompt-output" rows="6" readonly></textarea>
       <div class="prompt-actions">
         <button type="button" id="copy-prompt" class="primary-btn">📋 Salin Prompt AI ↗</button>
-        <input id="config" readonly value='{{"theme":"obsidian-studio","caption_position":"below-face","effects":[],"language":"id"}}'>
+        <input id="config" readonly value='{{"theme":"obsidian-studio","caption_position":"below-face","effects":["orbit"],"language":"id"}}'>
         <button type="button" id="copy">Salin JSON ↗</button>
       </div>
     </div>
   </div>
 </section>
 
-<div class="collection-heading" id="pro"><div><span class="kicker">BARU / 11—15</span><h2>Pro Talking-Head. Depth Hook &amp; Floating Caption.</h2></div><p>Teks di atas &amp; belakang kepala presenter, caption melayang di bawah muka. Klik kartu mana saja untuk memuat ke Studio di atas.</p></div>
+<div class="collection-heading" id="pro"><div><span class="kicker">BARU / 11—15</span><h2>Pro Talking-Head. Depth Hook &amp; 5 Efek Viral.</h2></div><p>Setiap kartu Pro menampilkan efek viral bawaannya (ORBIT, UI World, Headline Wall, Digital Zoom, Pull Back Reveal). Klik kartu mana saja untuk memuat ke Studio di atas.</p></div>
 <section class="packages" aria-label="Lima tema Pro Influencer">{''.join(pro_cards)}</section>
 
 <div class="collection-heading" id="fun"><div><span class="kicker">FUN / 06—10</span><h2>Fun, in every shape.</h2></div><p>Bingkai melengkung. Pola yang punya karakter.</p></div>

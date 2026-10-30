@@ -133,26 +133,39 @@ def mrlabs_normalize_effects(visual=None, config=None, duration=6.0):
     return normalized
 
 
-def mrlabs_effect_specimen_html(theme=None):
+def mrlabs_effect_specimen_html(theme=None, visual=None):
     """Return the 5 viral effect layers so both gallery specimens and video builds can toggle/animate them."""
+    custom_cards = (visual or {}).get("orbit_cards") or []
+    if custom_cards:
+        c1 = custom_cards[0]
+        c2 = custom_cards[1] if len(custom_cards) > 1 else custom_cards[0]
+        c3 = custom_cards[2] if len(custom_cards) > 2 else custom_cards[0]
+        orbit_html = (
+            f'<div id="fx-orbit-1" class="fx-item fx-orbit-card card-1 fx-orbit-img"><img src="{c1}" alt="Card 1"></div>'
+            f'<div id="fx-orbit-2" class="fx-item fx-orbit-card card-2 fx-orbit-img"><img src="{c2}" alt="Card 2"></div>'
+            f'<div id="fx-orbit-3" class="fx-item fx-orbit-card card-3 fx-orbit-img"><img src="{c3}" alt="Card 3"></div>'
+        )
+    else:
+        orbit_html = (
+            '<div id="fx-orbit-1" class="fx-item fx-orbit-card card-1">'
+            '<span class="orb-tag">● ORBIT METRIC 01</span>'
+            '<strong class="orb-val">+14.2K</strong>'
+            '<span class="orb-sub">Organic Reach · 7 Hari</span>'
+            '</div>'
+            '<div id="fx-orbit-2" class="fx-item fx-orbit-card card-2">'
+            '<span class="orb-tag">● ORBIT WORKFLOW 02</span>'
+            '<strong class="orb-val">98.4%</strong>'
+            '<span class="orb-sub">Hook Hold Rate · AI Cut</span>'
+            '</div>'
+            '<div id="fx-orbit-3" class="fx-item fx-orbit-card card-3">'
+            '<span class="orb-tag">● ORBIT SPEED 03</span>'
+            '<strong class="orb-val">4.2×</strong>'
+            '<span class="orb-sub">Lebih Cepat Tanpa Template</span>'
+            '</div>'
+        )
     return (
         '<div class="fx-layer" aria-hidden="true">'
-        # 1. ORBIT (3D cards passing behind z=2 and in front of z=8 the subject z=3)
-        '<div id="fx-orbit-1" class="fx-item fx-orbit-card card-1">'
-        '<span class="orb-tag">● ORBIT METRIC 01</span>'
-        '<strong class="orb-val">+14.2K</strong>'
-        '<span class="orb-sub">Organic Reach · 7 Hari</span>'
-        '</div>'
-        '<div id="fx-orbit-2" class="fx-item fx-orbit-card card-2">'
-        '<span class="orb-tag">● ORBIT WORKFLOW 02</span>'
-        '<strong class="orb-val">98.4%</strong>'
-        '<span class="orb-sub">Hook Hold Rate · AI Cut</span>'
-        '</div>'
-        '<div id="fx-orbit-3" class="fx-item fx-orbit-card card-3">'
-        '<span class="orb-tag">● ORBIT SPEED 03</span>'
-        '<strong class="orb-val">4.2×</strong>'
-        '<span class="orb-sub">Lebih Cepat Tanpa Template</span>'
-        '</div>'
+        + orbit_html +
         # 2. UI WORLD (Top-half interactive AI / Claude window)
         '<div id="fx-ui-world" class="fx-item fx-ui-world">'
         '<div class="fx-ui-bar">'
@@ -285,7 +298,7 @@ def mrlabs_build(project, theme_id=None, safe=False):
     markup.append(f'<audio id="voice" src="assets/aroll.mp4" data-start="0" data-duration="{duration}" data-track-index="1" data-volume="1"></audio>')
     markup.append(f'<div id="brand" class="brand">{html.escape(config["brand"])}</div>')
     markup.append(f'<div id="credit" class="credit">{html.escape(config["credit"])}</div>')
-    markup.append(mrlabs_effect_specimen_html(theme))
+    markup.append(mrlabs_effect_specimen_html(theme, visual=visual))
     timeline.append("tl.from('#brand',{opacity:0,y:16,duration:.35,ease:'power3.out'},.1);")
     timeline.append("tl.from('#credit',{opacity:0,y:10,duration:.4,ease:'sine.out'},.2);")
     caption_z = 2 if caption_behind else 9
@@ -322,34 +335,83 @@ def mrlabs_build(project, theme_id=None, safe=False):
     if used_behind:
         markup.append(f'<video id="subject" class="subject" style="z-index:3" src="assets/subject.webm" muted playsinline data-start="0" data-duration="{duration}" data-track-index="2"></video>')
     # Wire timeline cues for the 5 viral effects when specified in visual.json / config.json
-    fx_attrs = []
+    # Sequential non-overlapping activation for the 5 viral effects
+    timeline.append("tl.set(['.fx-orbit-card','#fx-ui-world','#fx-zoom-hud','.fx-headline-card','#fx-pullback','#fx-profile-card'],{display:'none',opacity:0},0);")
     for fx in effects:
         fx_type, start, end = fx["type"], fx["start"], fx["end"]
-        fx_attrs.append(f'data-fx-{fx_type}="true"')
         if fx_type == "digital-zoom":
             targets = "['#aroll','#subject']" if used_behind else "['#aroll']"
+            timeline.append(f"tl.set('#fx-zoom-hud',{{display:'flex',opacity:0}},{start});")
+            timeline.append(f"tl.to('#fx-zoom-hud',{{opacity:1,duration:.2}},{start});")
             timeline.append(f"tl.fromTo({targets},{{scale:1,y:0}},{{scale:1.24,y:42,duration:.38,ease:'power3.out',immediateRender:false}},{start});")
             timeline.append(f"tl.to({targets},{{scale:1,y:0,duration:.42,ease:'power2.inOut'}},{max(start + 0.4, end - 0.42)});")
-            timeline.append(f"tl.fromTo('#fx-zoom-hud',{{opacity:0}},{{opacity:1,duration:.2,immediateRender:false}},{start});")
-            timeline.append(f"tl.set('#fx-zoom-hud',{{opacity:0}},{end});")
+            timeline.append(f"tl.to('#fx-zoom-hud',{{opacity:0,duration:.2}},{max(start + 0.3, end - 0.2)});")
+            timeline.append(f"tl.set('#fx-zoom-hud',{{display:'none'}},{end});")
         elif fx_type == "ui-world":
-            timeline.append(f"tl.fromTo('#fx-ui-world',{{opacity:0,y:-36,scale:.95}},{{opacity:1,y:0,scale:1,duration:.35,ease:'back.out(1.4)',immediateRender:false}},{start});")
-            timeline.append(f"tl.set('#fx-ui-world',{{opacity:0}},{end});")
+            timeline.append(f"tl.set('#fx-ui-world',{{display:'flex',opacity:0,y:-36,scale:.95}},{start});")
+            timeline.append(f"tl.to('#fx-ui-world',{{opacity:1,y:0,scale:1,duration:.35,ease:'back.out(1.4)'}},{start});")
+            timeline.append(f"tl.to('#fx-ui-world',{{opacity:0,y:-20,scale:.95,duration:.25}},{max(start + 0.4, end - 0.25)});")
+            timeline.append(f"tl.set('#fx-ui-world',{{display:'none'}},{end});")
         elif fx_type == "headline-wall":
+            timeline.append(f"tl.set('.fx-headline-card',{{display:'block',opacity:0}},{start});")
             for idx in range(1, 5):
                 t_in = min(end - 0.1, start + (idx - 1) * 0.18)
                 timeline.append(f"tl.fromTo('#fx-hw-{idx}',{{opacity:0,scale:1.25,y:-20}},{{opacity:1,scale:1,y:0,duration:.28,ease:'back.out(1.6)',immediateRender:false}},{t_in});")
-                timeline.append(f"tl.set('#fx-hw-{idx}',{{opacity:0}},{end});")
+            timeline.append(f"tl.to('.fx-headline-card',{{opacity:0,duration:.25}},{max(start + 0.6, end - 0.25)});")
+            timeline.append(f"tl.set('.fx-headline-card',{{display:'none'}},{end});")
         elif fx_type == "orbit":
-            for idx in range(1, 4):
-                timeline.append(f"tl.fromTo('#fx-orbit-{idx}',{{opacity:0}},{{opacity:1,duration:.25,immediateRender:false}},{start});")
-                timeline.append(f"tl.set('#fx-orbit-{idx}',{{opacity:0}},{end});")
+            # 3 cards orbiting: Card 1 (behind left shoulder -> in front), Card 2 (in front -> behind right shoulder), Card 3 (behind right shoulder floating)
+            t_mid = start + (end - start) * 0.48
+            dur1 = (end - start) * 0.48
+            dur2 = (end - start) * 0.52
+            # Card 1: sweeps behind left shoulder (zIndex 2) -> in front of chest (zIndex 8)
+            timeline.append(f"tl.set('#fx-orbit-1',{{display:'flex',opacity:0,x:40,y:-20,scale:.82,zIndex:2}},{start});")
+            timeline.append(f"tl.to('#fx-orbit-1',{{opacity:1,duration:.3}},{start});")
+            timeline.append(f"tl.to('#fx-orbit-1',{{x:180,y:25,scale:.96,duration:{dur1:.2f},ease:'power1.inOut'}},{start});")
+            timeline.append(f"tl.set('#fx-orbit-1',{{zIndex:8}},{t_mid:.2f});")
+            timeline.append(f"tl.to('#fx-orbit-1',{{x:370,y:60,scale:1.05,duration:{dur2:.2f},ease:'power1.out'}},{t_mid:.2f});")
+            timeline.append(f"tl.to('#fx-orbit-1',{{opacity:0,scale:.9,duration:.25}},{end - 0.25:.2f});")
+            timeline.append(f"tl.set('#fx-orbit-1',{{display:'none'}},{end});")
+
+            # Card 2: starts in front of chest (zIndex 8) -> sweeps to right behind shoulder (zIndex 2)
+            timeline.append(f"tl.set('#fx-orbit-2',{{display:'flex',opacity:0,x:380,y:60,scale:1.05,zIndex:8}},{start});")
+            timeline.append(f"tl.to('#fx-orbit-2',{{opacity:1,duration:.3}},{start});")
+            timeline.append(f"tl.to('#fx-orbit-2',{{x:560,y:20,scale:.95,duration:{dur1:.2f},ease:'power1.inOut'}},{start});")
+            timeline.append(f"tl.set('#fx-orbit-2',{{zIndex:2}},{t_mid:.2f});")
+            timeline.append(f"tl.to('#fx-orbit-2',{{x:680,y:-30,scale:.82,duration:{dur2:.2f},ease:'power1.out'}},{t_mid:.2f});")
+            timeline.append(f"tl.to('#fx-orbit-2',{{opacity:0,scale:.8,duration:.25}},{end - 0.25:.2f});")
+            timeline.append(f"tl.set('#fx-orbit-2',{{display:'none'}},{end});")
+
+            # Card 3: starts behind right shoulder (zIndex 2) -> floats against white wall
+            timeline.append(f"tl.set('#fx-orbit-3',{{display:'flex',opacity:0,x:680,y:-50,scale:.85,zIndex:2}},{start});")
+            timeline.append(f"tl.to('#fx-orbit-3',{{opacity:1,duration:.35}},{start + 0.1:.2f});")
+            timeline.append(f"tl.to('#fx-orbit-3',{{x:640,y:20,scale:.92,duration:{(end - start)*0.85:.2f},ease:'sine.inOut'}},{start + 0.1:.2f});")
+            timeline.append(f"tl.to('#fx-orbit-3',{{opacity:0,scale:.8,duration:.25}},{end - 0.25:.2f});")
+            timeline.append(f"tl.set('#fx-orbit-3',{{display:'none'}},{end});")
         elif fx_type == "pull-back-reveal":
             targets = "['#aroll','#subject']" if used_behind else "['#aroll']"
-            timeline.append(f"tl.fromTo('#fx-pullback',{{opacity:0}},{{opacity:1,duration:.35,ease:'power2.out',immediateRender:false}},{start});")
+            timeline.append(f"tl.set('#fx-pullback',{{display:'flex',opacity:0}},{start});")
+            timeline.append(f"tl.to('#fx-pullback',{{opacity:1,duration:.35,ease:'power2.out'}},{start});")
             timeline.append(f"tl.fromTo({targets},{{scale:1,y:0}},{{scale:.82,y:-60,duration:.45,ease:'power3.out',immediateRender:false}},{start});")
             timeline.append(f"tl.to({targets},{{scale:1,y:0,duration:.35,ease:'power2.inOut'}},{max(start + 0.45, end - 0.35)});")
-            timeline.append(f"tl.set('#fx-pullback',{{opacity:0}},{end});")
+            timeline.append(f"tl.to('#fx-pullback',{{opacity:0,duration:.3}},{max(start + 0.45, end - 0.3)});")
+            timeline.append(f"tl.set('#fx-pullback',{{display:'none'}},{end});")
+    profile_card = visual.get("profile_card")
+    if profile_card and profile_card.get("file"):
+        card_file = Path(profile_card["file"])
+        if not card_file.is_absolute():
+            card_file = project / card_file
+        if card_file.exists():
+            target_card = project / "assets" / f"profile-card{card_file.suffix.lower()}"
+            shutil.copy2(card_file, target_card)
+            rel_card = target_card.relative_to(project).as_posix()
+            c_start = float(profile_card.get("start", max(0.0, duration - 5.0)))
+            c_end = float(profile_card.get("end", duration))
+            markup.append(f'<div id="fx-profile-card" class="fx-profile-card" style="display:none;opacity:0;z-index:9"><img src="{rel_card}" alt="Profile IG"></div>')
+            timeline.append(f"tl.set('#fx-profile-card',{{display:'block',opacity:0,scale:.8,y:30}},{c_start});")
+            timeline.append(f"tl.to('#fx-profile-card',{{opacity:1,scale:1,y:0,duration:.45,ease:'back.out(1.5)'}},{c_start});")
+            timeline.append(f"tl.to('#fx-profile-card',{{opacity:0,scale:.9,duration:.3}},{max(c_start + 0.5, c_end - 0.3)});")
+            timeline.append(f"tl.set('#fx-profile-card',{{display:'none'}},{c_end});")
     for index, cue in enumerate(broll):
         target = project / "assets" / "broll" / f"broll-{index}{cue['path'].suffix.lower()}"
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -382,7 +444,7 @@ def mrlabs_build(project, theme_id=None, safe=False):
     if safe:
         markup.append('<div class="safe"></div>')
     language = "en" if config["language"] == "en" else "id"
-    fx_attr_str = (" " + " ".join(dict.fromkeys(fx_attrs))) if fx_attrs else ""
+    fx_attr_str = ""
     document = f'''<!doctype html><html lang="{language}"><head><meta charset="utf-8"><title>MR Labs — {html.escape(theme['name'])}</title>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script><style>{mrlabs_css(theme, portrait=portrait, caption_top=caption_top)}</style></head>
     <body><div id="main" data-theme="{theme['id']}" data-talking-head="{'true' if theme.get('talking_head') else 'false'}" data-portrait="{'true' if portrait else 'false'}" data-caption-pos="{caption_pos}"{fx_attr_str} data-composition-id="main" data-start="0" data-duration="{duration}" data-width="1080" data-height="1920">{''.join(markup)}</div>

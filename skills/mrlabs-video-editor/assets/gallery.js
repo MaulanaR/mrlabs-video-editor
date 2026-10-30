@@ -2,7 +2,10 @@ let selected = 'obsidian-studio';
 let language = 'id';
 let forceNonPortrait = false;
 let captionPos = 'below-face';
-let activeEffects = new Set();
+let activeEffects = new Set(['orbit']);
+let userCustomizedEffects = false;
+
+const ALL_FX = ['orbit', 'ui-world', 'digital-zoom', 'headline-wall', 'pull-back-reveal'];
 
 const FX_LABELS = {
   'orbit': 'ORBIT 3D Cards (kartu UI/metrik berputar di belakang & depan badan)',
@@ -38,6 +41,14 @@ document.fonts.load('400 28px "Helvetica"').then(faces => {
   if (el) el.textContent = 'Helvetica belum tersedia; contoh ini memakai Roboto.';
 });
 
+function syncCheckboxesWithSet() {
+  document.querySelectorAll('.fx-toggle').forEach(cb => {
+    const isOn = activeEffects.has(cb.value);
+    cb.checked = isOn;
+    cb.closest('.fx-chip')?.classList.toggle('active', isOn);
+  });
+}
+
 function syncFrameState(frame, isStudio = false) {
   const doc = frame.contentDocument;
   if (!doc?.documentElement) return;
@@ -49,8 +60,18 @@ function syncFrameState(frame, isStudio = false) {
   if (!main) return;
   main.dataset.portrait = forceNonPortrait ? 'false' : 'true';
   main.dataset.captionPos = captionPos;
-  ['orbit', 'ui-world', 'digital-zoom', 'headline-wall', 'pull-back-reveal'].forEach(fx => {
-    if (activeEffects.has(fx)) {
+
+  const defaultCardFx = main.dataset.defaultFx || '';
+  ALL_FX.forEach(fx => {
+    let shouldEnable = false;
+    if (isStudio) {
+      shouldEnable = activeEffects.has(fx);
+    } else if (userCustomizedEffects) {
+      shouldEnable = activeEffects.has(fx);
+    } else {
+      shouldEnable = defaultCardFx ? (fx === defaultCardFx) : false;
+    }
+    if (shouldEnable) {
       main.setAttribute(`data-fx-${fx}`, 'true');
     } else {
       main.removeAttribute(`data-fx-${fx}`);
@@ -60,6 +81,28 @@ function syncFrameState(frame, isStudio = false) {
 
 function syncAllFrames() {
   allFrames().forEach(frame => syncFrameState(frame, frame === studioFrame));
+}
+
+function buildStatefulSrcdoc(rawSrcdoc) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(rawSrcdoc, 'text/html');
+  doc.documentElement.lang = language;
+  doc.querySelectorAll('[data-id]').forEach(el => {
+    el.textContent = el.dataset[language];
+  });
+  const main = doc.querySelector('#main');
+  if (main) {
+    main.dataset.portrait = forceNonPortrait ? 'false' : 'true';
+    main.dataset.captionPos = captionPos;
+    ALL_FX.forEach(fx => {
+      if (activeEffects.has(fx)) {
+        main.setAttribute(`data-fx-${fx}`, 'true');
+      } else {
+        main.removeAttribute(`data-fx-${fx}`);
+      }
+    });
+  }
+  return '<!doctype html>' + doc.documentElement.outerHTML;
 }
 
 function buildPromptText() {
@@ -145,6 +188,7 @@ function buildPromptText() {
 }
 
 function updateUI() {
+  syncCheckboxesWithSet();
   if (promptOutput) {
     promptOutput.value = buildPromptText();
   }
@@ -176,8 +220,13 @@ function updateUI() {
 function selectTheme(themeId, scrollStudio = false) {
   selected = themeId;
   const spec = window.__MRLABS_SPECIMENS && window.__MRLABS_SPECIMENS[themeId];
-  if (spec && studioFrame) {
-    studioFrame.srcdoc = spec.srcdoc;
+  if (spec) {
+    if (!userCustomizedEffects && spec.default_fx) {
+      activeEffects = new Set([spec.default_fx]);
+    }
+    if (studioFrame) {
+      studioFrame.srcdoc = buildStatefulSrcdoc(spec.srcdoc);
+    }
   }
   updateUI();
   if (scrollStudio) {
@@ -215,13 +264,13 @@ document.querySelectorAll('.bg-chip').forEach(chip => chip.addEventListener('cli
 }));
 
 document.querySelectorAll('.fx-toggle').forEach(checkbox => checkbox.addEventListener('change', () => {
+  userCustomizedEffects = true;
   const fx = checkbox.value;
   if (checkbox.checked) {
     activeEffects.add(fx);
   } else {
     activeEffects.delete(fx);
   }
-  checkbox.closest('.fx-chip')?.classList.toggle('active', checkbox.checked);
   updateUI();
   if (statusEl) {
     statusEl.textContent = activeEffects.size
@@ -230,12 +279,16 @@ document.querySelectorAll('.fx-toggle').forEach(checkbox => checkbox.addEventLis
   }
 }));
 
+document.querySelector('#all-fx')?.addEventListener('click', () => {
+  userCustomizedEffects = true;
+  activeEffects = new Set(ALL_FX);
+  updateUI();
+  if (statusEl) statusEl.textContent = 'Semua 5 efek diaktifkan';
+});
+
 document.querySelector('#clear-fx')?.addEventListener('click', () => {
+  userCustomizedEffects = true;
   activeEffects.clear();
-  document.querySelectorAll('.fx-toggle').forEach(cb => {
-    cb.checked = false;
-    cb.closest('.fx-chip')?.classList.remove('active');
-  });
   updateUI();
   if (statusEl) statusEl.textContent = 'Efek di-reset';
 });
@@ -285,3 +338,4 @@ document.querySelectorAll('audio').forEach(audio => audio.addEventListener('play
 }));
 
 updateUI();
+window.addEventListener('load', () => syncAllFrames());
