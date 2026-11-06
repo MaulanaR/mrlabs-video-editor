@@ -1,51 +1,84 @@
-# MR Labs Video Editor
+# MR Labs Video Editor — Pro Talking-Head & Captioning Studio
 
-Skill editor video asli dengan bahasa Indonesia sebagai default, dukungan Inggris/campuran, B-roll kontekstual, 15 paket visual, 12 keluarga font OFL + opsi Helvetica lokal, dan 10 SFX CC0.
+Skill AI Video Editor untuk mengubah rekaman *talking-head* asli menjadi video vertikal `1080×1920` (Reels / Shorts / TikTok) menggunakan **HyperFrames + GSAP + Faster-Whisper**, lengkap dengan **15 Mode Pro Talking-Head**, **6 Mode Posisi & Tipografi Caption**, **13 Efek Depth Viral**, **12 keluarga font OFL**, dan **10 SFX CC0**.
 
-Skill berada di [`skills/mrlabs-video-editor/SKILL.md`](skills/mrlabs-video-editor/SKILL.md). Buka [`theme-gallery.html`](skills/mrlabs-video-editor/assets/theme-gallery.html) di browser untuk membandingkan paket, melihat font dan mendengarkan SFX. File galeri bekerja lokal tanpa akun. GitHub menampilkan source HTML; unduh/clone repo lalu buka file tersebut.
+---
 
-Snapshot koleksi Original (edisi 02); galeri HTML memuat seluruh 15 tema terbaru.
+## 🚀 Cara Pakai Pertama Kali (Untuk User Baru)
 
-![Lima paket visual MR Labs — edisi 02](skills/mrlabs-video-editor/assets/previews/themes-v2.png)
-
-Hasil dan batas pengujian lokal: [`VALIDATION.md`](VALIDATION.md).
-
-| Paket | Kegunaan |
-|---|---|
-| Atlas Studio | Editorial merah-putih untuk edukasi dan tutorial |
-| Voltage Pop | Poster biru elektrik untuk hook dan tips cepat |
-| Maison Journal | Majalah ivory/wine untuk opini dan wawancara |
-| Playroom | Kolase lilac/butter untuk cerita kreatif dan edukasi ringan |
-| Blueprint Lab | Diagram navy/cyan untuk coding dan automation |
-| Peach Doodle | Coretan peach dengan bingkai organik |
-| Bubble Pop | Gelembung lilac/pink dan kapsul bulat |
-| Groovy Mint | Gelombang retro mint/lavender |
-| Sunny Picnic | Pola bunga kuning dan bentuk kelopak |
-| Orbit Candy | Orbit dan bintang di latar ungu malam |
-| Verge Glass | Latar hitam `#0A0A0C` & bento beraksen biru es untuk review tech & produktivitas |
-| Monocle Brief | Latar putih `#FFFFFF` & kolom pers hijau emerald untuk bisnis & finansial |
-| Kinfolk Linen | Latar putih `#FFFFFF` & serif tenang untuk quiet luxury & lifestyle |
-| Obsidian Studio | Latar hitam `#0A0A0A` & emas sampanye untuk podcast & personal brand |
-| Founder Slate | Latar putih `#FFFFFF` & kartu pitch-deck kobalt untuk founder, AI & studi kasus |
-
-Lima tema Original merupakan remake edisi 02; lima tema Fun berpola ditambahkan pada edisi 03; lima tema Pro Influencer berlatar putih dan hitam ditambahkan pada edisi 04. Jika video sumber sudah mendukung format potrait (`height > width`), latar belakang tema otomatis dilewati sehingga video potrait langsung tampil penuh tanpa latar tambahan. Galeri dan video memakai CSS preset yang sama. Poppins Bold (700), Roboto (400) dan Roboto Light (300) dibundel; Helvetica memakai font lokal berlisensi dengan fallback Roboto. ID konfigurasi sebelumnya tetap didukung; lihat [pemetaan tema dan perilaku render](skills/mrlabs-video-editor/references/visual-packs.md).
-
-Untuk Codex atau agen kompatibel, arahkan ke `SKILL.md`, atau salin folder skill ke direktori skill pribadi lalu invoke `$mrlabs-video-editor`. Penempatan repo tidak otomatis memasang skill ke semua aplikasi.
+### Langkah 1 — Install Skill (Cukup Sekali)
+Buka terminal atau chat AI Agent kamu (**Antigravity / Claude Code / Codex**), lalu ketik:
 
 ```text
-Gunakan skill di skills/mrlabs-video-editor/SKILL.md.
-Edit video yang saya tentukan dengan subtitle Indonesia.
-Tampilkan pilihan tema dan rencana edit bertimestamp dahulu.
-Gunakan B-roll yang menjelaskan isi ucapan dan pertahankan suara asli.
+Clone https://github.com/maulanarahman/mrlabs-video-editor, install skill mrlabs-video-editor beserta environment-nya, lalu buka studio HTML-nya.
 ```
 
-Perintah lengkap dan format proyek: [`commands.md`](skills/mrlabs-video-editor/references/commands.md). Pemeriksaan aset tanpa unduhan:
+*(Atau jika kamu sudah men-download/clone folder repo ini, cukup ketik di chat AI: **`Install skill ini dan buka studio-nya`**).*
+
+### Langkah 2 — Panggil Skill Tanpa Konteks (Otomatis Buka Studio HTML)
+Setiap kali mau mengedit video baru, kamu cukup mengetik di chat:
+
+```text
+$mrlabs-video-editor
+```
+*(atau `/mrlabs-video-editor` / `"buka studio mrlabs"`)*
+
+AI akan otomatis menjalankan `python "skills/mrlabs-video-editor/scripts/mrlabs-gallery.py" --open` dan **membuka halaman Daylight Studio ([`theme-gallery.html`](skills/mrlabs-video-editor/assets/theme-gallery.html)) di browser kamu**:
+1. **Pilih file video raw** langsung dari komputermu di bagian `00 / PILIH FILE VIDEO RAW` (resolusi & orientasi potrait/landscape otomatis terdeteksi, bahkan bisa langsung di-*preview* di monitor Studio).
+2. **Pilih 1 dari 15 Mode Pro Talking-Head**, **6 Mode Caption**, dan **13 Efek Viral**.
+3. Klik tombol **`📋 Salin Prompt Murni ke Chat ↗`** lalu *paste* langsung ke ruang chat AI Agent!
+
+---
+
+## 🎨 15 Mode Pro Talking-Head (`themes.json`)
+
+| No | Mode / ID | Karakter Visual & Kegunaan | Efek Bawaan |
+| :--- | :--- | :--- | :--- |
+| **01** | **Creator Hook** (`obsidian-studio`) | Latar hitam `#0A0A0A`, angka kuning `#FCE373` raksasa di belakang kepala, caption dada | `orbit` |
+| **02** | **Verge Glass** (`verge-glass`) | Latar hitam `#0A0A0C`, metrik biru es `#5CC8FF` di belakang subjek, review tech & AI | `ui-world` |
+| **03** | **Monocle Brief** (`monocle-brief`) | Latar putih `#FFFFFF`, serif DM Serif Display, aksen hijau emerald `#6EE7B7` bisnis | `headline-wall` |
+| **04** | **Kinfolk Linen** (`kinfolk-linen`) | Latar putih `#FFFFFF`, serif Instrument Serif tenang, aksen champagne `#FDE68A` | `digital-zoom` |
+| **05** | **Founder Slate** (`founder-slate`) | Latar putih `#FFFFFF`, Space Grotesk tegas, aksen biru langit `#93C5FD` founder | `pull-back-reveal` |
+| **06** | **Neon Script** (`neon-script`) | Header blok putih tinggi di belakang kepala + cursive script neon `#E2FF32` di dada | `side-stack` |
+| **07** | **Echo Stack** (`echo-pulse`) | Tumpukan kata kunci berulang 5 lapis (`#FF6B4A`) di belakang kepala | `echo-wall` |
+| **08** | **Cover Story** (`vogue-cover`) | Sampul majalah serif raksasa (`#F5E6C8`) di belakang kepala + edisi & barcode | `cover-story` |
+| **09** | **Pixel Creator** (`pixel-creator`) | Kombinasi font mono hijau lime `#A3E635` & sans putih di belakang kepala | `prompt-bar` |
+| **10** | **Tactile Paper** (`tactile-paper`) | Kanvas meja kertas hangat dengan caption bertingkat emas menyala (`#FBBF24`) | `tactile-board` |
+| **11** | **3×3 Reel Matrix** (`claude-grid`) | Aksen tembaga Claude `#E87B55` dengan matriks 3×3 mengelilingi tile tengah | `grid-3x3` |
+| **12** | **Colorist HUD** (`colorist-grade`) | Grade sinematik *moody* dengan grafik Tone Curve & slider warna di atas kepala | `grade-hud` |
+| **13** | **Sticker UI Cutout** (`sticker-pop`) | Garis tepi stiker putih pada cutout tubuh di depan latar UI gelap (`#38BDF8`) | `orbit` |
+| **14** | **Shoulder Callout** (`shoulder-note`) | Aksen emerald `#34D399` + catatan mikro 3 baris melayang di samping bahu/pelipis | `digital-zoom` |
+| **15** | **Before / After Stage** (`before-after-stage`) | Panggung komparasi `🔴 Before` mentah di kiri vs `🟢 After` hasil edit di kanan | `before-after` |
+
+---
+
+## ✨ 13 Efek Viral (`mrlabs_visual.py`)
+
+- `orbit` — **ORBIT 3D Cards**: Kartu UI & metrik berputar 3D di belakang dan di depan tubuh.
+- `ui-world` — **UI World Window**: Setengah atas layar menjadi window AI/aplikasi interaktif.
+- `digital-zoom` — **Digital Zoom Punch-In**: Kamera *punch-in* halus `1.24×` ke wajah pada kata kunci.
+- `headline-wall` — **Headline Wall**: Potongan koran & artikel menempel di dinding belakang subjek.
+- `pull-back-reveal` — **Pull Back Reveal**: Kamera *zoom-out* ke antarmuka timeline desktop video editor.
+- `echo-wall` — **Echo Repeat Stack**: 5 baris kata berulang di belakang kepala dengan gradasi *opacity*.
+- `cover-story` — **Magazine Cover Story**: Masthead majalah raksasa + info edisi + barcode.
+- `grid-3x3` — **3×3 Reel Matrix**: Video utama mengecil ke tengah grid `3×3` dikelilingi 8 video lain.
+- `prompt-bar` — **AI Prompt & Tool Pills**: Kotak input prompt Claude + tombol `↑` + pill `Remotion` & `FFmpeg`.
+- `grade-hud` — **Colorist Tone Curve HUD**: Panel kurva warna SVG & slider *grading* di atas kepala.
+- `side-stack` — **Side Block & Starburst**: Teks blok vertikal di kiri/kanan bahu + bintang berputar.
+- `tactile-board` — **Tactile Sticky & Wireframe**: Sticky note checklist kuning & kartu sketsa wireframe.
+- `before-after` — **Before / After Stage**: Kartu `🔴 Before` di kiri + badge `🟢 After · Pro Edit`.
+
+---
+
+## 🛠️ Perintah CLI & Verifikasi Lokal
+
+Lihat dokumentasi lengkap di [`skills/mrlabs-video-editor/SKILL.md`](skills/mrlabs-video-editor/SKILL.md) dan [`references/commands.md`](skills/mrlabs-video-editor/references/commands.md).
 
 ```powershell
+# Buka Daylight Studio & Prompt Generator di browser
+python skills/mrlabs-video-editor/scripts/mrlabs-gallery.py --open
+
+# Verifikasi integritas 22 aset font & SFX + jalankan unit test
 python skills/mrlabs-video-editor/scripts/mrlabs-assets.py
 python -m unittest discover -s skills/mrlabs-video-editor/tests -v
 ```
-
-Alur: pilih sumber → transkripsi → rencana edit → persetujuan yang berlaku → assembly → B-roll/visual → preview → render → pemeriksaan video dan dengar audio. B-roll dicari oleh agen menggunakan alat web, lalu dicatat dalam ledger; helper Python tidak mengklaim integrasi API stok. Profil render v1: 1080×1920, 30fps.
-
-Implementasi MR Labs baru, terinspirasi workflow [tenfoldmarc/video-edit-skill](https://github.com/tenfoldmarc/video-edit-skill) oleh [@tenfoldmarc](https://www.instagram.com/tenfoldmarc/). Tidak menyertakan salinan script/template upstream. Dependensi runtime memiliki lisensi masing-masing. Font dan SFX beserta asal dan hash-nya tercatat dalam [`catalog.json`](skills/mrlabs-video-editor/assets/catalog.json); lisensi individual dibundel. Tidak ada footage pribadi, model Whisper, virtual environment atau hasil produksi yang perlu di-commit.

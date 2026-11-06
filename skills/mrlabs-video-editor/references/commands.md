@@ -15,8 +15,14 @@ All executable scripts use `mrlabs-*.py`; module names and function identifiers 
 | check_cuts | mrlabs-check-cuts.py |
 | New asset library | mrlabs-assets.py |
 | New contextual briefs | mrlabs-broll.py |
-| New pack gallery | mrlabs-gallery.py |
+| New pack gallery & auto-open studio | mrlabs-gallery.py (`--open`) |
 | Protected output render | mrlabs-render.py |
+
+When the skill is invoked without a video file or theme context, open the interactive Daylight Studio immediately:
+
+```powershell
+python "skills/mrlabs-video-editor/scripts/mrlabs-gallery.py" --open
+```
 
 PowerShell example, run from the repository root (adapt the source/project locations):
 
@@ -33,7 +39,7 @@ Review transcripts/contact sheets, then author the EDL and the timed edit plan. 
 ## Minimal project.json
 
 ```json
-{"schema":1,"language":"id","model":"small","device":"cpu","theme":"signal-clean","fps":30,"width":1080,"height":1920,"keywords":["MR Labs","ChatGPT"],"brand":"MR LABS","credit":"by @maulanarahman_"}
+{"schema":1,"language":"id","model":"small","device":"cpu","theme":"obsidian-studio","fps":30,"width":1080,"height":1920,"keywords":["MR Labs","ChatGPT"],"brand":"MR LABS","credit":"by @maulanarahman_"}
 ```
 
 Supported languages: `id`, `en`, `auto`, `mixed`. `task=transcribe` keeps the spoken language. Do not assume mixed mode fixes all borrowed technical words. `small` is multilingual; `small.en` is rejected unless language is explicitly `en`.

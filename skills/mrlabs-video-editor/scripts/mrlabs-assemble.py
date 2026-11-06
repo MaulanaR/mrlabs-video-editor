@@ -50,7 +50,7 @@ def mrlabs_main():
     work.mkdir(parents=True, exist_ok=True)
     assets.mkdir(exist_ok=True)
     ffmpeg = mrlabs_tool("ffmpeg")
-    bg_hex = mrlabs_theme_bg(config.get("theme", "signal-clean"))
+    bg_hex = mrlabs_theme_bg(config.get("theme", "obsidian-studio"))
     parts, segments, frame = [], [], 0
     for index, segment in enumerate(edl):
         source = sources[segment["clip"]]

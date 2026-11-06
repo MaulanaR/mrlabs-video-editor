@@ -4,21 +4,52 @@ let forceNonPortrait = false;
 let captionPos = 'below-face';
 let activeEffects = new Set(['orbit']);
 let userCustomizedEffects = false;
+let userCustomizedCaptionPos = false;
 
-const ALL_FX = ['orbit', 'ui-world', 'digital-zoom', 'headline-wall', 'pull-back-reveal'];
+let userVideoMeta = null; // { name, width, height, duration, objectUrl }
+let showUserVideoInMonitor = false;
+let userProfileObjectUrl = '';
+let showProfileInMonitor = false;
 
-const FX_LABELS = {
-  'orbit': 'ORBIT 3D Cards (kartu UI/metrik berputar di belakang & depan badan)',
-  'ui-world': 'UI World Window (window aplikasi/AI interaktif di bagian atas)',
-  'digital-zoom': 'Digital Zoom Punch-In (zoom halus 1.24x ke wajah pada kata kunci)',
-  'headline-wall': 'Headline Wall (kliping berita/artikel menempel di dinding belakang badan)',
-  'pull-back-reveal': 'Pull Back Reveal (zoom-out ke tampilan timeline desktop video editor)'
+const ALL_FX = [
+  'orbit',
+  'ui-world',
+  'digital-zoom',
+  'headline-wall',
+  'pull-back-reveal',
+  'echo-wall',
+  'cover-story',
+  'grid-3x3',
+  'prompt-bar',
+  'grade-hud',
+  'side-stack',
+  'tactile-board',
+  'before-after'
+];
+
+const FX_NAMES = {
+  'orbit': 'ORBIT 3D Cards',
+  'ui-world': 'UI World Window',
+  'digital-zoom': 'Digital Zoom Punch-In',
+  'headline-wall': 'Headline Wall',
+  'pull-back-reveal': 'Pull Back Reveal',
+  'echo-wall': 'Echo Repeat Stack',
+  'cover-story': 'Magazine Cover Story',
+  'grid-3x3': '3×3 Reel Matrix',
+  'prompt-bar': 'AI Prompt & Tool Pills',
+  'grade-hud': 'Colorist Tone Curve HUD',
+  'side-stack': 'Side Block & Starburst',
+  'tactile-board': 'Tactile Sticky & Wireframe',
+  'before-after': 'Before / After Stage'
 };
 
-const POS_LABELS = {
-  'below-face': 'Di bawah muka / di depan dada (below-face / chest-float, Y: 1050px)',
-  'above-head': 'Di atas kepala presenter (above-head, Y: 310px)',
-  'bottom': 'Di bagian bawah frame (bottom, Y: 1265px)'
+const POS_SHORT = {
+  'below-face': 'Di Bawah Muka',
+  'above-head': 'Di Atas Kepala',
+  'bottom': 'Di Bawah Frame',
+  'split-script': 'Split Script Neon',
+  'hierarchy-glow': 'Hierarchy Glow',
+  'shoulder-note': 'Shoulder Callout'
 };
 
 const configInput = document.querySelector('#config');
@@ -27,6 +58,20 @@ const statusEl = document.querySelector('.status');
 const studioFrame = document.querySelector('#studio-frame');
 const studioBadge = document.querySelector('#studio-badge');
 const selectedThemeLabel = document.querySelector('#selected-theme-label');
+
+const videoFileInput = document.querySelector('#video-file');
+const videoPathInput = document.querySelector('#video-path');
+const folderPathInput = document.querySelector('#folder-path');
+const profileFileInput = document.querySelector('#profile-file');
+const profilePathInput = document.querySelector('#profile-path');
+const notesInput = document.querySelector('#notes-input');
+const brandInput = document.querySelector('#brand-input');
+const creditInput = document.querySelector('#credit-input');
+const keywordsInput = document.querySelector('#keywords-input');
+const videoMetaBadge = document.querySelector('#video-meta-badge');
+const toggleUserVideoBtn = document.querySelector('#toggle-user-video');
+const toggleProfilePreviewBtn = document.querySelector('#toggle-profile-preview');
+
 const allFrames = () => [...document.querySelectorAll('iframe')];
 
 document.fonts.load('400 28px "Helvetica"').then(faces => {
@@ -40,6 +85,36 @@ document.fonts.load('400 28px "Helvetica"').then(faces => {
   const el = document.querySelector('#helvetica-status');
   if (el) el.textContent = 'Helvetica belum tersedia; contoh ini memakai Roboto.';
 });
+
+function joinPath(folder, file) {
+  const cleanFile = (file || '').trim().replace(/^["']|["']$/g, '');
+  const cleanFolder = (folder || '').trim().replace(/^["']|["']$/g, '').replace(/[\\/]+$/, '');
+  if (!cleanFile) return cleanFolder ? `${cleanFolder}\\input.mp4` : './input.mp4';
+  if (/^[a-zA-Z]:[\\/]/.test(cleanFile) || cleanFile.startsWith('/') || cleanFile.startsWith('./') || cleanFile.startsWith('..\\')) {
+    return cleanFile;
+  }
+  if (cleanFolder) {
+    const sep = cleanFolder.includes('/') && !cleanFolder.includes('\\') ? '/' : '\\';
+    return `${cleanFolder}${sep}${cleanFile}`;
+  }
+  return cleanFile;
+}
+
+function getResolvedVideoPath() {
+  return joinPath(folderPathInput?.value, videoPathInput?.value);
+}
+
+function getResolvedProfilePath() {
+  const raw = (profilePathInput?.value || '').trim();
+  if (!raw) return '';
+  return joinPath(folderPathInput?.value, raw);
+}
+
+function getKeywordsList() {
+  const raw = (keywordsInput?.value || '').trim();
+  if (!raw) return ['MR Labs', 'Claude Code', 'HyperFrames'];
+  return raw.split(',').map(s => s.trim()).filter(Boolean);
+}
 
 function syncCheckboxesWithSet() {
   document.querySelectorAll('.fx-toggle').forEach(cb => {
@@ -59,7 +134,52 @@ function syncFrameState(frame, isStudio = false) {
   const main = doc.querySelector('#main');
   if (!main) return;
   main.dataset.portrait = forceNonPortrait ? 'false' : 'true';
-  main.dataset.captionPos = captionPos;
+  const defaultCardPos = main.dataset.defaultCaptionPos || 'below-face';
+  main.dataset.captionPos = (isStudio || userCustomizedCaptionPos) ? captionPos : defaultCardPos;
+
+  const brandEl = doc.querySelector('.brand');
+  if (brandEl && brandInput) {
+    brandEl.textContent = brandInput.value.trim() || 'MR LABS';
+  }
+  const creditEl = doc.querySelector('.credit');
+  if (creditEl && creditInput) {
+    creditEl.textContent = creditInput.value.trim() || 'by @maulanarahman_';
+  }
+
+  if (isStudio) {
+    const userVid = doc.querySelector('#user-preview-video');
+    const baseImg = doc.querySelector('#default-base-img');
+    const subjImg = doc.querySelector('#default-subject-img');
+    if (userVid && baseImg && subjImg) {
+      if (showUserVideoInMonitor && userVideoMeta?.objectUrl) {
+        if (userVid.src !== userVideoMeta.objectUrl) {
+          userVid.src = userVideoMeta.objectUrl;
+        }
+        userVid.style.display = 'block';
+        userVid.play().catch(() => {});
+        baseImg.style.display = 'none';
+        subjImg.style.display = 'none';
+      } else {
+        userVid.pause?.();
+        userVid.style.display = 'none';
+        baseImg.style.display = '';
+        subjImg.style.display = '';
+      }
+    }
+
+    const profCard = doc.querySelector('#fx-profile-card');
+    const profImg = doc.querySelector('#user-profile-img');
+    if (profCard && profImg) {
+      if (showProfileInMonitor && userProfileObjectUrl) {
+        profImg.src = userProfileObjectUrl;
+        profCard.style.display = 'block';
+        profCard.style.opacity = '1';
+      } else {
+        profCard.style.display = 'none';
+        profCard.style.opacity = '0';
+      }
+    }
+  }
 
   const defaultCardFx = main.dataset.defaultFx || '';
   ALL_FX.forEach(fx => {
@@ -110,27 +230,53 @@ function buildPromptText() {
   const fxArray = [...activeEffects];
   const creatorHook = selected === 'obsidian-studio';
   const themeName = creatorHook ? 'Obsidian Studio' : spec.name;
+
+  const videoPath = getResolvedVideoPath();
+  const profilePath = getResolvedProfilePath();
+  const brandVal = (brandInput?.value || 'MR LABS').trim();
+  const creditVal = (creditInput?.value || 'by @maulanarahman_').trim();
+  const notesVal = (notesInput?.value || '').trim();
+  const kwList = getKeywordsList();
+
   const positions = {
-    id: { 'above-head': 'di atas kepala saya', 'below-face': 'di bawah muka saya / di depan dada', bottom: 'di bagian bawah frame' },
-    en: { 'above-head': 'above my head', 'below-face': 'below my face / across my chest', bottom: 'in the lower part of the frame' }
+    id: {
+      'above-head': 'di atas kepala saya (`above-head`, Y: 310px)',
+      'below-face': 'di bawah muka / di depan dada saya (`below-face` / `chest-float`, Y: 1050px)',
+      'bottom': 'di bagian bawah frame (`bottom`, Y: 1265px)',
+      'split-script': 'di depan dada dengan gaya Split Script Neon (`split-script`, font cursive Caveat menyala)',
+      'hierarchy-glow': 'di depan dada dengan gaya Hierarchy Glow 2-baris (`hierarchy-glow`, baris pengantar kecil + kata kunci emas menyala)',
+      'shoulder-note': 'di depan dada disertai catatan mikro 3 baris di samping bahu/pelipis (`shoulder-note`)'
+    },
+    en: {
+      'above-head': 'above my head (`above-head`, Y: 310px)',
+      'below-face': 'below my face / across my chest (`below-face` / `chest-float`, Y: 1050px)',
+      'bottom': 'in the lower part of the frame (`bottom`, Y: 1265px)',
+      'split-script': 'across my chest in Split Script Neon style (`split-script`, glowing Caveat cursive script)',
+      'hierarchy-glow': 'across my chest in 2-line Hierarchy Glow style (`hierarchy-glow`, small setup line + glowing accent keyword)',
+      'shoulder-note': 'across my chest paired with a 3-line micro Shoulder Callout note beside my temple/shoulder (`shoulder-note`)'
+    }
   };
-  const effects = {
-    orbit: 'ORBIT 3D Cards', 'ui-world': 'UI World Window',
-    'digital-zoom': 'Digital Zoom Punch-In', 'headline-wall': 'Headline Wall',
-    'pull-back-reveal': 'Pull Back Reveal'
-  };
-  const effectNames = fxArray.map(fx => effects[fx] || fx).join(', ');
+  const effectNames = fxArray.map(fx => `${FX_NAMES[fx] || fx} (\`${fx}\`)`).join(', ');
 
   const payload = {
+    source_video: videoPath,
     theme: selected,
     caption_position: captionPos,
     effects: fxArray,
     portrait: !forceNonPortrait,
-    language
+    language,
+    brand: brandVal,
+    credit: creditVal,
+    keywords: kwList
   };
+  if (profilePath) payload.profile_card = profilePath;
+  if (userVideoMeta) {
+    payload.detected_resolution = `${userVideoMeta.width}x${userVideoMeta.height}`;
+    payload.detected_duration_sec = Number(userVideoMeta.duration.toFixed(2));
+  }
   configInput.value = JSON.stringify(payload);
 
-  const posShort = captionPos === 'below-face' ? 'Di Bawah Muka' : (captionPos === 'above-head' ? 'Di Atas Kepala' : 'Di Bawah Frame');
+  const posShort = POS_SHORT[captionPos] || captionPos;
   if (studioBadge) {
     studioBadge.textContent = `${spec.name} · ${posShort}${fxArray.length ? ` · +${fxArray.length} FX` : ''}`;
   }
@@ -138,53 +284,86 @@ function buildPromptText() {
     selectedThemeLabel.textContent = `${spec.name} (${selected})`;
   }
 
+  const metaLineId = userVideoMeta
+    ? ` (${userVideoMeta.width}×${userVideoMeta.height}px, durasi ${userVideoMeta.duration.toFixed(1)} detik, orientasi ${userVideoMeta.height > userVideoMeta.width ? 'Potrait 9:16' : 'Landscape'})`
+    : '';
+  const metaLineEn = userVideoMeta
+    ? ` (${userVideoMeta.width}×${userVideoMeta.height}px, duration ${userVideoMeta.duration.toFixed(1)}s, ${userVideoMeta.height > userVideoMeta.width ? 'Portrait 9:16' : 'Landscape'})`
+    : '';
+
   if (language === 'en') {
-    return [
+    const lines = [
       'Edit my talking-head video using the `$mrlabs-video-editor` skill.',
       '',
-      'Video file: [enter the video file path]',
-      'Instagram profile: [enter the profile image path, if available]',
-      'Visual reference: [attach the reference image, if available]',
+      `Source video: \`${videoPath}\`${metaLineEn}`,
+      `Theme mode: **${themeName}** (\`${selected}\`)`,
+      `Brand & credit: \`${brandVal}\` · \`${creditVal}\``,
+      `Transcript keywords: ${kwList.join(', ')}`
+    ];
+    if (profilePath) {
+      lines.push(`Instagram profile card: \`${profilePath}\` (show during the follow call-to-action)`);
+    }
+    if (notesVal) {
+      lines.push(`Special instructions: ${notesVal}`);
+    }
+    lines.push(
       '',
-      `Use the **${themeName}** theme (\`${selected}\`)${creatorHook ? ' with captions in the *Creator Hook* reference style' : ''}:`,
-      '',
-      `- Place bold, white conversational captions ${positions.en[captionPos]}. Use short, readable phrases timed to the actual speech.`,
-      `- At important moments, show **very large ${creatorHook ? 'yellow' : `theme-accent (${spec.accent || spec.background})`} keywords** below the conversational captions. Select words actually spoken; “EDIT AI”, “ORBIT”, and “FOLLOW” are examples only, and must not be inserted if absent from the speech.`,
-      '- Place the large keywords **behind my head and body** using a subject cutout, so my head naturally occludes part of the letters. Keep the keywords readable and preserve my original face and recorded voice. Check mask edges and movement in the final video.',
+      'Visual & editing rules:',
+      `- Place conversational captions ${positions.en[captionPos] || positions.en['below-face']}. Keep phrases short and timed to actual speech.`,
+      `- Highlight key spoken moments with large **${creatorHook ? 'yellow (#FCE373)' : `theme-accent (${spec.accent || spec.background})`}** depth titles behind my head and shoulders using a subject cutout (\`subject.webm\`), so my head naturally occludes part of the letters.`,
       forceNonPortrait
-        ? `- Place the subject cutout over the selected theme background (${spec.background}).`
-        : '- Keep the original video background when the source is already vertical. For other aspect ratios, plan the reframing and theme background around the subject.',
-      '- Do not add numbers, statistics, or claims that I did not say. Treat preview text, metrics, and UI as illustrations, never as factual source material.',
-      `- Keep effects clear of my face and captions.${fxArray.length ? ` Use ${effectNames} when the corresponding feature is discussed; space the effects across relevant moments rather than showing all at once.` : ' Do not add optional effects; focus on typography and keyword depth.'}`,
-      '- Show the supplied Instagram profile during the follow call to action. If the image or call to action is absent, flag it in the plan instead of inventing profile details or speech.',
-      '- Use the attached reference image to check composition, relative text size, color, and occlusion. Adapt placement to my actual head position; the gallery preview alone does not guarantee an identical result.',
+        ? `- Place my subject cutout over the **${themeName}** studio background (\`${spec.background}\`).`
+        : '- Keep my original portrait video background without adding a synthetic canvas background (`data-portrait="true"`).',
+      fxArray.length
+        ? `- Activate these viral effects at relevant moments in the timeline (spaced cleanly, never all overlapping at once): ${effectNames}.`
+        : '- No extra overlay effects; focus purely on clean typography and depth behind the subject.',
+      '- Do not invent numbers, statistics, or words not present in my actual speech.',
       '',
-      'Review the transcript and propose a timestamped edit plan first, including the exact phrases, keywords, selected effects, and missing assets. Wait for my approval before production. Then deliver the full-quality video, a lightweight phone version, and an SRT subtitle file.'
-    ].join('\n');
+      'Configuration (`project.json` / `visual.json`):',
+      '```json',
+      JSON.stringify(payload, null, 2),
+      '```',
+      '',
+      'Review the transcript and propose a timestamped edit plan first. Wait for my approval, then render the full 1080×1920 MP4, phone copy, and `captions.srt`.'
+    );
+    return lines.join('\n');
   }
 
-  return [
+  const lines = [
     'Edit video talking-head saya menggunakan skill `$mrlabs-video-editor`.',
     '',
-    'File video: [masukkan lokasi file video]',
-    'Profil Instagram: [masukkan lokasi gambar profil, jika ada]',
-    'Referensi visual: [lampirkan gambar referensi, jika ada]',
+    `File video utama: \`${videoPath}\`${metaLineId}`,
+    `Mode tema: **${themeName}** (\`${selected}\`)`,
+    `Brand & credit: \`${brandVal}\` · \`${creditVal}\``,
+    `Kata kunci transkrip (Whisper): ${kwList.join(', ')}`
+  ];
+  if (profilePath) {
+    lines.push(`Gambar profil Instagram / CTA: \`${profilePath}\` (tampilkan pada bagian ajakan follow)`);
+  }
+  if (notesVal) {
+    lines.push(`Instruksi khusus: ${notesVal}`);
+  }
+  lines.push(
     '',
-    `Gunakan tema **${themeName}** (\`${selected}\`)${creatorHook ? ' dengan gaya caption seperti referensi *Creator Hook*' : ''}:`,
-    '',
-    `- Letakkan caption percakapan berwarna putih, tebal, ${positions.id[captionPos]}. Gunakan potongan frasa pendek yang mengikuti waktu ucapan dan mudah dibaca.`,
-    `- Pada bagian penting, tampilkan **kata kunci ${creatorHook ? 'berwarna kuning' : `berwarna aksen tema (${spec.accent || spec.background})`} dengan ukuran sangat besar** di bawah caption percakapan. Pilih kata kunci dari isi ucapan; “EDIT AI”, “ORBIT”, atau “FOLLOW” hanya contoh, jangan dimasukkan jika tidak diucapkan.`,
-    '- Tempatkan kata besar **di belakang kepala dan badan saya** menggunakan cutout subjek, sehingga sebagian huruf tertutup secara alami oleh kepala. Pastikan kata tetap terbaca dan pertahankan wajah serta suara asli. Periksa tepi cutout dan pergerakannya pada hasil video.',
+    'Aturan visual & komposisi:',
+    `- Letakkan caption percakapan ${positions.id[captionPos] || positions.id['below-face']}. Gunakan potongan frasa pendek yang mengikuti waktu ucapan.`,
+    `- Pada poin penting yang diucapkan, tampilkan kata kunci besar berwarna **${creatorHook ? 'kuning (#FCE373)' : `aksen tema (${spec.accent || spec.background})`}** di belakang kepala dan bahu saya menggunakan cutout subjek (\`subject.webm\`), sehingga sebagian huruf tertutup alami oleh kepala.`,
     forceNonPortrait
-      ? `- Gunakan latar belakang tema (${spec.background}) di belakang cutout subjek sesuai pilihan saya.`
-      : '- Gunakan latar asli video jika sumber sudah vertikal. Untuk rasio lain, rencanakan penyesuaian framing dan latar tema dengan memperhatikan posisi subjek.',
-    '- Jangan tambahkan angka, statistik, atau klaim yang tidak saya ucapkan. Teks, metrik, dan UI di preview hanya ilustrasi, bukan sumber fakta untuk video.',
-    `- Sesuaikan posisi efek agar tidak menutupi wajah atau bertabrakan dengan caption.${fxArray.length ? ` Gunakan efek ${effectNames} pada saat fitur tersebut dibahas; sebarkan pada momen yang relevan, bukan ditampilkan sekaligus.` : ' Tanpa efek tambahan; fokus pada tipografi dan kedalaman kata kunci.'}`,
-    '- Tampilkan profil Instagram yang saya berikan pada bagian ajakan follow. Jika gambar atau ajakan follow tidak tersedia, catat dalam rencana tanpa mengarang identitas profil atau ucapan.',
-    '- Gunakan gambar referensi yang dilampirkan untuk memeriksa komposisi, perbandingan ukuran teks, warna, dan bagian huruf yang tertutup subjek. Sesuaikan posisi dengan kepala saya di video; preview galeri saja tidak menjamin hasil identik.',
+      ? `- Tempatkan cutout subjek di atas latar belakang studio tema **${themeName}** (\`${spec.background}\`).`
+      : '- Pertahankan latar asli video karena sumber sudah vertikal/potrait (`data-portrait="true"`, tanpa tambahan latar belakang tema).',
+    fxArray.length
+      ? `- Gunakan efek berikut pada bagian pembahasan yang relevan (sebarkan secara bergantian di timeline, jangan ditumpuk sekaligus): ${effectNames}.`
+      : '- Tanpa efek tambahan; fokus pada ketajaman tipografi dan depth kata kunci di belakang kepala.',
+    '- Jangan mengarang angka, klaim, atau teks yang tidak saya ucapkan di dalam video.',
     '',
-    'Tinjau transkrip dan susun rencana edit bertimestamp terlebih dahulu, termasuk frasa persis, kata kunci, efek terpilih, dan aset yang belum tersedia. Tunggu persetujuan saya sebelum produksi. Setelah saya setujui, lanjutkan produksi dan berikan video kualitas penuh, versi ringan untuk ponsel, serta file subtitle SRT.'
-  ].join('\n');
+    'Konfigurasi siap pakai (`project.json` / `visual.json`):',
+    '```json',
+    JSON.stringify(payload, null, 2),
+    '```',
+    '',
+    'Susun rencana edit bertimestamp dari transkrip terlebih dahulu. Setelah saya setujui, jalankan produksi hingga menghasilkan video 1080×1920 kualitas penuh, versi ringan untuk HP, dan file `captions.srt`.'
+  );
+  return lines.join('\n');
 }
 
 function updateUI() {
@@ -195,7 +374,7 @@ function updateUI() {
   document.querySelectorAll('.pick').forEach(btn => {
     const isSel = btn.dataset.theme === selected;
     btn.setAttribute('aria-pressed', String(isSel));
-    btn.firstChild.textContent = isSel ? 'Terpilih' : 'Pilih tema';
+    btn.firstChild.textContent = isSel ? 'Terpilih' : 'Gunakan Mode Ini';
   });
   document.querySelectorAll('.theme-chip').forEach(chip => {
     chip.setAttribute('aria-pressed', String(chip.dataset.theme === selected));
@@ -224,6 +403,9 @@ function selectTheme(themeId, scrollStudio = false) {
     if (!userCustomizedEffects && spec.default_fx) {
       activeEffects = new Set([spec.default_fx]);
     }
+    if (!userCustomizedCaptionPos && spec.caption_position) {
+      captionPos = spec.caption_position;
+    }
     if (studioFrame) {
       studioFrame.srcdoc = buildStatefulSrcdoc(spec.srcdoc);
     }
@@ -233,6 +415,83 @@ function selectTheme(themeId, scrollStudio = false) {
     document.querySelector('.studio-builder')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 }
+
+// Handle local Raw Video file selection -> auto-detect resolution, duration & portrait orientation!
+videoFileInput?.addEventListener('change', () => {
+  const file = videoFileInput.files && videoFileInput.files[0];
+  if (!file) return;
+  if (videoPathInput && (!videoPathInput.value.trim() || !videoPathInput.value.includes('\\'))) {
+    videoPathInput.value = file.name;
+  }
+  const objUrl = URL.createObjectURL(file);
+  const probeVid = document.createElement('video');
+  probeVid.preload = 'metadata';
+  probeVid.onloadedmetadata = () => {
+    const w = probeVid.videoWidth || 1080;
+    const h = probeVid.videoHeight || 1920;
+    const dur = probeVid.duration || 0;
+    const isPortrait = h > w;
+    userVideoMeta = { name: file.name, width: w, height: h, duration: dur, objectUrl: objUrl };
+    forceNonPortrait = !isPortrait;
+    if (videoMetaBadge) {
+      videoMetaBadge.textContent = `✓ ${file.name} · ${w}×${h} (${isPortrait ? 'Potrait' : 'Landscape'}) · ${dur.toFixed(1)} dtk`;
+      videoMetaBadge.classList.add('ready');
+    }
+    if (toggleUserVideoBtn) {
+      toggleUserVideoBtn.style.display = 'inline-flex';
+      showUserVideoInMonitor = true;
+      toggleUserVideoBtn.textContent = '🖼 Kembali ke Foto Contoh Studio';
+    }
+    if (statusEl) {
+      statusEl.textContent = `✓ Video ${file.name} (${w}×${h}) siap di prompt`;
+    }
+    updateUI();
+  };
+  probeVid.src = objUrl;
+});
+
+toggleUserVideoBtn?.addEventListener('click', () => {
+  showUserVideoInMonitor = !showUserVideoInMonitor;
+  toggleUserVideoBtn.textContent = showUserVideoInMonitor
+    ? '🖼 Kembali ke Foto Contoh Studio'
+    : '👁 Tampilkan Video Raw Saya di Monitor';
+  syncAllFrames();
+});
+
+// Handle Profile Image file selection
+profileFileInput?.addEventListener('change', () => {
+  const file = profileFileInput.files && profileFileInput.files[0];
+  if (!file) return;
+  if (profilePathInput && !profilePathInput.value.trim()) {
+    profilePathInput.value = file.name;
+  }
+  userProfileObjectUrl = URL.createObjectURL(file);
+  if (toggleProfilePreviewBtn) {
+    toggleProfilePreviewBtn.style.display = 'inline-flex';
+    showProfileInMonitor = true;
+    toggleProfilePreviewBtn.textContent = '🙈 Sembunyikan Kartu IG di Monitor';
+  }
+  updateUI();
+});
+
+toggleProfilePreviewBtn?.addEventListener('click', () => {
+  showProfileInMonitor = !showProfileInMonitor;
+  toggleProfilePreviewBtn.textContent = showProfileInMonitor
+    ? '🙈 Sembunyikan Kartu IG di Monitor'
+    : '👤 Preview Kartu IG di Monitor';
+  syncAllFrames();
+});
+
+// Live update prompt when any text input changes
+[videoPathInput, folderPathInput, profilePathInput, notesInput, brandInput, creditInput, keywordsInput].forEach(inp => {
+  inp?.addEventListener('input', () => {
+    if (inp === videoPathInput && videoPathInput.value.trim() && !userVideoMeta && videoMetaBadge) {
+      videoMetaBadge.textContent = `✓ Path: ${getResolvedVideoPath()}`;
+      videoMetaBadge.classList.add('ready');
+    }
+    updateUI();
+  });
+});
 
 const resize = new ResizeObserver(entries => entries.forEach(({ target }) => {
   const iframe = target.querySelector('iframe');
@@ -244,18 +503,19 @@ allFrames().forEach(frame => frame.addEventListener('load', () => syncFrameState
 
 document.querySelectorAll('.pick').forEach(button => button.addEventListener('click', () => {
   selectTheme(button.dataset.theme, true);
-  if (statusEl) statusEl.textContent = `Tema ${button.dataset.theme} dimuat ke Studio`;
+  if (statusEl) statusEl.textContent = `Mode ${button.dataset.theme} dimuat ke Studio`;
 }));
 
 document.querySelectorAll('.theme-chip').forEach(chip => chip.addEventListener('click', () => {
   selectTheme(chip.dataset.theme, false);
-  if (statusEl) statusEl.textContent = `Tema ${chip.dataset.theme} aktif`;
+  if (statusEl) statusEl.textContent = `Mode ${chip.dataset.theme} aktif`;
 }));
 
 document.querySelectorAll('.pos-chip').forEach(chip => chip.addEventListener('click', () => {
+  userCustomizedCaptionPos = true;
   captionPos = chip.dataset.pos;
   updateUI();
-  if (statusEl) statusEl.textContent = `Posisi caption: ${captionPos}`;
+  if (statusEl) statusEl.textContent = `Mode caption: ${captionPos}`;
 }));
 
 document.querySelectorAll('.bg-chip').forEach(chip => chip.addEventListener('click', () => {
@@ -283,7 +543,7 @@ document.querySelector('#all-fx')?.addEventListener('click', () => {
   userCustomizedEffects = true;
   activeEffects = new Set(ALL_FX);
   updateUI();
-  if (statusEl) statusEl.textContent = 'Semua 5 efek diaktifkan';
+  if (statusEl) statusEl.textContent = `Semua ${ALL_FX.length} efek diaktifkan`;
 });
 
 document.querySelector('#clear-fx')?.addEventListener('click', () => {
@@ -295,7 +555,7 @@ document.querySelector('#clear-fx')?.addEventListener('click', () => {
 
 document.querySelector('#language')?.addEventListener('click', () => {
   language = language === 'id' ? 'en' : 'id';
-  document.querySelector('#language').textContent = language === 'id' ? 'Contoh: Indonesia' : 'Sample: English';
+  document.querySelector('#language').textContent = language === 'id' ? 'Bahasa Prompt: Indonesia' : 'Prompt Language: English';
   updateUI();
 });
 
@@ -314,7 +574,7 @@ document.querySelector('#replay')?.addEventListener('click', () => {
 document.querySelector('#copy-prompt')?.addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(promptOutput.value);
-    if (statusEl) statusEl.textContent = '✓ Prompt AI berhasil disalin!';
+    if (statusEl) statusEl.textContent = '✓ Prompt murni berhasil disalin!';
   } catch {
     promptOutput.select();
     if (statusEl) statusEl.textContent = 'Tekan Ctrl+C untuk menyalin prompt';

@@ -1,7 +1,10 @@
-"""Build the interactive theme studio, live effect preview (using creator.png), and AI prompt generator."""
+"""Build the interactive Daylight Pro Talking-Head & Captioning Studio and AI prompt generator."""
+import argparse
 import hashlib
 import html
 import json
+import os
+import webbrowser
 from mrlabs_core import MRLABS_ROOT, mrlabs_read
 from mrlabs_visual import MRLABS_EFFECTS, mrlabs_css, mrlabs_motion, mrlabs_effect_specimen_html
 
@@ -11,6 +14,16 @@ DEFAULT_PRO_FX = {
     "monocle-brief": "headline-wall",
     "kinfolk-linen": "digital-zoom",
     "founder-slate": "pull-back-reveal",
+    "neon-script": "side-stack",
+    "echo-pulse": "echo-wall",
+    "vogue-cover": "cover-story",
+    "pixel-creator": "prompt-bar",
+    "tactile-paper": "tactile-board",
+    "claude-grid": "grid-3x3",
+    "colorist-grade": "grade-hud",
+    "sticker-pop": "orbit",
+    "shoulder-note": "digital-zoom",
+    "before-after-stage": "before-after",
 }
 
 
@@ -19,7 +32,7 @@ def mrlabs_bilingual(tag, class_name, indonesian, english):
 
 
 def mrlabs_bilingual_title(theme):
-    if theme.get("talking_head") and "\n" in theme["heading_id"] and "\n" in theme["heading_en"]:
+    if "\n" in theme["heading_id"] and "\n" in theme["heading_en"]:
         id_kicker, id_hero = theme["heading_id"].split("\n", 1)
         en_kicker, en_hero = theme["heading_en"].split("\n", 1)
         kicker = mrlabs_bilingual("span", "title-kicker", id_kicker, en_kicker)
@@ -28,103 +41,76 @@ def mrlabs_bilingual_title(theme):
     return mrlabs_bilingual("div", "title", theme["heading_id"], theme["heading_en"])
 
 
-def mrlabs_art(theme, number):
-    """Original vector specimens for B-roll cards on non-talking-head themes."""
-    if theme.get("collection") == "fun":
-        return '<div class="theme-placeholder"><span>B-roll</span><small>RUANG VISUAL / VISUAL SPACE</small></div>'
-    bg, panel, fg, accent = (theme[k] for k in ('background', 'panel', 'foreground', 'accent'))
-    art = {
-        'signal-clean': f'<rect width="810" height="456" fill="{panel}"/><circle cx="570" cy="195" r="140" fill="{accent}"/><path d="M60 290V110H240V290ZM275 290V55H455V290Z" fill="{bg}"/><path d="M60 310H745" stroke="{fg}" stroke-width="3"/><text x="70" y="170" font-family="sans-serif" font-size="40" fill="{fg}">A</text><path d="M100 240H360L335 215M360 240L335 265" stroke="{fg}" stroke-width="8" fill="none"/>',
-        'kinetic-punch': f'<rect width="810" height="456" fill="{panel}"/><path d="M410 10 445 110 535 55 510 155 625 160 545 230 625 300 510 295 535 400 445 345 410 445 375 345 285 400 310 295 195 300 275 230 195 160 310 155 285 55 375 110Z" fill="{accent}"/><path d="M395 100 465 100 420 205 475 205 355 335 390 235 340 235Z" fill="{bg}"/>',
-        'editorial-noir': f'<rect width="810" height="456" fill="{panel}"/><path d="M210 430V210A195 195 0 0 1 600 210V430Z" fill="{accent}"/><circle cx="550" cy="100" r="57" fill="{bg}"/><path d="M120 350Q345 190 690 350V456H120Z" fill="{fg}"/><path d="M170 398Q370 275 650 386" fill="none" stroke="{bg}" stroke-width="2"/>',
-        'warm-story': f'<rect width="810" height="456" fill="{bg}"/><rect x="110" y="55" width="340" height="275" rx="40" fill="{accent}" transform="rotate(-8 280 190)"/><rect x="360" y="65" width="310" height="270" rx="150" fill="{panel}"/><path d="M460 165Q500 200 540 165M590 165Q625 200 660 165M500 240Q560 295 625 240" stroke="{fg}" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M180 200H355M270 115V285" stroke="{panel}" stroke-width="36" stroke-linecap="round"/>',
-        'tech-grid': f'<defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" stroke="{accent}" opacity=".18" fill="none"/></pattern></defs><rect width="810" height="456" fill="{bg}"/><rect width="810" height="456" fill="url(#grid)"/><g stroke="{accent}" fill="{panel}" stroke-width="3"><path d="M180 215H405V110H625M405 215V300H625" fill="none"/><rect x="65" y="155" width="180" height="120"/><circle cx="405" cy="215" r="47"/><rect x="590" y="55" width="150" height="105"/><rect x="590" y="250" width="150" height="105"/></g><g fill="{accent}" font-family="monospace" font-size="28"><text x="105" y="225">IN</text><text x="388" y="225">+</text><text x="622" y="120">RUN</text><text x="622" y="315">OUT</text></g>',
-    }.get(theme['id'], f'<rect width="810" height="456" fill="{panel}"/>')
-    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 810 456" role="img" aria-label="Ilustrasi grafis {html.escape(theme["name"])}">{art}</svg>'
-
-
 def mrlabs_specimen(theme, number):
-    """Build a 1080x1920 specimen using previews/creator.png + previews/creator-cutout.png and 5 toggleable effects."""
+    """Build a 1080x1920 talking-head specimen using previews/creator.png + previews/creator-cutout.png and 13 toggleable effects."""
     css = mrlabs_css(theme).replace('assets/mrlabs/fonts/', 'fonts/')
     motion = mrlabs_motion(theme)
-    is_th = bool(theme.get('talking_head'))
-    caption_pos = 'below-face' if theme.get('caption_position') in ('chest-float', 'below-face') else theme.get('caption_position', 'bottom')
+    raw_pos = theme.get('caption_position', 'below-face')
+    caption_pos = 'below-face' if raw_pos in ('chest-float', 'below-face') else raw_pos
     default_portrait = 'true'
     default_fx = DEFAULT_PRO_FX.get(theme['id'], '')
     fx_attr = f' data-default-fx="{default_fx}" data-fx-{default_fx}="true"' if default_fx else ''
     transform = f'translate({motion.get("x",0)}px,{motion.get("y",0)}px) scale({motion.get("scale",1)}) rotate({motion.get("rotation",0)}deg)'
-    label = mrlabs_bilingual('div', 'broll-label', ('BINGKAI / ' if theme.get('collection')=='fun' else 'ILUSTRASI / ')+theme['name'], ('FRAME / ' if theme.get('collection')=='fun' else 'ILLUSTRATION / ')+theme['name'])
     title = mrlabs_bilingual_title(theme)
     caption = mrlabs_bilingual('div', 'caption '+theme['caption_style'], theme['caption_id'], theme['caption_en'])
-    broll_block = '' if is_th else f'<div class="broll">{mrlabs_art(theme,number)}{label}</div>'
     fx_html = mrlabs_effect_specimen_html(theme)
     return f'''<!doctype html><html lang="id"><head><meta charset="utf-8"><style>{css}
     .preview-bg{{position:absolute;inset:0;background:var(--background);z-index:0}}
     #main[data-portrait="true"] .preview-bg{{background:transparent!important}}
     #main[data-portrait="false"] .preview-bg{{background:var(--background)!important;display:block!important}}
-    /* Hide decorative B-roll card when any of the 5 talking-head effects are active so creator.png is unobstructed */
-    #main:is([data-fx-orbit="true"],[data-fx-ui-world="true"],[data-fx-digital-zoom="true"],[data-fx-headline-wall="true"],[data-fx-pull-back-reveal="true"]) .broll{{display:none!important}}
     .specimen-index{{position:absolute;bottom:85px;right:85px;z-index:8;font:400 140px var(--heading-font);color:var(--accent);opacity:.22;pointer-events:none}}
     .specimen-note{{position:absolute;bottom:120px;left:65px;z-index:8;font:400 22px var(--label-font);letter-spacing:.1em;color:var(--muted);pointer-events:none}}
-    .broll svg{{display:block;width:100%;height:100%;object-fit:cover}}
-    .theme-placeholder{{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:35px 40px 85px;background:var(--panel);color:var(--foreground)}}
-    .theme-placeholder span{{font:var(--heading-weight) 105px var(--heading-font);letter-spacing:-.04em}}
-    .theme-placeholder small{{font:400 18px var(--body-font);letter-spacing:.12em;margin-top:8px}}
-    #main:not([data-talking-head="true"]) .caption{{color:var(--highlight)}}
-    .replay .title,.replay .caption,.replay .broll{{animation:entrance {theme['enter_seconds']}s cubic-bezier(.2,.8,.2,1) both}}
-    .replay .broll{{animation-delay:.16s}}.replay .caption{{animation-delay:.3s}}
+    .replay .title,.replay .caption{{animation:entrance {theme['enter_seconds']}s cubic-bezier(.2,.8,.2,1) both}}
+    .replay .caption{{animation-delay:.22s}}
     @keyframes entrance{{from{{opacity:0;transform:{transform};filter:{motion.get('filter','none')}}}to{{opacity:1;transform:translate(0,0) scale(1) rotate(0);filter:none}}}}
     @media(prefers-reduced-motion:reduce){{*{{animation:none!important}}}}
-    </style></head><body><div id="main" data-theme="{theme['id']}" data-talking-head="{'true' if is_th else 'false'}" data-portrait="{default_portrait}" data-default-portrait="{default_portrait}" data-caption-pos="{caption_pos}" data-default-caption-pos="{caption_pos}"{fx_attr}><div class="preview-bg"></div><img class="base" src="previews/creator.png" alt="Foto kreator"><div class="shade"></div><div class="art-direction"></div><img class="subject" src="previews/creator-cutout.png" alt="Cutout kreator">{fx_html}<div class="brand">MR LABS</div>{title}{broll_block}{caption}<div class="credit">by @maulanarahman_</div><div class="specimen-index">{number:02d}</div><div class="specimen-note">VISUAL STUDY<br>EDITION {theme.get("edition", 2):02d}</div></div></body></html>'''
+    </style></head><body><div id="main" data-theme="{theme['id']}" data-talking-head="true" data-portrait="{default_portrait}" data-default-portrait="{default_portrait}" data-caption-pos="{caption_pos}" data-default-caption-pos="{caption_pos}"{fx_attr}><div class="preview-bg"></div><video id="user-preview-video" class="base" muted loop playsinline style="display:none"></video><img id="default-base-img" class="base" src="previews/creator.png" alt="Foto kreator"><div class="shade"></div><div class="art-direction"></div><img id="default-subject-img" class="subject" src="previews/creator-cutout.png" alt="Cutout kreator"><div id="fx-profile-card" class="fx-profile-card" style="display:none;opacity:0;z-index:9"><img id="user-profile-img" src="" alt="Profile IG"></div>{fx_html}<div class="brand">MR LABS</div>{title}{caption}<div class="credit">by @maulanarahman_</div><div class="specimen-index">{number:02d}</div><div class="specimen-note">VISUAL STUDY<br>PRO CAPTIONING</div></div></body></html>'''
 
 
 def mrlabs_main():
-    # Refresh the prompt generator when its content changes, including cached gallery tabs.
     script_version = hashlib.sha256((MRLABS_ROOT / 'assets/gallery.js').read_bytes()).hexdigest()[:12]
     themes = mrlabs_read(MRLABS_ROOT / 'assets/themes.json')['themes']
     assets = mrlabs_read(MRLABS_ROOT / 'assets/catalog.json')['assets']
-    cards, fun_cards, pro_cards = [], [], []
+    pro_cards = []
     theme_pills = []
     specimens_map = {}
 
-    # Default studio theme: obsidian-studio (Creator Hook) with ORBIT pre-enabled
     default_theme_id = 'obsidian-studio'
     default_active_fx = {'orbit'}
 
     for number, t in enumerate(themes, 1):
         raw_specimen = mrlabs_specimen(t, number)
+        raw_pos = t.get("caption_position", "below-face")
+        norm_pos = "below-face" if raw_pos in ("chest-float", "below-face") else raw_pos
         specimens_map[t['id']] = {
             "id": t["id"],
             "name": t["name"],
-            "collection": t.get("collection", "original"),
+            "collection": t.get("collection", "pro"),
             "tagline": t["tagline"],
             "background": t["background"],
             "accent": t["accent"],
-            "talking_head": bool(t.get("talking_head")),
+            "talking_head": True,
             "default_fx": DEFAULT_PRO_FX.get(t["id"], ""),
-            "caption_position": "below-face" if t.get("caption_position") in ("chest-float", "below-face") else t.get("caption_position", "bottom"),
+            "caption_position": norm_pos,
             "srcdoc": raw_specimen,
         }
         specimen = html.escape(raw_specimen, quote=True)
         swatches = ''.join(f'<i style="background:{t[key]}"></i>' for key in ('background', 'foreground', 'accent'))
-        collection = t.get('collection')
         is_selected = (t['id'] == default_theme_id)
         fx_badge = DEFAULT_PRO_FX.get(t['id'])
         fx_label = f' · FX: {MRLABS_EFFECTS[fx_badge]["name"].upper()}' if fx_badge else ''
-        target_cards = pro_cards if collection == 'pro' else (fun_cards if collection == 'fun' else cards)
-        target_cards.append(
+        pro_cards.append(
             f'<article class="package" data-card-theme="{t["id"]}" style="--accent:{t["accent"]}">'
             f'<div class="card-heading"><span>{number:02d}</span><span>{t["energy"].upper()}{fx_label}</span></div>'
             f'<div class="screen"><iframe title="{t["name"]} — contoh komposisi" tabindex="-1" srcdoc="{specimen}"></iframe></div>'
             f'<div class="details"><h2>{t["name"]}</h2><p class="tagline">{t["tagline"]}</p><p class="use">{t["use_for"]}</p>'
             f'<div class="swatches">{swatches}<span>{t["heading_font"]}</span></div>'
-            f'<button class="pick" data-theme="{t["id"]}" aria-pressed="{"true" if is_selected else "false"}">{"Terpilih" if is_selected else "Pilih tema"}<span aria-hidden="true">↗</span></button>'
+            f'<button class="pick" data-theme="{t["id"]}" aria-pressed="{"true" if is_selected else "false"}">{"Terpilih" if is_selected else "Gunakan Mode Ini"}<span aria-hidden="true">↗</span></button>'
             f'</div></article>'
         )
-        badge = "PRO" if collection == "pro" else ("FUN" if collection == "fun" else "ORIG")
         theme_pills.append(
             f'<button type="button" class="theme-chip" data-theme="{t["id"]}" aria-pressed="{"true" if is_selected else "false"}">'
-            f'<i style="background:{t["accent"]}"></i><span>{t["name"]}</span><small>{badge}</small></button>'
+            f'<i style="background:{t["accent"]}"></i><span>{t["name"]}</span><small>{number:02d}</small></button>'
         )
 
     effect_cards = []
@@ -151,42 +137,124 @@ def mrlabs_main():
     default_srcdoc = html.escape(specimens_map[default_theme_id]["srcdoc"], quote=True)
     specimens_json = json.dumps(specimens_map, ensure_ascii=False)
 
-    document = f'''<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>MR Labs — Visual Studio &amp; Prompt Generator</title><link rel="stylesheet" href="fonts/fonts.css"><link rel="stylesheet" href="gallery.css"></head><body><main>
-<nav><a class="wordmark" href="#">MR<span>↗</span>LABS</a><span>VIDEO EDITOR / INTERACTIVE STUDIO &amp; PROMPT GENERATOR</span><span class="edition">EDITION 04</span></nav>
+    document = f'''<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>MR Labs — Pro Talking-Head &amp; Captioning Studio</title><link rel="stylesheet" href="fonts/fonts.css"><link rel="stylesheet" href="gallery.css"></head><body><main>
+<nav>
+  <a class="wordmark" href="#">MR<span>↗</span>LABS</a>
+  <span>PRO TALKING-HEAD STUDIO &amp; PROMPT GENERATOR</span>
+  <div class="nav-links">
+    <a href="#studio">01. Studio Builder</a>
+    <a href="#pro">02. 15 Mode Visual</a>
+    <a href="#assets">03. Font &amp; SFX</a>
+  </div>
+  <span class="edition">15 PRO MODES · EDITION 05</span>
+</nav>
+
 <header>
   <div>
-    <div class="kicker">STUDIO INTERAKTIF · BASE FOTO KREATOR ASLI + 5 EFEK VIRAL</div>
-    <h1>Rancang gayamu.<br><span>Salin prompt-nya.</span></h1>
-    <p>Pilih tema dari 15 paket visual, tentukan posisi caption (di bawah muka atau di atas kepala), aktifkan efek depth seperti <b>ORBIT</b>, <b>UI World</b>, <b>Digital Zoom</b>, <b>Headline Wall</b>, dan <b>Pull Back Reveal</b> langsung di atas foto aslimu, lalu salin prompt-nya.</p>
+    <div class="kicker">✦ DAYLIGHT STUDIO · 15 MODE PRO + 13 EFEK VIRAL</div>
+    <h1>Pilih videomu.<br><span>Salin prompt murninya.</span></h1>
+    <p>Pilih langsung file <b>video raw</b> dari komputermu, tentukan <b>1 dari 15 mode visual</b>, atur <b>6 posisi caption</b>, dan nyalakan <b>13 efek viral</b>. Prompt yang dihasilkan sudah terisi lengkap dengan path file, resolusi, dan konfigurasi murni yang siap langsung ditempel ke chat AI Agent tanpa perlu mengedit kurung siku lagi.</p>
   </div>
   <div class="controls">
-    <button id="language" type="button">Contoh: Indonesia</button>
+    <button id="language" type="button">Bahasa Prompt: Indonesia</button>
     <button id="portrait" type="button" aria-pressed="false">Latar: Potrait Asli (Tanpa BG)</button>
     <button id="replay" type="button">↻ Putar ulang animasi</button>
-    <small>Base: assets/previews/creator.png + 3D Cutout<br>Semua perubahan langsung tampil di layar kiri &amp; bawah</small>
+    <small>Resolusi &amp; orientasi potrait/landscape otomatis terdeteksi saat kamu memilih file video.</small>
   </div>
 </header>
 
-<section class="studio-builder" aria-label="Interactive Prompt Generator Studio">
+<section class="studio-builder" id="studio" aria-label="Interactive Prompt Generator Studio">
   <div class="studio-preview-col">
     <div class="studio-monitor-head">
-      <span class="kicker">LIVE PREVIEW · 1080×1920</span>
+      <span class="kicker">LIVE MONITOR · 1080×1920</span>
       <span id="studio-badge">Creator Hook · Di Bawah Muka · +1 FX</span>
     </div>
     <div class="screen studio-screen">
       <iframe id="studio-frame" title="Live Interactive Studio Preview" srcdoc="{default_srcdoc}"></iframe>
     </div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button type="button" id="toggle-user-video" class="mini-btn" style="flex:1;display:none">👁 Tampilkan Video Raw Saya di Monitor</button>
+      <button type="button" id="toggle-profile-preview" class="mini-btn" style="flex:1;display:none">👤 Preview Kartu IG di Monitor</button>
+    </div>
   </div>
 
   <div class="studio-controls-col">
+    <div class="builder-group project-inputs">
+      <div class="builder-label">
+        <span>00 / PILIH FILE VIDEO RAW &amp; ASET PROYEK (OTOMATIS MASUK KE PROMPT)</span>
+        <span id="video-meta-badge" class="meta-pill">Belum ada file dipilih (default: ./input.mp4)</span>
+      </div>
+
+      <div class="input-grid-2">
+        <div class="field-card">
+          <div class="field-head">
+            <label for="video-path">🎬 File Video Raw Utama</label>
+            <small>Wajib · .mp4 / .mov / .mkv</small>
+          </div>
+          <div class="file-picker-row">
+            <label class="file-btn">
+              <span>📂 Pilih Video...</span>
+              <input type="file" id="video-file" accept="video/*">
+            </label>
+            <input type="text" id="video-path" class="text-input" placeholder="Atau tempel path lengkap: D:\\Video\\raw.mp4">
+          </div>
+        </div>
+
+        <div class="field-card">
+          <div class="field-head">
+            <label for="folder-path">📁 Folder Kerja / Direktori Video (Opsional)</label>
+            <small>Digabung otomatis dengan nama file</small>
+          </div>
+          <input type="text" id="folder-path" class="text-input" placeholder="Contoh: D:\\KERJAAN YOUTUBE\\footage">
+        </div>
+
+        <div class="field-card">
+          <div class="field-head">
+            <label for="profile-path">👤 Gambar Profil IG / Kartu CTA (Opsional)</label>
+            <small>Muncul saat ajakan follow</small>
+          </div>
+          <div class="file-picker-row">
+            <label class="file-btn">
+              <span>🖼️ Pilih Gambar...</span>
+              <input type="file" id="profile-file" accept="image/*">
+            </label>
+            <input type="text" id="profile-path" class="text-input" placeholder="Opsional: path gambar profil IG">
+          </div>
+        </div>
+
+        <div class="field-card">
+          <div class="field-head">
+            <label for="notes-input">✨ Instruksi / Catatan Edit Tambahan (Opsional)</label>
+            <small>Langsung masuk ke prompt</small>
+          </div>
+          <input type="text" id="notes-input" class="text-input" placeholder="Misal: Tonjolkan kata Claude, potong jeda awal...">
+        </div>
+      </div>
+
+      <div class="input-grid-3">
+        <div class="field-card">
+          <div class="field-head"><label for="brand-input">🏷️ Brand Header Atas</label><small>Live di monitor</small></div>
+          <input type="text" id="brand-input" class="text-input" value="MR LABS">
+        </div>
+        <div class="field-card">
+          <div class="field-head"><label for="credit-input">✍️ Credit / Handle</label><small>Live di monitor</small></div>
+          <input type="text" id="credit-input" class="text-input" value="by @maulanarahman_">
+        </div>
+        <div class="field-card">
+          <div class="field-head"><label for="keywords-input">🔤 Kata Kunci Transkrip (Whisper Hint)</label><small>Pisahkan koma</small></div>
+          <input type="text" id="keywords-input" class="text-input" placeholder="Misal: MR Labs, Claude Code, HyperFrames">
+        </div>
+      </div>
+    </div>
+
     <div class="builder-group">
-      <div class="builder-label"><span>01 / PILIH TEMA VISUAL (15 TEMA)</span><small id="selected-theme-label">Creator Hook (obsidian-studio)</small></div>
+      <div class="builder-label"><span>01 / PILIH MODE PRO TALKING-HEAD (15 MODE)</span><small id="selected-theme-label">Creator Hook (obsidian-studio)</small></div>
       <div class="theme-chip-grid">{''.join(theme_pills)}</div>
     </div>
 
     <div class="builder-row-2">
       <div class="builder-group">
-        <div class="builder-label"><span>02 / POSISI CAPTION</span><small>Sesuaikan dengan framing wajah</small></div>
+        <div class="builder-label"><span>02 / POSISI &amp; MODE CAPTION (6 MODE)</span><small>Sesuaikan tipografi &amp; letak</small></div>
         <div class="pos-chip-grid" role="radiogroup" aria-label="Posisi Caption">
           <button type="button" class="pos-chip" data-pos="below-face" aria-pressed="true">
             <strong>Di Bawah Muka / Dada</strong>
@@ -200,19 +268,31 @@ def mrlabs_main():
             <strong>Di Bawah Frame</strong>
             <small>Posisi klasik sepertiga bawah (Y: 1265px)</small>
           </button>
+          <button type="button" class="pos-chip" data-pos="split-script" aria-pressed="false">
+            <strong>Split Script Neon</strong>
+            <small>Cursive Caveat menyala di dada ala Vids</small>
+          </button>
+          <button type="button" class="pos-chip" data-pos="hierarchy-glow" aria-pressed="false">
+            <strong>Hierarchy Glow 2-Baris</strong>
+            <small>Baris pengantar + kata kunci emas menyala</small>
+          </button>
+          <button type="button" class="pos-chip" data-pos="shoulder-note" aria-pressed="false">
+            <strong>Shoulder Callout Note</strong>
+            <small>Caption dada + catatan mikro di samping bahu</small>
+          </button>
         </div>
       </div>
 
       <div class="builder-group">
-        <div class="builder-label"><span>03 / KONDISI LATAR VIDEO</span><small>Aturan otomatis potrait</small></div>
+        <div class="builder-label"><span>03 / KONDISI LATAR VIDEO</span><small>Otomatis terdeteksi dari video</small></div>
         <div class="pos-chip-grid" role="radiogroup" aria-label="Mode Background">
           <button type="button" class="bg-chip" data-bg-mode="portrait" aria-pressed="true">
             <strong>Video Sudah Potrait (Tanpa BG)</strong>
-            <small>Gunakan ruang asli creator.png</small>
+            <small>Gunakan ruang asli video potrait</small>
           </button>
           <button type="button" class="bg-chip" data-bg-mode="studio" aria-pressed="false">
             <strong>Non-Potrait (Latar Putih/Hitam Tema)</strong>
-            <small>Cutout di atas latar Putih/Hitam tema</small>
+            <small>Cutout di atas latar Putih/Hitam/Kertas tema</small>
           </button>
         </div>
       </div>
@@ -220,7 +300,7 @@ def mrlabs_main():
 
     <div class="builder-group">
       <div class="builder-label">
-        <span>04 / PILIH EFEK VIDEO (BISA PILIH BANYAK)</span>
+        <span>04 / PILIH EFEK VIDEO (13 EFEK VIRAL · BISA PILIH BANYAK)</span>
         <div style="display:flex;gap:8px">
           <button type="button" id="all-fx" class="mini-btn">✨ Semua Efek</button>
           <button type="button" id="clear-fx" class="mini-btn">Reset Efek</button>
@@ -231,41 +311,50 @@ def mrlabs_main():
 
     <div class="builder-group prompt-box">
       <div class="builder-label">
-        <span>05 / PROMPT GENERATOR &amp; CONFIG JSON</span>
-        <span class="status" role="status" aria-live="polite">Siap disalin ke AI Agent</span>
+        <span>05 / PROMPT MURNI SIAP TEMPEL KE CHAT AI &amp; CONFIG JSON</span>
+        <span class="status" role="status" aria-live="polite">✓ Prompt murni siap dipakai</span>
       </div>
       <label for="prompt-output" class="sr-only">Prompt AI</label>
-      <p class="asset-note">Prompt mengikuti pilihan di atas. Isi lokasi video dan profil, lalu lampirkan gambar referensi saat mengirim prompt. Rencana edit perlu disetujui sebelum produksi.</p>
-      <textarea id="prompt-output" rows="6" readonly></textarea>
+      <p class="asset-note">Prompt di bawah ini sudah otomatis berisi nama/lokasi file video, resolusi, mode tema, posisi caption, efek terpilih, serta blok konfigurasi JSON—langsung salin dan tempel ke chat.</p>
+      <textarea id="prompt-output" rows="9" readonly></textarea>
       <div class="prompt-actions">
-        <button type="button" id="copy-prompt" class="primary-btn">📋 Salin Prompt AI ↗</button>
+        <button type="button" id="copy-prompt" class="primary-btn">📋 Salin Prompt Murni ke Chat ↗</button>
         <input id="config" readonly value='{{"theme":"obsidian-studio","caption_position":"below-face","effects":["orbit"],"language":"id"}}'>
-        <button type="button" id="copy">Salin JSON ↗</button>
+        <button type="button" id="copy">Salin JSON Saja ↗</button>
       </div>
     </div>
   </div>
 </section>
 
-<div class="collection-heading" id="pro"><div><span class="kicker">BARU / 11—15</span><h2>Pro Talking-Head. Depth Hook &amp; 5 Efek Viral.</h2></div><p>Setiap kartu Pro menampilkan efek viral bawaannya (ORBIT, UI World, Headline Wall, Digital Zoom, Pull Back Reveal). Klik kartu mana saja untuk memuat ke Studio di atas.</p></div>
-<section class="packages" aria-label="Lima tema Pro Influencer">{''.join(pro_cards)}</section>
+<div class="collection-heading" id="pro"><div><span class="kicker">PRO TALKING-HEAD / 01—15</span><h2>15 Mode Talking-Head, Depth Hook &amp; 13 Efek Viral.</h2></div><p>5 mode klasik + 10 mode baru hasil bedah referensi kreator global. Klik kartu mana saja untuk memuat tema &amp; efek bawaannya ke Studio di atas.</p></div>
+<section class="packages" aria-label="Lima belas tema Pro Influencer">{''.join(pro_cards)}</section>
 
-<div class="collection-heading" id="fun"><div><span class="kicker">FUN / 06—10</span><h2>Fun, in every shape.</h2></div><p>Bingkai melengkung. Pola yang punya karakter.</p></div>
-<section class="packages" aria-label="Lima tema Fun">{''.join(fun_cards)}</section>
-
-<div class="collection-heading" id="original"><div><span class="kicker">ORIGINAL / 01—05</span><h2>Lima karakter pilihanmu.</h2></div><p>Koleksi editorial pertama yang tetap tersedia.</p></div>
-<section class="packages" aria-label="Lima tema Original">{''.join(cards)}</section>
-
-<div class="asset-header"><h2>Peralatan kreatif.</h2><p>Aset lokal. Siap dirangkai.</p></div>
+<div class="asset-header" id="assets"><h2>Peralatan kreatif lokal.</h2><p>12 keluarga font berlisensi terbuka + 10 aksen suara antarmuka.</p></div>
 <details class="asset-group"><summary>01 / Koleksi font · 12 keluarga + Helvetica lokal <span>+</span></summary><p class="asset-note">Poppins Bold (700), Roboto (400), dan Roboto Light (300) tersedia lokal. Helvetica memakai instalasi lokal berlisensi, dengan fallback Roboto jika tidak tersedia.</p><div class="font-shelf">{''.join(fonts)}</div></details>
 <details class="asset-group"><summary>02 / Sepuluh aksen suara <span>+</span></summary><p class="asset-note">Kenney Interface Sounds · CC0. Efek mengikuti aksi dan tetap di bawah narasi.</p><div class="sound-shelf">{''.join(sounds)}</div></details>
-<footer><span>MR LABS / MADE FOR YOUR NEXT IDEA.</span><p>Font <a href="https://github.com/google/fonts">Google Fonts / OFL</a> · SFX <a href="https://kenney.nl/assets/interface-sounds">Kenney / CC0</a> · <a href="catalog.json">Sumber &amp; lisensi</a></p><p>Base foto kreator: <code>assets/previews/creator.png</code> + <code>creator-cutout.png</code>.</p></footer>
+<footer><span>MR LABS / DAYLIGHT STUDIO EDITION 05.</span><p>Font <a href="https://github.com/google/fonts">Google Fonts / OFL</a> · SFX <a href="https://kenney.nl/assets/interface-sounds">Kenney / CC0</a> · <a href="catalog.json">Sumber &amp; lisensi</a></p><p>Base foto kreator: <code>assets/previews/creator.png</code> + <code>creator-cutout.png</code>.</p></footer>
 </main>
 <script>window.__MRLABS_SPECIMENS={specimens_json};</script>
 <script src="gallery.js?v={script_version}"></script></body></html>'''
     target = MRLABS_ROOT / 'assets/theme-gallery.html'
     target.write_text(document, encoding='utf-8')
     print(target)
+    return target
+
+
+def mrlabs_open_gallery(target=None):
+    target = (target or (MRLABS_ROOT / 'assets/theme-gallery.html')).resolve()
+    if hasattr(os, 'startfile'):
+        os.startfile(str(target))
+    else:
+        webbrowser.open(target.as_uri())
+    return target
 
 
 if __name__ == '__main__':
-    mrlabs_main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--open', action='store_true', help='Open theme-gallery.html in the default browser after building.')
+    args = parser.parse_args()
+    out = mrlabs_main()
+    if args.open:
+        mrlabs_open_gallery(out)

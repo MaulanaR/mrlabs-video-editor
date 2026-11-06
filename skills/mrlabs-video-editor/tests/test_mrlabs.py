@@ -10,10 +10,10 @@ from unittest.mock import patch
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
-from mrlabs_core import (mrlabs_language, mrlabs_transcribe, mrlabs_caption_groups,
+from mrlabs_core import (MRLABS_ROOT, mrlabs_read, mrlabs_language, mrlabs_transcribe, mrlabs_caption_groups,
                          mrlabs_validate_words, mrlabs_export_srt, mrlabs_config)
 from mrlabs_broll import mrlabs_broll_plan, mrlabs_validate_broll
-from mrlabs_visual import (MRLABS_EFFECTS, mrlabs_theme, mrlabs_entrance, mrlabs_is_portrait,
+from mrlabs_visual import (MRLABS_EFFECTS, CAPTION_POSITIONS, mrlabs_theme, mrlabs_entrance, mrlabs_is_portrait,
                            mrlabs_css, mrlabs_caption_top, mrlabs_format_title_html,
                            mrlabs_normalize_effects, mrlabs_effect_specimen_html)
 
@@ -98,10 +98,17 @@ class BrollBehavior(unittest.TestCase):
 
 
 class ThemeMotion(unittest.TestCase):
-    def test_short_cues_leave_time_to_read_in_every_theme(self):
-        for theme_id in ('signal-clean', 'kinetic-punch', 'editorial-noir', 'warm-story', 'tech-grid',
-                         'peach-doodle', 'bubble-pop', 'groovy-mint', 'sunny-picnic', 'orbit-candy',
-                         'verge-glass', 'monocle-brief', 'kinfolk-linen', 'obsidian-studio', 'founder-slate'):
+    ALL_PRO_IDS = (
+        'obsidian-studio', 'verge-glass', 'monocle-brief', 'kinfolk-linen', 'founder-slate',
+        'neon-script', 'echo-pulse', 'vogue-cover', 'pixel-creator', 'tactile-paper',
+        'claude-grid', 'colorist-grade', 'sticker-pop', 'shoulder-note', 'before-after-stage'
+    )
+
+    def test_fifteen_pro_modes_exist_and_short_cues_leave_time_to_read(self):
+        themes_data = mrlabs_read(MRLABS_ROOT / "assets/themes.json")["themes"]
+        self.assertEqual(len(themes_data), 15)
+        self.assertEqual(tuple(t["id"] for t in themes_data), self.ALL_PRO_IDS)
+        for theme_id in self.ALL_PRO_IDS:
             theme = mrlabs_theme(theme_id)
             for role in ('caption', 'title', 'broll'):
                 for duration in (.02, .2, .7, 3):
@@ -111,11 +118,7 @@ class ThemeMotion(unittest.TestCase):
                     self.assertFalse(final['immediateRender'])
 
     def test_poster_tilt_survives_but_full_frame_never_shrinks_or_tilts(self):
-        theme = mrlabs_theme('kinetic-punch')
-        self.assertEqual(mrlabs_entrance(theme, 'title', 2)[1]['rotation'], -2)
-        self.assertEqual(mrlabs_entrance(theme, 'caption', 2)[1]['rotation'], -2)
-        self.assertEqual(mrlabs_entrance(theme, 'broll', 2)[1]['rotation'], 3)
-        for theme_id in ('kinetic-punch', 'warm-story', 'tech-grid', 'verge-glass', 'monocle-brief', 'obsidian-studio'):
+        for theme_id in self.ALL_PRO_IDS:
             initial, final = mrlabs_entrance(mrlabs_theme(theme_id), 'broll', .7, full=True)
             for state in (initial, final):
                 self.assertEqual(state.get('rotation', 0), 0)
@@ -124,11 +127,10 @@ class ThemeMotion(unittest.TestCase):
                 self.assertEqual(state.get('y', 0), 0)
 
     def test_pro_themes_use_white_or_black_bg_and_skip_bg_when_video_is_portrait(self):
-        pro_ids = ('verge-glass', 'monocle-brief', 'kinfolk-linen', 'obsidian-studio', 'founder-slate')
-        for theme_id in pro_ids:
+        for theme_id in self.ALL_PRO_IDS:
             theme = mrlabs_theme(theme_id)
             self.assertIn(theme['background'], ('#FFFFFF', '#0A0A0C', '#0A0A0A'))
-            self.assertEqual(theme.get('caption_position'), 'chest-float')
+            self.assertIn(theme.get('caption_position'), CAPTION_POSITIONS)
             self.assertTrue(theme.get('talking_head'))
             self.assertIn('--canvas-background:transparent', mrlabs_css(theme, portrait=True))
             self.assertIn(f"--canvas-background:{theme['background']}", mrlabs_css(theme, portrait=False))
@@ -144,15 +146,26 @@ class ThemeMotion(unittest.TestCase):
             (project / "head-samples.json").write_text(json.dumps([{"segment": "s1", "time": 0.5, "bounds": [300, 480, 780, 1800]}]), encoding="utf-8")
             self.assertEqual(mrlabs_caption_top(project), 330)
 
-    def test_five_viral_effects_and_caption_positions(self):
-        expected = {'orbit', 'ui-world', 'digital-zoom', 'headline-wall', 'pull-back-reveal'}
+    def test_thirteen_viral_effects_and_caption_positions(self):
+        expected = {
+            'orbit', 'ui-world', 'digital-zoom', 'headline-wall', 'pull-back-reveal',
+            'echo-wall', 'cover-story', 'grid-3x3', 'prompt-bar', 'grade-hud',
+            'side-stack', 'tactile-board', 'before-after'
+        }
         self.assertEqual(set(MRLABS_EFFECTS.keys()), expected)
-        normalized = mrlabs_normalize_effects({"effects": ["orbit", {"type": "headline-wall", "start": 0.5, "end": 3.0}]}, duration=5.0)
-        self.assertEqual([fx["type"] for fx in normalized], ["orbit", "headline-wall"])
+        normalized = mrlabs_normalize_effects(
+            {"effects": ["orbit", "echo-wall", {"type": "cover-story", "start": 0.5, "end": 3.0}]},
+            duration=5.0
+        )
+        self.assertEqual([fx["type"] for fx in normalized], ["orbit", "echo-wall", "cover-story"])
         self.assertEqual(normalized[0]["end"], 5.0)
-        self.assertEqual(normalized[1]["start"], 0.5)
+        self.assertEqual(normalized[2]["start"], 0.5)
         specimen_html = mrlabs_effect_specimen_html()
-        for marker in ("fx-orbit-card", "fx-ui-world", "fx-zoom-hud", "fx-headline-card", "fx-pullback"):
+        for marker in (
+            "fx-orbit-card", "fx-ui-world", "fx-zoom-hud", "fx-headline-card", "fx-pullback",
+            "fx-echo-wall", "fx-cover-story", "fx-grid-3x3", "fx-prompt-bar", "fx-grade-hud",
+            "fx-side-stack", "fx-tactile-board", "fx-before-after", "fx-shoulder-callout"
+        ):
             self.assertIn(marker, specimen_html)
         with self.assertRaises(ValueError):
             mrlabs_normalize_effects({"effects": ["unknown-effect"]}, duration=5.0)

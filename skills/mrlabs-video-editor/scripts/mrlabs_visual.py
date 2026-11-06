@@ -1,4 +1,4 @@
-"""Data-driven HyperFrames composition, 5 viral talking-head effects, and local asset integration."""
+"""Data-driven HyperFrames composition, 13 viral talking-head effects, and local asset integration."""
 import html
 import json
 from pathlib import Path
@@ -43,7 +43,73 @@ MRLABS_EFFECTS = {
         "summary_en": "Camera pulls back to reveal the video playing inside a desktop NLE timeline interface.",
         "uses_depth": False,
     },
+    "echo-wall": {
+        "id": "echo-wall",
+        "name": "Echo Repeat Stack",
+        "summary_id": "Tumpukan 5 baris kata kunci berulang di belakang kepala dengan gradasi opacity (100% ke 18%).",
+        "summary_en": "5-layer repeating keyword stack behind the speaker's head with decaying opacity.",
+        "uses_depth": True,
+    },
+    "cover-story": {
+        "id": "cover-story",
+        "name": "Magazine Cover Story",
+        "summary_id": "Frame berubah jadi sampul majalah: masthead serif raksasa di belakang kepala, edisi & barcode.",
+        "summary_en": "Transforms the frame into an editorial magazine cover with giant serif masthead and barcode.",
+        "uses_depth": True,
+    },
+    "grid-3x3": {
+        "id": "grid-3x3",
+        "name": "3×3 Reel Matrix",
+        "summary_id": "Video utama mengecil ke tile tengah dikelilingi 8 tile video referensi dalam grid 3×3.",
+        "summary_en": "Shrinks the main shot into the center tile while 8 surrounding reel tiles pop in around it.",
+        "uses_depth": False,
+    },
+    "prompt-bar": {
+        "id": "prompt-bar",
+        "name": "AI Prompt & Tool Pills",
+        "summary_id": "Kotak prompt Claude dengan tombol kirim oranye ↑ ditambah badge tool (FFmpeg, Remotion).",
+        "summary_en": "Claude-style prompt input bar with orange send button and floating tool pills.",
+        "uses_depth": False,
+    },
+    "grade-hud": {
+        "id": "grade-hud",
+        "name": "Colorist Tone Curve HUD",
+        "summary_id": "Panel grafik kurva warna (Tone Curve) & slider saturasi/kontras di atas kepala.",
+        "summary_en": "Live Tone Curve graph and color grading sliders floating above the speaker's head.",
+        "uses_depth": False,
+    },
+    "side-stack": {
+        "id": "side-stack",
+        "name": "Side Block & Starburst",
+        "summary_id": "Teks blok vertikal rata kiri/kanan di samping bahu + bintang geometris berputar di belakang.",
+        "summary_en": "Left/right vertical condensed block text flanking the shoulders with a spinning starburst.",
+        "uses_depth": True,
+    },
+    "tactile-board": {
+        "id": "tactile-board",
+        "name": "Tactile Sticky & Wireframe",
+        "summary_id": "Sticky note checklist kuning & kartu sketsa wireframe kertas mengapit presenter.",
+        "summary_en": "Tactile sticky-note checklist and paper wireframe storyboard card flanking the presenter.",
+        "uses_depth": False,
+    },
+    "before-after": {
+        "id": "before-after",
+        "name": "Before / After Stage",
+        "summary_id": "Kartu komparasi 🔴 Before mentah di kiri vs 🟢 After hasil edit di panggung utama.",
+        "summary_en": "Portfolio comparison stage with a muted 🔴 Before card on the left and 🟢 After badge.",
+        "uses_depth": False,
+    },
 }
+
+CAPTION_POSITIONS = (
+    "bottom",
+    "above-head",
+    "below-face",
+    "chest-float",
+    "split-script",
+    "hierarchy-glow",
+    "shoulder-note",
+)
 
 
 def mrlabs_theme(theme_id):
@@ -134,7 +200,7 @@ def mrlabs_normalize_effects(visual=None, config=None, duration=6.0):
 
 
 def mrlabs_effect_specimen_html(theme=None, visual=None):
-    """Return the 5 viral effect layers so both gallery specimens and video builds can toggle/animate them."""
+    """Return the 13 viral effect layers + shoulder callout so both gallery specimens and video builds can toggle/animate them."""
     custom_cards = (visual or {}).get("orbit_cards") or []
     if custom_cards:
         c1 = custom_cards[0]
@@ -163,6 +229,7 @@ def mrlabs_effect_specimen_html(theme=None, visual=None):
             '<span class="orb-sub">Lebih Cepat Tanpa Template</span>'
             '</div>'
         )
+    echo_word = (visual or {}).get("echo_word") or "IMMEDIATELY"
     return (
         '<div class="fx-layer" aria-hidden="true">'
         + orbit_html +
@@ -216,6 +283,80 @@ def mrlabs_effect_specimen_html(theme=None, visual=None):
         '<div class="fx-pb-track">V2 · SUBJECT CUTOUT (VP9 ALPHA) <span>Z-INDEX 3 · LOCKED</span></div>'
         '<div class="fx-pb-track">V1 · A-ROLL CAMERA + AUDIO WAVEFORM <span>-14 LUFS · SYNCED</span></div>'
         '</div>'
+        '</div>'
+        # 6. ECHO WALL (5-layer repeating word stack behind head)
+        f'<div id="fx-echo-wall" class="fx-item fx-echo-wall">'
+        f'<span>{html.escape(echo_word)}</span>'
+        f'<span>{html.escape(echo_word)}</span>'
+        f'<span>{html.escape(echo_word)}</span>'
+        f'<span>{html.escape(echo_word)}</span>'
+        f'<span>{html.escape(echo_word)}</span>'
+        '</div>'
+        # 7. COVER STORY (Editorial magazine masthead + barcode)
+        '<div id="fx-cover-story" class="fx-item fx-cover-story">'
+        '<div class="fx-cs-header">'
+        '<div><span>ONE SENTENCE</span><b>The whole video, edited.</b></div>'
+        '<div style="text-align:right"><span>ISSUE NO. 01 · 2026</span><b>Just Claude.</b></div>'
+        '</div>'
+        '<div class="fx-cs-masthead">CLAUDE</div>'
+        '<div class="fx-cs-barcode"><div class="fx-cs-bars"></div><small>EDITED BY MR LABS</small></div>'
+        '</div>'
+        # 8. GRID 3x3 (3x3 reel matrix surrounding center tile)
+        '<div id="fx-grid-3x3" class="fx-item fx-grid-3x3">'
+        '<div class="fx-grid-cell"><small>REEL 01</small><strong>Creator Hook</strong><span>▶ 1.4M</span></div>'
+        '<div class="fx-grid-cell"><small>REEL 02</small><strong>Neon Script</strong><span>▶ 890K</span></div>'
+        '<div class="fx-grid-cell"><small>REEL 03</small><strong>Cover Story</strong><span>▶ 2.1M</span></div>'
+        '<div class="fx-grid-cell"><small>REEL 04</small><strong>Echo Stack</strong><span>▶ 640K</span></div>'
+        '<div class="fx-grid-cell center-hole"><small>LIVE SHOT</small><strong>CENTER TILE</strong><span>● ACTIVE</span></div>'
+        '<div class="fx-grid-cell"><small>REEL 06</small><strong>Pixel Hybrid</strong><span>▶ 1.1M</span></div>'
+        '<div class="fx-grid-cell"><small>REEL 07</small><strong>Tactile Desk</strong><span>▶ 950K</span></div>'
+        '<div class="fx-grid-cell"><small>REEL 08</small><strong>Colorist HUD</strong><span>▶ 780K</span></div>'
+        '<div class="fx-grid-cell"><small>REEL 09</small><strong>Sticker UI</strong><span>▶ 1.8M</span></div>'
+        '</div>'
+        # 9. PROMPT BAR (Claude prompt input box + tool pills)
+        '<div id="fx-prompt-bar" class="fx-item fx-prompt-bar">'
+        '<div class="fx-pb-input">'
+        '<span>Shrink my shot into the centre tile of a 3×3 grid, then pop 8 reels around it...</span>'
+        '<div class="fx-pb-send">↑</div>'
+        '</div>'
+        '<div class="fx-tool-pill tp-1"><i></i><span>▶ Remotion</span></div>'
+        '<div class="fx-tool-pill tp-2"><i></i><span>⚡ FFmpeg</span></div>'
+        '</div>'
+        # 10. GRADE HUD (Tone Curve + Basic grading sliders)
+        '<div id="fx-grade-hud" class="fx-item fx-grade-hud">'
+        '<div class="fx-gh-curve">'
+        '<small>TONE CURVE · LUT</small>'
+        '<svg viewBox="0 0 200 120"><line x1="0" y1="120" x2="200" y2="0" stroke="rgba(255,255,255,.2)" stroke-dasharray="4 4"/>'
+        '<path d="M0,115 C55,112 75,80 105,55 C140,26 168,8 200,5" fill="none" stroke="var(--accent)" stroke-width="4"/>'
+        '<circle cx="62" cy="92" r="5" fill="#fff"/><circle cx="142" cy="28" r="5" fill="#fff"/></svg>'
+        '</div>'
+        '<div class="fx-gh-sliders">'
+        '<div class="fx-gh-row"><span>Highlights</span><div class="fx-gh-bar"><i style="left:32%"></i></div><span>-35</span></div>'
+        '<div class="fx-gh-row"><span>Blacks</span><div class="fx-gh-bar"><i style="left:64%"></i></div><span>+12</span></div>'
+        '<div class="fx-gh-row"><span>Saturation</span><div class="fx-gh-bar"><i style="left:38%"></i></div><span>-15%</span></div>'
+        '<div class="fx-gh-row"><span>Vignette</span><div class="fx-gh-bar"><i style="left:72%"></i></div><span>+18</span></div>'
+        '</div>'
+        '</div>'
+        # 11. SIDE STACK (Vertical side block text + spinning starburst)
+        '<div id="fx-side-stack" class="fx-item fx-side-stack">'
+        '<div class="fx-ss-star">✳</div>'
+        '<div class="fx-ss-left">IMPORT<br>YOUR<br>CLIP</div>'
+        '<div class="fx-ss-right">AND AI<br>HANDLES<br>THE REST</div>'
+        '</div>'
+        # 12. TACTILE BOARD (Sticky note checklist + wireframe sketch card)
+        '<div id="fx-tactile-board" class="fx-item fx-tactile-board">'
+        '<div class="fx-tb-wire"><small>📌 STORYBOARD · 1–2 MONTHS</small><div class="fx-tb-wire-box">▶ WIREFRAME</div></div>'
+        '<div class="fx-tb-note"><span>✓ concept</span><span>✓ story</span><span>✓ style</span><span>✓ final cut</span></div>'
+        '</div>'
+        # 13. BEFORE / AFTER STAGE (Split comparison stage)
+        '<div id="fx-before-after" class="fx-item fx-before-after">'
+        '<div class="fx-ba-pill-before"><i></i><span>Before</span></div>'
+        '<div class="fx-ba-before"><img src="previews/creator.png" onerror="this.style.display=\'none\'" alt="Before raw"></div>'
+        '<div class="fx-ba-pill-after"><i></i><span>After · Pro Edit</span></div>'
+        '</div>'
+        # Shoulder callout note (for shoulder-note mode)
+        '<div id="fx-shoulder-callout" class="fx-shoulder-callout">'
+        '<span>dikerjakan sekitar</span><b>3–4 bulan sebelumnya</b><span>secara terjadwal</span>'
         '</div>'
         '</div>'
     )
@@ -281,8 +422,8 @@ def mrlabs_build(project, theme_id=None, safe=False):
     visual_file = project / "visual.json"
     visual = mrlabs_read(visual_file) if visual_file.exists() else {}
     caption_pos = visual.get("caption_position") or config.get("caption_position") or theme.get("caption_position", "bottom")
-    if caption_pos not in ("bottom", "above-head", "below-face", "chest-float"):
-        raise ValueError("caption_position harus 'bottom', 'above-head', 'below-face', atau 'chest-float'")
+    if caption_pos not in CAPTION_POSITIONS:
+        raise ValueError(f"caption_position harus salah satu dari: {', '.join(CAPTION_POSITIONS)}")
     caption_top = mrlabs_caption_top(project, config, visual)
     has_cutout = (project / "assets/subject.webm").exists()
     caption_behind = bool(visual.get("caption_behind_subject", False))
@@ -310,7 +451,6 @@ def mrlabs_build(project, theme_id=None, safe=False):
         timeline.append(f"tl.fromTo('#{name}',{json.dumps(initial)},{json.dumps(final)},{group['start']});")
         for k, word in enumerate(group["words"]):
             timeline.append(f"tl.set('#{name}-w{k}',{{color:'{theme['highlight']}'}},{word['start']});")
-        # End-of-caption state reset is required for seekable transcript-driven text.
         timeline.append(f"tl.set('#{name}',{{opacity:0}},{group['end']});")
     titles = visual.get("titles", [])
     used_behind = caption_behind or any(MRLABS_EFFECTS[fx["type"]]["uses_depth"] and has_cutout for fx in effects)
@@ -334,9 +474,22 @@ def mrlabs_build(project, theme_id=None, safe=False):
         timeline.append(f"tl.set('#{name}',{{opacity:0}},{end});")
     if used_behind:
         markup.append(f'<video id="subject" class="subject" style="z-index:3" src="assets/subject.webm" muted playsinline data-start="0" data-duration="{duration}" data-track-index="2"></video>')
-    # Wire timeline cues for the 5 viral effects when specified in visual.json / config.json
-    # Sequential non-overlapping activation for the 5 viral effects
-    timeline.append("tl.set(['.fx-orbit-card','#fx-ui-world','#fx-zoom-hud','.fx-headline-card','#fx-pullback','#fx-profile-card'],{display:'none',opacity:0},0);")
+
+    # Wire timeline cues for all 13 viral effects when specified in visual.json / config.json
+    timeline.append(
+        "tl.set(['.fx-orbit-card','#fx-ui-world','#fx-zoom-hud','.fx-headline-card','#fx-pullback',"
+        "'#fx-echo-wall','#fx-cover-story','#fx-grid-3x3','#fx-prompt-bar','#fx-grade-hud',"
+        "'#fx-side-stack','#fx-tactile-board','#fx-before-after','#fx-profile-card'],{display:'none',opacity:0},0);"
+    )
+    simple_block_fx = {
+        "echo-wall": ("#fx-echo-wall", "flex"),
+        "cover-story": ("#fx-cover-story", "block"),
+        "prompt-bar": ("#fx-prompt-bar", "block"),
+        "grade-hud": ("#fx-grade-hud", "grid"),
+        "side-stack": ("#fx-side-stack", "block"),
+        "tactile-board": ("#fx-tactile-board", "block"),
+        "before-after": ("#fx-before-after", "block"),
+    }
     for fx in effects:
         fx_type, start, end = fx["type"], fx["start"], fx["end"]
         if fx_type == "digital-zoom":
@@ -360,11 +513,9 @@ def mrlabs_build(project, theme_id=None, safe=False):
             timeline.append(f"tl.to('.fx-headline-card',{{opacity:0,duration:.25}},{max(start + 0.6, end - 0.25)});")
             timeline.append(f"tl.set('.fx-headline-card',{{display:'none'}},{end});")
         elif fx_type == "orbit":
-            # 3 cards orbiting: Card 1 (behind left shoulder -> in front), Card 2 (in front -> behind right shoulder), Card 3 (behind right shoulder floating)
             t_mid = start + (end - start) * 0.48
             dur1 = (end - start) * 0.48
             dur2 = (end - start) * 0.52
-            # Card 1: sweeps behind left shoulder (zIndex 2) -> in front of chest (zIndex 8)
             timeline.append(f"tl.set('#fx-orbit-1',{{display:'flex',opacity:0,x:40,y:-20,scale:.82,zIndex:2}},{start});")
             timeline.append(f"tl.to('#fx-orbit-1',{{opacity:1,duration:.3}},{start});")
             timeline.append(f"tl.to('#fx-orbit-1',{{x:180,y:25,scale:.96,duration:{dur1:.2f},ease:'power1.inOut'}},{start});")
@@ -373,7 +524,6 @@ def mrlabs_build(project, theme_id=None, safe=False):
             timeline.append(f"tl.to('#fx-orbit-1',{{opacity:0,scale:.9,duration:.25}},{end - 0.25:.2f});")
             timeline.append(f"tl.set('#fx-orbit-1',{{display:'none'}},{end});")
 
-            # Card 2: starts in front of chest (zIndex 8) -> sweeps to right behind shoulder (zIndex 2)
             timeline.append(f"tl.set('#fx-orbit-2',{{display:'flex',opacity:0,x:380,y:60,scale:1.05,zIndex:8}},{start});")
             timeline.append(f"tl.to('#fx-orbit-2',{{opacity:1,duration:.3}},{start});")
             timeline.append(f"tl.to('#fx-orbit-2',{{x:560,y:20,scale:.95,duration:{dur1:.2f},ease:'power1.inOut'}},{start});")
@@ -382,7 +532,6 @@ def mrlabs_build(project, theme_id=None, safe=False):
             timeline.append(f"tl.to('#fx-orbit-2',{{opacity:0,scale:.8,duration:.25}},{end - 0.25:.2f});")
             timeline.append(f"tl.set('#fx-orbit-2',{{display:'none'}},{end});")
 
-            # Card 3: starts behind right shoulder (zIndex 2) -> floats against white wall
             timeline.append(f"tl.set('#fx-orbit-3',{{display:'flex',opacity:0,x:680,y:-50,scale:.85,zIndex:2}},{start});")
             timeline.append(f"tl.to('#fx-orbit-3',{{opacity:1,duration:.35}},{start + 0.1:.2f});")
             timeline.append(f"tl.to('#fx-orbit-3',{{x:640,y:20,scale:.92,duration:{(end - start)*0.85:.2f},ease:'sine.inOut'}},{start + 0.1:.2f});")
@@ -396,6 +545,21 @@ def mrlabs_build(project, theme_id=None, safe=False):
             timeline.append(f"tl.to({targets},{{scale:1,y:0,duration:.35,ease:'power2.inOut'}},{max(start + 0.45, end - 0.35)});")
             timeline.append(f"tl.to('#fx-pullback',{{opacity:0,duration:.3}},{max(start + 0.45, end - 0.3)});")
             timeline.append(f"tl.set('#fx-pullback',{{display:'none'}},{end});")
+        elif fx_type == "grid-3x3":
+            targets = "['#aroll','#subject']" if used_behind else "['#aroll']"
+            timeline.append(f"tl.set('#fx-grid-3x3',{{display:'grid',opacity:0}},{start});")
+            timeline.append(f"tl.to('#fx-grid-3x3',{{opacity:1,duration:.3,ease:'power2.out'}},{start});")
+            timeline.append(f"tl.fromTo({targets},{{scale:1,y:0}},{{scale:.34,y:-40,duration:.42,ease:'power3.out',immediateRender:false}},{start});")
+            timeline.append(f"tl.to({targets},{{scale:1,y:0,duration:.38,ease:'power2.inOut'}},{max(start + 0.45, end - 0.38)});")
+            timeline.append(f"tl.to('#fx-grid-3x3',{{opacity:0,duration:.28}},{max(start + 0.45, end - 0.28)});")
+            timeline.append(f"tl.set('#fx-grid-3x3',{{display:'none'}},{end});")
+        elif fx_type in simple_block_fx:
+            sel, disp = simple_block_fx[fx_type]
+            timeline.append(f"tl.set('{sel}',{{display:'{disp}',opacity:0,y:24}},{start});")
+            timeline.append(f"tl.to('{sel}',{{opacity:1,y:0,duration:.32,ease:'power3.out'}},{start});")
+            timeline.append(f"tl.to('{sel}',{{opacity:0,y:-16,duration:.25}},{max(start + 0.4, end - 0.25)});")
+            timeline.append(f"tl.set('{sel}',{{display:'none'}},{end});")
+
     profile_card = visual.get("profile_card")
     if profile_card and profile_card.get("file"):
         card_file = Path(profile_card["file"])
@@ -451,10 +615,10 @@ def mrlabs_build(project, theme_id=None, safe=False):
     <script>const tl=gsap.timeline({{paused:true}});{''.join(timeline)}window.__timelines={{main:tl}};</script></body></html>'''
     (project / "index.html").write_text(document, encoding="utf-8")
     mrlabs_write(project / "hyperframes.json", {"width":1080,"height":1920,"fps":30})
-    mrlabs_write(project / "build-report.json", {"theme": theme["id"], "theme_edition": theme.get("edition", 2),
+    mrlabs_write(project / "build-report.json", {"theme": theme["id"], "theme_edition": theme.get("edition", 5),
                                                  "portrait_video": portrait, "background_applied": not portrait,
                                                  "caption_position": caption_pos,
-                                                 "caption_top": caption_top if caption_pos == "above-head" else (1050 if caption_pos in ("below-face", "chest-float") else 1265),
+                                                 "caption_top": caption_top if caption_pos == "above-head" else (1050 if caption_pos in ("below-face", "chest-float", "split-script", "hierarchy-glow", "shoulder-note") else 1265),
                                                  "effects": [fx["type"] for fx in effects],
                                                  "duration": duration, "safe_guide": safe,
                                                  "broll": references, "captions": len(words), "needs_visual_audio_review": True})

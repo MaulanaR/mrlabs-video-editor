@@ -1,11 +1,18 @@
 ---
 name: mrlabs-video-editor
-description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, fifteen MR Labs visual packs, local open-license fonts and SFX, and final-render verification. Use for original-video editing, subtitle styling, or choosing these visual packs; not for creating a faceless video from a topic alone.
+description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, fifteen Pro Talking-Head & Captioning visual modes, thirteen viral depth effects, six caption layout modes, local open-license fonts and SFX, and final-render verification. When invoked without a video path or theme context, automatically open assets/theme-gallery.html (`python "SK/scripts/mrlabs-gallery.py" --open`) so the user can pick their raw video, theme, caption mode, and effects and copy the ready-to-use prompt.
 ---
 
 # MR Labs Video Editor
 
 Edit the explicitly selected original footage. Default communication and transcription language is Bahasa Indonesia (`id`); preserve English speech when `en` or `mixed` is chosen. Keep the original face, recorded voice, and meaning. This skill is a new MR Labs implementation inspired by [tenfoldmarc/video-edit-skill](https://github.com/tenfoldmarc/video-edit-skill).
+
+## Zero-context launch (Auto-Open Studio HTML)
+
+- **MANDATORY FIRST ACTION WHEN INVOKED WITHOUT CONTEXT:** If the user invokes `$mrlabs-video-editor` (or asks to edit a video / open the studio) **without providing a specific video file path or theme configuration**, you MUST immediately:
+  1. Run `python "SK/scripts/mrlabs-gallery.py" --open` so [assets/theme-gallery.html](assets/theme-gallery.html) opens automatically in the user's default browser.
+  2. Show a clickable link to [theme-gallery.html](assets/theme-gallery.html) in chat and invite the user to pick their raw video file, choose 1 of the 15 Pro modes, select caption layout & viral effects in the Studio, and paste the generated prompt back into chat.
+- Do not ask a long list of text questions when the user has not chosen a video or style yet—open `theme-gallery.html` first so they can visually configure everything in one place.
 
 ## Scope and starting point
 
@@ -33,25 +40,25 @@ Use Python 3.10+, Node 22+, FFmpeg/ffprobe, faster-whisper and Pillow. Read [ref
 
 ## Visual choice
 
-Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs help choosing. The local gallery has ID/EN examples, fifteen layouts, replayable motion, twelve bundled font families plus optional local Helvetica, and ten playable SFX. Edition 04 adds five restrained Pro Influencer directions with pure White (`#FFFFFF`) and Black (`#0A0A0C` / `#0A0A0A`) backgrounds while preserving the five Fun directions (Edition 03) and five Original directions (Edition 02) and their configuration IDs. If the source video already supports portrait (`height > width`), the theme background is skipped automatically (`--canvas-background: transparent`, `data-portrait="true"`). Theme tokens live in [assets/themes.json](assets/themes.json); the gallery and video builder share [assets/render-themes.css](assets/render-themes.css). Read [assets/DESIGN.md](assets/DESIGN.md) before changing these visual directions.
+Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs help choosing. The local studio gallery has ID/EN examples, fifteen Pro Talking-Head & Captioning modes (`01—15`), thirteen toggleable viral effects, six caption layout modes (`below-face`, `above-head`, `bottom`, `split-script`, `hierarchy-glow`, `shoulder-note`), twelve bundled font families plus optional local Helvetica, and ten playable SFX. Each theme uses White (`#FFFFFF`) or Black (`#0A0A0C` / `#0A0A0A`) studio backgrounds when needed, and if the source video already supports portrait (`height > width`), the theme background is skipped automatically (`--canvas-background: transparent`, `data-portrait="true"`). Theme tokens live in [assets/themes.json](assets/themes.json); the gallery and video builder share [assets/render-themes.css](assets/render-themes.css). Read [assets/DESIGN.md](assets/DESIGN.md) before changing these visual directions.
 
-| Theme | Use |
+| Mode / Theme ID | Use |
 |---|---|
-| Atlas Studio / `signal-clean` (default) | Education/tutorials; paper and vermilion, Swiss typography, indexed square frame |
-| Voltage Pop / `kinetic-punch` | Hooks and quick tips; cobalt and acid yellow, tilted poster, spring entrance |
-| Maison Journal / `editorial-noir` | Opinions/interviews; ivory and wine, centered serif, gallery mat |
-| Playroom / `warm-story` | Creative stories; lilac and butter, rounded notes, playful collage |
-| Blueprint Lab / `tech-grid` | Coding/data/automation; navy and cyan, drafting lines, monospace captions |
-| Peach Doodle / `peach-doodle` | Peach doodles, soft speech-tail caption, dashed organic frame |
-| Bubble Pop / `bubble-pop` | Lilac bubbles, Poppins Bold headings, round capsules |
-| Groovy Mint / `groovy-mint` | Mint rolling waves, asymmetrical pebble shapes |
-| Sunny Picnic / `sunny-picnic` | Yellow floral pattern, petal-like curves, Poppins Bold |
-| Orbit Candy / `orbit-candy` | Purple orbital rings, ellipse frame, Roboto Light captions |
-| Verge Glass / `verge-glass` | Pro tech/productivity reviews; black `#0A0A0C` background, bento glass, ice-blue rule |
-| Monocle Brief / `monocle-brief` | Executive business/finance; white `#FFFFFF` background, DM Serif Display, racing green |
-| Kinfolk Linen / `kinfolk-linen` | Quiet luxury/lifestyle/wellness; white `#FFFFFF` background, Instrument Serif, bronze rule |
-| Obsidian Studio / `obsidian-studio` | Cinema/podcast/masterclass; black `#0A0A0A` background, Fraunces, champagne gold L-frame |
-| Founder Slate / `founder-slate` | Startup/AI/founder updates; white `#FFFFFF` background, Space Grotesk, cobalt bar |
+| Creator Hook / `obsidian-studio` (default) | Cinema/podcast/masterclass; black `#0A0A0A` background, massive yellow `#FCE373` depth hero behind head, frameless chest caption |
+| Verge Glass / `verge-glass` | Pro tech/productivity reviews; black `#0A0A0C` background, ice-blue `#5CC8FF` depth hero, clean floating caption |
+| Monocle Brief / `monocle-brief` | Executive business/finance; white `#FFFFFF` background, DM Serif Display, emerald `#6EE7B7` depth hero |
+| Kinfolk Linen / `kinfolk-linen` | Quiet luxury/lifestyle/wellness; white `#FFFFFF` background, Instrument Serif, warm champagne `#FDE68A` depth hero |
+| Founder Slate / `founder-slate` | Startup/AI/founder updates; white `#FFFFFF` background, Space Grotesk, sky-cobalt `#93C5FD` depth hero |
+| Neon Script / `neon-script` | High-contrast display block behind head + glowing neon lime cursive script (`Caveat` `#E2FF32`) across chest |
+| Echo Stack / `echo-pulse` | 5-layer repeating coral-orange `#FF6B4A` keyword stack behind head with decaying opacity |
+| Cover Story / `vogue-cover` | Editorial magazine cover behind head (`Instrument Serif` masthead `#F5E6C8` + issue metadata + barcode) |
+| Pixel Creator / `pixel-creator` | Hybrid monospace lime green `#A3E635` (`IBM Plex Mono`) + crisp white sans (`Plus Jakarta Sans`) behind head |
+| Tactile Paper / `tactile-paper` | Warm paper desk canvas + 2-line hierarchy amber gold `#FBBF24` glowing captions |
+| 3×3 Reel Matrix / `claude-grid` | Claude terracotta `#E87B55` depth hero + 3×3 reel matrix surrounding center tile |
+| Colorist HUD / `colorist-grade` | Moody cinematic grade + tungsten amber `#F59E0B` serif hero + live Tone Curve HUD |
+| Sticker UI Cutout / `sticker-pop` | Crisp white sticker contour around subject cutout over dark UI backdrop with cyan `#38BDF8` accent |
+| Shoulder Callout / `shoulder-note` | Emerald `#34D399` depth hero + 3-line floating micro callout note beside shoulder/temple |
+| Before / After Stage / `before-after-stage` | Portfolio comparison stage with `🔴 Before` card on left and `🟢 After` hero frame on right |
 
 Read [references/visual-packs.md](references/visual-packs.md) for treatment details. Choose one coherent pack unless the brief calls for a purposeful section change. Font, accent, geometry, caption and motion differ; do not present palette swaps as new themes.
 
@@ -64,8 +71,16 @@ Read [references/visual-packs.md](references/visual-packs.md) for treatment deta
 | `digital-zoom` | **Digital Zoom Punch-In** — smooth programmatic `1.24×` camera punch-in onto speaker's face/gestures on emphasis cues | Scales `aroll` + `subject` |
 | `headline-wall` | **Headline Wall** — angled newspaper clippings and highlighted headlines stick onto the wall behind the speaker one by one | Uses `subject.webm` (`z-index: 2` behind `3`) |
 | `pull-back-reveal` | **Pull Back Reveal** — camera zooms out to reveal the vertical video playing inside a desktop NLE video editor timeline interface | NLE frame (`z-index: 10`) |
+| `echo-wall` | **Echo Repeat Stack** — 5-line vertical repeating keyword wall behind head with `100%` to `18%` opacity gradient | Uses `subject.webm` (`z-index: 2`) |
+| `cover-story` | **Magazine Cover Story** — transforms the shot into a magazine cover with giant serif masthead, issue bar & barcode | Uses `subject.webm` (`z-index: 2`) |
+| `grid-3x3` | **3×3 Reel Matrix** — shrinks main shot into center tile while 8 surrounding reel tiles pop in around it | Grid overlay (`z-index: 7`) |
+| `prompt-bar` | **AI Prompt & Tool Pills** — Claude-style dark prompt input box with orange `↑` send button + floating `Remotion` & `FFmpeg` tool badges | Foreground (`z-index: 8`) |
+| `grade-hud` | **Colorist Tone Curve HUD** — live Tone Curve graph and color grading sliders floating above speaker's head | Foreground (`z-index: 8`) |
+| `side-stack` | **Side Block & Starburst** — vertical condensed block text flanking left/right shoulders + rotating geometric starburst behind | Uses `subject.webm` (`z-index: 2`) |
+| `tactile-board` | **Tactile Sticky & Wireframe** — pinned yellow sticky-note checklist and paper wireframe storyboard card flanking speaker | Foreground (`z-index: 7`) |
+| `before-after` | **Before / After Stage** — split portfolio showcase with muted `🔴 Before` card on left and `🟢 After` badge above hero frame | Foreground (`z-index: 8`) |
 
-Caption positions (`caption_position` in `visual.json` or `project.json`): `"below-face"` / `"chest-float"` (below face / across chest at `y=1050`), `"above-head"` (above head at `y=310`), or `"bottom"` (lower third at `y=1265`).
+Caption positions (`caption_position` in `visual.json` or `project.json`): `"below-face"` / `"chest-float"` (below face / across chest at `y=1050`), `"above-head"` (above head at `y=310`), `"bottom"` (lower third at `y=1265`), `"split-script"` (glowing cursive `Caveat` neon script across chest), `"hierarchy-glow"` (2-line setup + glowing gold/accent keyword), or `"shoulder-note"` (chest caption + 3-line floating callout beside temple/shoulder).
 
 ## Edit workflow
 

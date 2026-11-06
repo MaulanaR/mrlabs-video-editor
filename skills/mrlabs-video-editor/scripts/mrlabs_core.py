@@ -14,7 +14,7 @@ for _stream in (sys.stdout, sys.stderr):
 
 MRLABS_ROOT = Path(__file__).resolve().parents[1]
 MRLABS_DEFAULTS = {"schema": 1, "language": "id", "model": "small", "device": "cpu",
-                   "theme": "signal-clean", "fps": 30, "width": 1080, "height": 1920,
+                   "theme": "obsidian-studio", "fps": 30, "width": 1080, "height": 1920,
                    "keywords": ["MR Labs", "ChatGPT", "Cloudflare", "HyperFrames"],
                    "brand": "MR LABS", "credit": "by @maulanarahman_"}
 
