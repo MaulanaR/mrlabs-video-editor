@@ -10,7 +10,7 @@ Skill AI Video Editor untuk mengubah rekaman *talking-head* asli menjadi video v
 Buka terminal atau chat AI Agent kamu (**Antigravity / Claude Code / Codex**), lalu ketik:
 
 ```text
-Clone https://github.com/maulanarahman/mrlabs-video-editor, install skill mrlabs-video-editor beserta environment-nya, lalu buka studio HTML-nya.
+Clone https://github.com/MaulanaR/mrlabs-video-editor, install skill mrlabs-video-editor beserta environment-nya, lalu buka studio HTML-nya.
 ```
 
 *(Atau jika kamu sudah men-download/clone folder repo ini, cukup ketik di chat AI: **`Install skill ini dan buka studio-nya`**).*
