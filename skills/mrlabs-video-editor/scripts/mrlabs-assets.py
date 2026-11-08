@@ -11,15 +11,37 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 REF = "9862abc066c9b83bf84c3e8ed1fc2d8d48f9bbf0"
 FONTS = [
-    ("plusjakartasans", "Plus Jakarta Sans"), ("manrope", "Manrope"),
-    ("spacegrotesk", "Space Grotesk"), ("dmsans", "DM Sans"),
-    ("bricolagegrotesque", "Bricolage Grotesque"), ("fraunces", "Fraunces"),
-    ("instrumentserif", "Instrument Serif"), ("dmserifdisplay", "DM Serif Display"),
-    ("ibmplexmono", "IBM Plex Mono"), ("caveat", "Caveat"),
-    ("poppins", "Poppins"), ("roboto", "Roboto"),
+    ("plusjakartasans", "Plus Jakarta Sans", "PlusJakartaSans[wght].ttf"),
+    ("manrope", "Manrope", "Manrope[wght].ttf"),
+    ("spacegrotesk", "Space Grotesk", "SpaceGrotesk[wght].ttf"),
+    ("dmsans", "DM Sans", "DMSans[opsz,wght].ttf"),
+    ("bricolagegrotesque", "Bricolage Grotesque", "BricolageGrotesque[opsz,wdth,wght].ttf"),
+    ("fraunces", "Fraunces", "Fraunces[SOFT,WONK,opsz,wght].ttf"),
+    ("instrumentserif", "Instrument Serif", "InstrumentSerif-Regular.ttf"),
+    ("dmserifdisplay", "DM Serif Display", "DMSerifDisplay-Regular.ttf"),
+    ("ibmplexmono", "IBM Plex Mono", "IBMPlexMono-Regular.ttf"),
+    ("caveat", "Caveat", "Caveat[wght].ttf"),
+    ("poppins", "Poppins", "Poppins-Bold.ttf"),
+    ("roboto", "Roboto", "Roboto[wdth,wght].ttf"),
+    ("montserrat", "Montserrat", "Montserrat[wght].ttf"),
+    ("bebasneue", "Bebas Neue", "BebasNeue-Regular.ttf"),
+    ("anton", "Anton", "Anton-Regular.ttf"),
+    ("inter", "Inter", "Inter[opsz,wght].ttf"),
+    ("oswald", "Oswald", "Oswald[wght].ttf"),
+    ("syne", "Syne", "Syne[wght].ttf"),
+    ("outfit", "Outfit", "Outfit[wght].ttf"),
+    ("archivo", "Archivo", "Archivo[wdth,wght].ttf"),
+    ("playfairdisplay", "Playfair Display", "PlayfairDisplay[wght].ttf"),
+    ("jetbrainsmono", "JetBrains Mono", "JetBrainsMono[wght].ttf"),
 ]
-SOUNDS = ["click_001", "confirmation_001", "open_001", "close_001", "maximize_001",
-          "minimize_001", "glitch_001", "pluck_001", "scroll_001", "switch_001"]
+SOUNDS = [
+    "click_001", "confirmation_001", "open_001", "close_001", "maximize_001",
+    "minimize_001", "glitch_001", "pluck_001", "scroll_001", "switch_001",
+    "back_001", "bong_001", "click_002", "click_003", "close_002",
+    "confirmation_002", "confirmation_003", "drop_001", "drop_002", "error_001",
+    "glass_001", "glass_002", "glitch_002", "maximize_002", "minimize_002",
+    "open_002", "pluck_002", "question_001", "scratch_001", "select_001",
+]
 PACK = "https://opengameart.org/sites/default/files/kenney_interfaceSounds.zip"
 
 
@@ -38,15 +60,19 @@ def mrlabs_record(path, data, **metadata):
 
 def mrlabs_collect():
     records, css = [], []
-    for slug, family in FONTS:
+    for item in FONTS:
+        slug, family = item[0], item[1]
         base = f"https://raw.githubusercontent.com/google/fonts/{REF}/ofl/{slug}/"
-        listing = json.loads(mrlabs_fetch(f"https://api.github.com/repos/google/fonts/contents/ofl/{slug}?ref={REF}"))
-        candidates = sorted(item["name"] for item in listing if item["name"].endswith(".ttf") and "Italic" not in item["name"])
-        if not candidates:
-            raise ValueError(f"No upright TTF: {family}")
-        selected = next((name for name in candidates if "Regular" in name or "[" in name), candidates[0])
-        if slug == "poppins":
-            selected = "Poppins-Bold.ttf"
+        if len(item) > 2 and item[2]:
+            selected = item[2]
+        else:
+            listing = json.loads(mrlabs_fetch(f"https://api.github.com/repos/google/fonts/contents/ofl/{slug}?ref={REF}"))
+            candidates = sorted(entry["name"] for entry in listing if entry["name"].endswith(".ttf") and "Italic" not in entry["name"])
+            if not candidates:
+                raise ValueError(f"No upright TTF: {family}")
+            selected = next((name for name in candidates if "Regular" in name or "[" in name), candidates[0])
+            if slug == "poppins":
+                selected = "Poppins-Bold.ttf"
         url = base + quote(selected)
         target = ROOT / "assets" / "fonts" / f"{slug}.ttf"
         data = mrlabs_fetch(url)

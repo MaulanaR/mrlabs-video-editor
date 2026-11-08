@@ -1,6 +1,6 @@
 ---
 name: mrlabs-video-editor
-description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, fifteen Pro Talking-Head & Captioning visual modes, thirteen viral depth effects, six caption layout modes, local open-license fonts and SFX, and final-render verification. When invoked without a video path or theme context, automatically open assets/theme-gallery.html (`python "SK/scripts/mrlabs-gallery.py" --open`) so the user can pick their raw video, theme, caption mode, and effects and copy the ready-to-use prompt.
+description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, thirty Pro Talking-Head & Captioning visual modes, thirteen viral depth effects, six caption layout modes, local open-license fonts and SFX, and final-render verification. When invoked without a video path or theme context, automatically open assets/theme-gallery.html (`python "SK/scripts/mrlabs-gallery.py" --open`) so the user can pick their raw video, theme, caption mode, and effects and copy the ready-to-use prompt.
 ---
 
 # MR Labs Video Editor
@@ -11,7 +11,7 @@ Edit the explicitly selected original footage. Default communication and transcr
 
 - **MANDATORY FIRST ACTION WHEN INVOKED WITHOUT CONTEXT:** If the user invokes `$mrlabs-video-editor` (or asks to edit a video / open the studio) **without providing a specific video file path or theme configuration**, you MUST immediately:
   1. Run `python "SK/scripts/mrlabs-gallery.py" --open` so [assets/theme-gallery.html](assets/theme-gallery.html) opens automatically in the user's default browser.
-  2. Show a clickable link to [theme-gallery.html](assets/theme-gallery.html) in chat and invite the user to pick their raw video file, choose 1 of the 15 Pro modes, select caption layout & viral effects in the Studio, and paste the generated prompt back into chat.
+  2. Show a clickable link to [theme-gallery.html](assets/theme-gallery.html) in chat and invite the user to pick their raw video file, choose 1 of the 30 Pro modes, select caption layout & viral effects in the Studio, and paste the generated prompt back into chat.
 - Do not ask a long list of text questions when the user has not chosen a video or style yet—open `theme-gallery.html` first so they can visually configure everything in one place.
 
 ## Scope and starting point
@@ -40,7 +40,7 @@ Use Python 3.10+, Node 22+, FFmpeg/ffprobe, faster-whisper and Pillow. Read [ref
 
 ## Visual choice
 
-Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs help choosing. The local studio gallery has ID/EN examples, fifteen Pro Talking-Head & Captioning modes (`01—15`), thirteen toggleable viral effects, six caption layout modes (`below-face`, `above-head`, `bottom`, `split-script`, `hierarchy-glow`, `shoulder-note`), twelve bundled font families plus optional local Helvetica, and ten playable SFX. Each theme uses White (`#FFFFFF`) or Black (`#0A0A0C` / `#0A0A0A`) studio backgrounds when needed, and if the source video already supports portrait (`height > width`), the theme background is skipped automatically (`--canvas-background: transparent`, `data-portrait="true"`). Theme tokens live in [assets/themes.json](assets/themes.json); the gallery and video builder share [assets/render-themes.css](assets/render-themes.css). Read [assets/DESIGN.md](assets/DESIGN.md) before changing these visual directions.
+Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs help choosing. The local studio gallery has ID/EN examples, thirty Pro Talking-Head & Captioning modes (`01—30`), thirteen toggleable viral effects, six caption layout modes (`below-face`, `above-head`, `bottom`, `split-script`, `hierarchy-glow`, `shoulder-note`), twenty-two bundled font families plus optional local Helvetica, and thirty playable SFX. Each theme uses White (`#FFFFFF`) or Black (`#0A0A0C` / `#0A0A0A`) studio backgrounds when needed, and if the source video already supports portrait (`height > width`), the theme background is skipped automatically (`--canvas-background: transparent`, `data-portrait="true"`). Theme tokens live in [assets/themes.json](assets/themes.json); the gallery and video builder share [assets/render-themes.css](assets/render-themes.css). Read [assets/DESIGN.md](assets/DESIGN.md) before changing these visual directions.
 
 | Mode / Theme ID | Use |
 |---|---|
@@ -59,6 +59,21 @@ Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs 
 | Sticker UI Cutout / `sticker-pop` | Crisp white sticker contour around subject cutout over dark UI backdrop with cyan `#38BDF8` accent |
 | Shoulder Callout / `shoulder-note` | Emerald `#34D399` depth hero + 3-line floating micro callout note beside shoulder/temple |
 | Before / After Stage / `before-after-stage` | Portfolio comparison stage with `🔴 Before` card on left and `🟢 After` hero frame on right |
+| Hormozi Punch / `hormozi-punch` | High-retention `Montserrat` 900 punch captions with cyber yellow `#FFEA00` + cash green `#22C55E` highlight |
+| Bebas Tower / `bebas-tower` | Tall condensed `Bebas Neue` crimson `#FF3B30` tower behind head + clean `Inter` subtitle |
+| Anton Impact / `anton-slam` | Extra-condensed `Anton` hook slam with blaze orange `#FF7A00` accent and `Outfit` body |
+| Cupertino Keynote / `inter-minimal` | Apple keynote precision with `Inter` 800, white `#FFFFFF` canvas, and `#3B82F6` blue glass UI |
+| Oswald Dispatch / `oswald-press` | Investigative newsroom `Oswald` 700 + press gold `#FACC15` shoulder callout |
+| Syne Art House / `syne-avant` | Avant-garde `Syne` 800 art direction with violet `#C084FC` accent and split-script caption |
+| Outfit Creator / `outfit-creator` | Friendly geometric `Outfit` 800 on white studio canvas with coral-rose `#FB7185` accent |
+| Archivo Kinetic / `archivo-kinetic` | High-velocity `Archivo` 900 telemetry aesthetic with kinetic mint `#2DD4BF` accent |
+| Playfair Luxury / `playfair-luxury` | High-contrast `Playfair Display` 700 luxury serif with champagne gold `#FDE047` glow |
+| JetBrains Terminal / `jetbrains-dev` | `JetBrains Mono` 800 developer HUD with cyan `#22D3EE` accent and AI prompt bar |
+| Iman Documentary / `iman-cinema` | Warm tungsten `#F59E0B` documentary aesthetic pairing `Bebas Neue` and `Montserrat` |
+| Productive Desk / `abdaal-desk` | Study-desk `Outfit` + handwritten `Caveat` on white canvas with sky `#38BDF8` accent |
+| Beast Retention / `beast-retention` | `Anton` + `Montserrat` 800 with hyper-cyan `#00F0FF` hierarchy glow and zoom punch |
+| Editorial Opinion / `nyt-opinion` | Op-ed `Playfair Display` + `DM Sans` column with warm gold `#FBBF24` shoulder callout |
+| Agency Pitch Deck / `agency-pitch` | Creative agency `Syne` + `Archivo` conversion stage with acid-lime `#BEF264` accent |
 
 Read [references/visual-packs.md](references/visual-packs.md) for treatment details. Choose one coherent pack unless the brief calls for a purposeful section change. Font, accent, geometry, caption and motion differ; do not present palette swaps as new themes.
 

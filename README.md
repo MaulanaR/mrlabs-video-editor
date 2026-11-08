@@ -1,6 +1,6 @@
 # MR Labs Video Editor — Pro Talking-Head & Captioning Studio
 
-Skill AI Video Editor untuk mengubah rekaman *talking-head* asli menjadi video vertikal `1080×1920` (Reels / Shorts / TikTok) menggunakan **HyperFrames + GSAP + Faster-Whisper**, lengkap dengan **15 Mode Pro Talking-Head**, **6 Mode Posisi & Tipografi Caption**, **13 Efek Depth Viral**, **12 keluarga font OFL**, dan **10 SFX CC0**.
+Skill AI Video Editor untuk mengubah rekaman *talking-head* asli menjadi video vertikal `1080×1920` (Reels / Shorts / TikTok) menggunakan **HyperFrames + GSAP + Faster-Whisper**, lengkap dengan **30 Mode Pro Talking-Head**, **6 Mode Posisi & Tipografi Caption**, **13 Efek Depth Viral**, **22 keluarga font OFL** (+ Helvetica lokal), dan **30 SFX CC0**.
 
 ---
 
@@ -25,12 +25,12 @@ $mrlabs-video-editor
 
 AI akan otomatis menjalankan `python "skills/mrlabs-video-editor/scripts/mrlabs-gallery.py" --open` dan **membuka halaman Daylight Studio ([`theme-gallery.html`](skills/mrlabs-video-editor/assets/theme-gallery.html)) di browser kamu**:
 1. **Pilih file video raw** langsung dari komputermu di bagian `00 / PILIH FILE VIDEO RAW` (resolusi & orientasi potrait/landscape otomatis terdeteksi, bahkan bisa langsung di-*preview* di monitor Studio).
-2. **Pilih 1 dari 15 Mode Pro Talking-Head**, **6 Mode Caption**, dan **13 Efek Viral**.
+2. **Pilih 1 dari 30 Mode Pro Talking-Head**, **6 Mode Caption**, dan **13 Efek Viral**.
 3. Klik tombol **`📋 Salin Prompt Murni ke Chat ↗`** lalu *paste* langsung ke ruang chat AI Agent!
 
 ---
 
-## 🎨 15 Mode Pro Talking-Head (`themes.json`)
+## 🎨 30 Mode Pro Talking-Head (`themes.json`)
 
 | No | Mode / ID | Karakter Visual & Kegunaan | Efek Bawaan |
 | :--- | :--- | :--- | :--- |
@@ -49,6 +49,21 @@ AI akan otomatis menjalankan `python "skills/mrlabs-video-editor/scripts/mrlabs-
 | **13** | **Sticker UI Cutout** (`sticker-pop`) | Garis tepi stiker putih pada cutout tubuh di depan latar UI gelap (`#38BDF8`) | `orbit` |
 | **14** | **Shoulder Callout** (`shoulder-note`) | Aksen emerald `#34D399` + catatan mikro 3 baris melayang di samping bahu/pelipis | `digital-zoom` |
 | **15** | **Before / After Stage** (`before-after-stage`) | Panggung komparasi `🔴 Before` mentah di kiri vs `🟢 After` hasil edit di kanan | `before-after` |
+| **16** | **Hormozi Punch** (`hormozi-punch`) | Tipografi `Montserrat` 900 super-tebal dengan aksen kuning `#FFEA00` & hijau `#22C55E` | `digital-zoom` |
+| **17** | **Bebas Tower** (`bebas-tower`) | Headline `Bebas Neue` kondensasi tinggi merah `#FF3B30` di belakang bahu + `Inter` | `echo-wall` |
+| **18** | **Anton Impact** (`anton-slam`) | Display `Anton` ekstra-padat untuk hook 3 detik pertama dengan oranye `#FF7A00` | `side-stack` |
+| **19** | **Cupertino Keynote** (`inter-minimal`) | Tipografi `Inter` presisi ala Apple Keynote di kanvas putih `#FFFFFF` + biru `#3B82F6` | `ui-world` |
+| **20** | **Oswald Dispatch** (`oswald-press`) | Kapsul berita `Oswald` ruang redaksi investigasi dengan aksen emas `#FACC15` | `headline-wall` |
+| **21** | **Syne Art House** (`syne-avant`) | Tipografi `Syne` eksperimental dengan aksen ungu `#C084FC` & cursive `split-script` | `orbit` |
+| **22** | **Outfit Creator** (`outfit-creator`) | Geometri bulat `Outfit` ramah di kanvas putih dengan aksen coral `#FB7185` | `tactile-board` |
+| **23** | **Archivo Kinetic** (`archivo-kinetic`) | Grotesque neo-teknis `Archivo` 900 untuk breakdown metrik & kecepatan (`#2DD4BF`) | `grid-3x3` |
+| **24** | **Playfair Luxury** (`playfair-luxury`) | Serif kontras tinggi `Playfair Display` dengan kilau emas sampanye `#FDE047` | `cover-story` |
+| **25** | **JetBrains Terminal** (`jetbrains-dev`) | Monospace `JetBrains Mono` tajam untuk AI engineer, coder & terminal HUD (`#22D3EE`) | `prompt-bar` |
+| **26** | **Iman Documentary** (`iman-cinema`) | Dokumenter bisnis hangat dengan tungsten amber `#F59E0B`, `Bebas Neue` & `Montserrat` | `grade-hud` |
+| **27** | **Productive Desk** (`abdaal-desk`) | Meja studi produktif `Outfit` + coretan tangan `Caveat` di kanvas putih (`#38BDF8`) | `tactile-board` |
+| **28** | **Beast Retention** (`beast-retention`) | Kombinasi `Anton` & `Montserrat` ExtraBold dengan glow cyan elektrik `#00F0FF` | `digital-zoom` |
+| **29** | **Editorial Opinion** (`nyt-opinion`) | Kolom opini `Playfair Display` & `DM Sans` dengan callout bahu emas `#FBBF24` | `headline-wall` |
+| **30** | **Agency Pitch Deck** (`agency-pitch`) | Panggung komparasi `Syne` & `Archivo` dengan aksen acid-lime `#BEF264` | `before-after` |
 
 ---
 

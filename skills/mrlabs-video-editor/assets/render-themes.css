@@ -119,16 +119,67 @@ video.subject,img.subject{z-index:3;pointer-events:none}
 /* 15. Before / After Stage (@vids_app & @mahdiology.edit showcase stage) */
 [data-theme="before-after-stage"] .title-hero{font-size:184px;letter-spacing:-.05em;color:#4ADE80}
 
+/* 16. Hormozi Punch (Montserrat Black high-retention yellow/green punch) */
+[data-theme="hormozi-punch"] .title-hero{font-size:196px;letter-spacing:-.055em;color:#FFEA00;text-shadow:0 0 36px rgba(255,234,0,.45),0 12px 34px rgba(0,0,0,.85)}
+[data-theme="hormozi-punch"] .caption{text-transform:uppercase;letter-spacing:-.04em}
+
+/* 17. Bebas Tower (Bebas Neue tall condensed crimson tower) */
+[data-theme="bebas-tower"] .title-hero{font-size:246px;letter-spacing:.01em;color:#FF3B30;text-shadow:0 12px 38px rgba(255,59,48,.5)}
+
+/* 18. Anton Impact (Anton condensed hook slam) */
+[data-theme="anton-slam"] .title-hero{font-size:224px;letter-spacing:-.01em;color:#FF7A00;text-shadow:0 12px 36px rgba(255,122,0,.5)}
+
+/* 19. Cupertino Keynote (Inter precision white/glass keynote) */
+[data-theme="inter-minimal"] .title-hero{font-size:178px;letter-spacing:-.055em;color:#3B82F6}
+
+/* 20. Oswald Dispatch (Oswald investigative press gold) */
+[data-theme="oswald-press"] .title-hero{font-size:204px;letter-spacing:-.02em;color:#FACC15}
+
+/* 21. Syne Art House (Syne experimental art direction) */
+[data-theme="syne-avant"] .title-hero{font-size:164px;letter-spacing:-.04em;color:#C084FC;text-shadow:0 0 34px rgba(192,132,252,.5)}
+
+/* 22. Outfit Creator (Outfit friendly creator studio) */
+[data-theme="outfit-creator"] .title-hero{font-size:180px;letter-spacing:-.045em;color:#FB7185}
+
+/* 23. Archivo Kinetic (Archivo neo-grotesque telemetry) */
+[data-theme="archivo-kinetic"] .title-hero{font-size:178px;letter-spacing:-.05em;color:#2DD4BF}
+
+/* 24. Playfair Luxury (Playfair Display high-contrast champagne gold) */
+[data-theme="playfair-luxury"] .title-hero{font-size:188px;letter-spacing:-.02em;color:#FDE047;text-shadow:0 12px 36px rgba(0,0,0,.78)}
+
+/* 25. JetBrains Terminal (JetBrains Mono AI engineer HUD) */
+[data-theme="jetbrains-dev"] .title-hero{font-size:158px;letter-spacing:-.05em;color:#22D3EE;text-shadow:0 0 32px rgba(34,211,238,.48)}
+
+/* 26. Iman Documentary (Bebas Neue + Montserrat warm tungsten documentary) */
+[data-theme="iman-cinema"] .art-direction{background:radial-gradient(circle at 50% 34%,rgba(245,158,11,.24),transparent 52%)}
+[data-theme="iman-cinema"] .title-hero{font-size:236px;letter-spacing:.015em;color:#F59E0B;text-shadow:0 0 38px rgba(245,158,11,.5),0 12px 34px rgba(0,0,0,.8)}
+
+/* 27. Productive Desk (Outfit + Caveat study desk) */
+[data-theme="abdaal-desk"] .title-hero{font-size:184px;letter-spacing:-.045em;color:#38BDF8}
+
+/* 28. Beast Retention (Anton + Montserrat hyper-cyan glow) */
+[data-theme="beast-retention"] .title-hero{font-size:212px;letter-spacing:-.015em;color:#00F0FF;text-shadow:0 0 40px rgba(0,240,255,.55),0 12px 36px rgba(0,0,0,.85)}
+
+/* 29. Editorial Opinion (Playfair Display + DM Sans op-ed column) */
+[data-theme="nyt-opinion"] .title-hero{font-size:182px;letter-spacing:-.025em;color:#FBBF24}
+
+/* 30. Agency Pitch Deck (Syne + Archivo acid-lime conversion stage) */
+[data-theme="agency-pitch"] .title-hero{font-size:176px;letter-spacing:-.045em;color:#BEF264}
+
 /* Non-portrait White-background theme contrast adjustments */
-#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"],[data-theme="tactile-paper"],[data-theme="shoulder-note"]) .title-kicker,
-#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"],[data-theme="tactile-paper"],[data-theme="shoulder-note"]) .brand,
-#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"],[data-theme="tactile-paper"],[data-theme="shoulder-note"]) .credit{color:var(--ink);text-shadow:none}
-#main[data-portrait="false"][data-caption-pos="above-head"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"],[data-theme="tactile-paper"],[data-theme="shoulder-note"]) .caption{color:var(--ink);text-shadow:0 2px 12px #ffffffcc}
+#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"],[data-theme="tactile-paper"],[data-theme="shoulder-note"],[data-theme="inter-minimal"],[data-theme="outfit-creator"],[data-theme="abdaal-desk"],[data-theme="nyt-opinion"]) .title-kicker,
+#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"],[data-theme="tactile-paper"],[data-theme="shoulder-note"],[data-theme="inter-minimal"],[data-theme="outfit-creator"],[data-theme="abdaal-desk"],[data-theme="nyt-opinion"]) .brand,
+#main[data-portrait="false"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"],[data-theme="tactile-paper"],[data-theme="shoulder-note"],[data-theme="inter-minimal"],[data-theme="outfit-creator"],[data-theme="abdaal-desk"],[data-theme="nyt-opinion"]) .credit{color:var(--ink);text-shadow:none}
+#main[data-portrait="false"][data-caption-pos="above-head"]:is([data-theme="monocle-brief"],[data-theme="kinfolk-linen"],[data-theme="founder-slate"],[data-theme="tactile-paper"],[data-theme="shoulder-note"],[data-theme="inter-minimal"],[data-theme="outfit-creator"],[data-theme="abdaal-desk"],[data-theme="nyt-opinion"]) .caption{color:var(--ink);text-shadow:0 2px 12px #ffffffcc}
 #main[data-portrait="false"][data-theme="monocle-brief"] .title-hero{color:#14532D;text-shadow:none}
 #main[data-portrait="false"][data-theme="kinfolk-linen"] .title-hero{color:#8C5238;text-shadow:none}
 #main[data-portrait="false"][data-theme="founder-slate"] .title-hero{color:#2563EB;text-shadow:none}
 #main[data-portrait="false"][data-theme="tactile-paper"] .title-hero{color:#B45309;text-shadow:none}
 #main[data-portrait="false"][data-theme="shoulder-note"] .title-hero{color:#047857;text-shadow:none}
+#main[data-portrait="false"][data-theme="inter-minimal"] .title-hero{color:#1D4ED8;text-shadow:none}
+#main[data-portrait="false"][data-theme="outfit-creator"] .title-hero{color:#E11D48;text-shadow:none}
+#main[data-portrait="false"][data-theme="abdaal-desk"] .title-hero{color:#0284C7;text-shadow:none}
+#main[data-portrait="false"][data-theme="nyt-opinion"] .title-hero{color:#B45309;text-shadow:none}
 
 /* ==========================================================================
    13 VIRAL TALKING-HEAD EFFECTS:

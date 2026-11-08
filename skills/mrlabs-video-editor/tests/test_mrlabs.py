@@ -101,15 +101,28 @@ class ThemeMotion(unittest.TestCase):
     ALL_PRO_IDS = (
         'obsidian-studio', 'verge-glass', 'monocle-brief', 'kinfolk-linen', 'founder-slate',
         'neon-script', 'echo-pulse', 'vogue-cover', 'pixel-creator', 'tactile-paper',
-        'claude-grid', 'colorist-grade', 'sticker-pop', 'shoulder-note', 'before-after-stage'
+        'claude-grid', 'colorist-grade', 'sticker-pop', 'shoulder-note', 'before-after-stage',
+        'hormozi-punch', 'bebas-tower', 'anton-slam', 'inter-minimal', 'oswald-press',
+        'syne-avant', 'outfit-creator', 'archivo-kinetic', 'playfair-luxury', 'jetbrains-dev',
+        'iman-cinema', 'abdaal-desk', 'beast-retention', 'nyt-opinion', 'agency-pitch'
     )
 
-    def test_fifteen_pro_modes_exist_and_short_cues_leave_time_to_read(self):
+    def test_thirty_pro_modes_exist_and_short_cues_leave_time_to_read(self):
         themes_data = mrlabs_read(MRLABS_ROOT / "assets/themes.json")["themes"]
-        self.assertEqual(len(themes_data), 15)
+        catalog_assets = mrlabs_read(MRLABS_ROOT / "assets/catalog.json")["assets"]
+        font_families = {a["family"] for a in catalog_assets if a["kind"] == "font"} | {"Helvetica"}
+        sfx_ids = {a["id"] for a in catalog_assets if a["kind"] == "sfx"}
+        self.assertEqual(len([a for a in catalog_assets if a["kind"] == "font"]), 22)
+        self.assertEqual(len(sfx_ids), 30)
+        self.assertEqual(len(themes_data), 30)
         self.assertEqual(tuple(t["id"] for t in themes_data), self.ALL_PRO_IDS)
         for theme_id in self.ALL_PRO_IDS:
             theme = mrlabs_theme(theme_id)
+            self.assertIn(theme["heading_font"], font_families)
+            self.assertIn(theme["body_font"], font_families)
+            self.assertIn(theme["label_font"], font_families)
+            for sfx in theme["sfx"]:
+                self.assertIn(sfx, sfx_ids)
             for role in ('caption', 'title', 'broll'):
                 for duration in (.02, .2, .7, 3):
                     initial, final = mrlabs_entrance(theme, role, duration)

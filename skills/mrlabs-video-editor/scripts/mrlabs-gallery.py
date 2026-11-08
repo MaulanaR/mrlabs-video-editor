@@ -24,6 +24,21 @@ DEFAULT_PRO_FX = {
     "sticker-pop": "orbit",
     "shoulder-note": "digital-zoom",
     "before-after-stage": "before-after",
+    "hormozi-punch": "digital-zoom",
+    "bebas-tower": "echo-wall",
+    "anton-slam": "side-stack",
+    "inter-minimal": "ui-world",
+    "oswald-press": "headline-wall",
+    "syne-avant": "orbit",
+    "outfit-creator": "tactile-board",
+    "archivo-kinetic": "grid-3x3",
+    "playfair-luxury": "cover-story",
+    "jetbrains-dev": "prompt-bar",
+    "iman-cinema": "grade-hud",
+    "abdaal-desk": "tactile-board",
+    "beast-retention": "digital-zoom",
+    "nyt-opinion": "headline-wall",
+    "agency-pitch": "before-after",
 }
 
 
@@ -143,17 +158,17 @@ def mrlabs_main():
   <span>PRO TALKING-HEAD STUDIO &amp; PROMPT GENERATOR</span>
   <div class="nav-links">
     <a href="#studio">01. Studio Builder</a>
-    <a href="#pro">02. 15 Mode Visual</a>
+    <a href="#pro">02. 30 Mode Visual</a>
     <a href="#assets">03. Font &amp; SFX</a>
   </div>
-  <span class="edition">15 PRO MODES · EDITION 05</span>
+  <span class="edition">30 PRO MODES · EDITION 05</span>
 </nav>
 
 <header>
   <div>
-    <div class="kicker">✦ DAYLIGHT STUDIO · 15 MODE PRO + 13 EFEK VIRAL</div>
+    <div class="kicker">✦ DAYLIGHT STUDIO · 30 MODE PRO + 13 EFEK VIRAL</div>
     <h1>Pilih videomu.<br><span>Salin prompt murninya.</span></h1>
-    <p>Pilih langsung file <b>video raw</b> dari komputermu, tentukan <b>1 dari 15 mode visual</b>, atur <b>6 posisi caption</b>, dan nyalakan <b>13 efek viral</b>. Prompt yang dihasilkan sudah terisi lengkap dengan path file, resolusi, dan konfigurasi murni yang siap langsung ditempel ke chat AI Agent tanpa perlu mengedit kurung siku lagi.</p>
+    <p>Pilih langsung file <b>video raw</b> dari komputermu, tentukan <b>1 dari 30 mode visual</b>, atur <b>6 posisi caption</b>, dan nyalakan <b>13 efek viral</b>. Prompt yang dihasilkan sudah terisi lengkap dengan path file, resolusi, dan konfigurasi murni yang siap langsung ditempel ke chat AI Agent tanpa perlu mengedit kurung siku lagi.</p>
   </div>
   <div class="controls">
     <button id="language" type="button">Bahasa Prompt: Indonesia</button>
@@ -248,7 +263,7 @@ def mrlabs_main():
     </div>
 
     <div class="builder-group">
-      <div class="builder-label"><span>01 / PILIH MODE PRO TALKING-HEAD (15 MODE)</span><small id="selected-theme-label">Creator Hook (obsidian-studio)</small></div>
+      <div class="builder-label"><span>01 / PILIH MODE PRO TALKING-HEAD (30 MODE)</span><small id="selected-theme-label">Creator Hook (obsidian-studio)</small></div>
       <div class="theme-chip-grid">{''.join(theme_pills)}</div>
     </div>
 
@@ -326,12 +341,12 @@ def mrlabs_main():
   </div>
 </section>
 
-<div class="collection-heading" id="pro"><div><span class="kicker">PRO TALKING-HEAD / 01—15</span><h2>15 Mode Talking-Head, Depth Hook &amp; 13 Efek Viral.</h2></div><p>5 mode klasik + 10 mode baru hasil bedah referensi kreator global. Klik kartu mana saja untuk memuat tema &amp; efek bawaannya ke Studio di atas.</p></div>
-<section class="packages" aria-label="Lima belas tema Pro Influencer">{''.join(pro_cards)}</section>
+<div class="collection-heading" id="pro"><div><span class="kicker">PRO TALKING-HEAD / 01—30</span><h2>30 Mode Talking-Head, Depth Hook &amp; 13 Efek Viral.</h2></div><p>30 kurasi mode visual talking-head &amp; captioning dari referensi kreator global. Klik kartu mana saja untuk memuat tema &amp; efek bawaannya ke Studio di atas.</p></div>
+<section class="packages" aria-label="Tiga puluh tema Pro Influencer">{''.join(pro_cards)}</section>
 
-<div class="asset-header" id="assets"><h2>Peralatan kreatif lokal.</h2><p>12 keluarga font berlisensi terbuka + 10 aksen suara antarmuka.</p></div>
-<details class="asset-group"><summary>01 / Koleksi font · 12 keluarga + Helvetica lokal <span>+</span></summary><p class="asset-note">Poppins Bold (700), Roboto (400), dan Roboto Light (300) tersedia lokal. Helvetica memakai instalasi lokal berlisensi, dengan fallback Roboto jika tidak tersedia.</p><div class="font-shelf">{''.join(fonts)}</div></details>
-<details class="asset-group"><summary>02 / Sepuluh aksen suara <span>+</span></summary><p class="asset-note">Kenney Interface Sounds · CC0. Efek mengikuti aksi dan tetap di bawah narasi.</p><div class="sound-shelf">{''.join(sounds)}</div></details>
+<div class="asset-header" id="assets"><h2>Peralatan kreatif lokal.</h2><p>22 keluarga font berlisensi terbuka + 30 aksen suara antarmuka.</p></div>
+<details class="asset-group"><summary>01 / Koleksi font · 22 keluarga + Helvetica lokal <span>+</span></summary><p class="asset-note">Montserrat, Bebas Neue, Anton, Inter, Oswald, Syne, Outfit, Archivo, Playfair Display, JetBrains Mono, Poppins Bold (700), Roboto (400/300), dan 10 font OFL lainnya tersedia lokal. Helvetica memakai instalasi lokal berlisensi, dengan fallback Roboto jika tidak tersedia.</p><div class="font-shelf">{''.join(fonts)}</div></details>
+<details class="asset-group"><summary>02 / Tiga puluh aksen suara <span>+</span></summary><p class="asset-note">Kenney Interface Sounds · CC0 (30 file .ogg). Efek mengikuti aksi dan tetap di bawah narasi.</p><div class="sound-shelf">{''.join(sounds)}</div></details>
 <footer><span>MR LABS / DAYLIGHT STUDIO EDITION 05.</span><p>Font <a href="https://github.com/google/fonts">Google Fonts / OFL</a> · SFX <a href="https://kenney.nl/assets/interface-sounds">Kenney / CC0</a> · <a href="catalog.json">Sumber &amp; lisensi</a></p><p>Base foto kreator: <code>assets/previews/creator.png</code> + <code>creator-cutout.png</code>.</p></footer>
 </main>
 <script>window.__MRLABS_SPECIMENS={specimens_json};</script>

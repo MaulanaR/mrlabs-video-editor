@@ -10,4 +10,14 @@
 @font-face{font-family:"Caveat";src:url("caveat.ttf") format("truetype");font-weight:100 900;font-display:block;}
 @font-face{font-family:"Poppins";src:url("poppins.ttf") format("truetype");font-weight:700;font-display:block;}
 @font-face{font-family:"Roboto";src:url("roboto.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Montserrat";src:url("montserrat.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Bebas Neue";src:url("bebasneue.ttf") format("truetype");font-weight:400;font-display:block;}
+@font-face{font-family:"Anton";src:url("anton.ttf") format("truetype");font-weight:400;font-display:block;}
+@font-face{font-family:"Inter";src:url("inter.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Oswald";src:url("oswald.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Syne";src:url("syne.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Outfit";src:url("outfit.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Archivo";src:url("archivo.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"Playfair Display";src:url("playfairdisplay.ttf") format("truetype");font-weight:100 900;font-display:block;}
+@font-face{font-family:"JetBrains Mono";src:url("jetbrainsmono.ttf") format("truetype");font-weight:100 900;font-display:block;}
 @font-face{font-family:"Helvetica";src:local("Helvetica"),local("Helvetica-Regular");font-weight:400;font-display:swap;}

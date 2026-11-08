@@ -371,7 +371,7 @@ def mrlabs_copy_assets(project):
 def mrlabs_motion(theme):
     return {"rise": {"y": 36}, "punch": {"scale": 0.82, "rotation": -3},
             "focus": {"filter": "blur(7px)", "scale": 1.015}, "float": {"y": 46, "rotation": 2},
-            "slide": {"x": -56}}[theme["motion"]]
+            "slide": {"x": -56}, "glide": {"y": 24, "scale": 0.96}}[theme["motion"]]
 
 
 def mrlabs_entrance(theme, role, cue_duration, full=False):
