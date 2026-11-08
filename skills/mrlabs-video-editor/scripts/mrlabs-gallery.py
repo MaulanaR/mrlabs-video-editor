@@ -147,7 +147,6 @@ def mrlabs_main():
                 fonts.append(f'<div class="font-specimen"><small>{sample["label"]} · {sample["weight"]} · OFL</small><p style="font-family:\'{asset["family"]}\';font-weight:{sample["weight"]};font-synthesis:none">Ide kecil. Dampak besar.</p></div>')
         else:
             sounds.append(f'<label class="sound"><span>{asset["id"]}</span><audio controls preload="metadata" src="sfx/{asset["id"]}.ogg"></audio></label>')
-    fonts.append('<div class="font-specimen helvetica"><small>Helvetica · 400 · lokal berlisensi</small><p style="font-family:Helvetica,Roboto,sans-serif">Ide kecil. Dampak besar.</p><small id="helvetica-status" role="status">Memeriksa font lokal; fallback: Roboto.</small></div>')
 
     default_srcdoc = html.escape(specimens_map[default_theme_id]["srcdoc"], quote=True)
     specimens_json = json.dumps(specimens_map, ensure_ascii=False)
@@ -344,8 +343,8 @@ def mrlabs_main():
 <div class="collection-heading" id="pro"><div><span class="kicker">PRO TALKING-HEAD / 01—30</span><h2>30 Mode Talking-Head, Depth Hook &amp; 13 Efek Viral.</h2></div><p>30 kurasi mode visual talking-head &amp; captioning dari referensi kreator global. Klik kartu mana saja untuk memuat tema &amp; efek bawaannya ke Studio di atas.</p></div>
 <section class="packages" aria-label="Tiga puluh tema Pro Influencer">{''.join(pro_cards)}</section>
 
-<div class="asset-header" id="assets"><h2>Peralatan kreatif lokal.</h2><p>22 keluarga font berlisensi terbuka + 30 aksen suara antarmuka.</p></div>
-<details class="asset-group"><summary>01 / Koleksi font · 22 keluarga + Helvetica lokal <span>+</span></summary><p class="asset-note">Montserrat, Bebas Neue, Anton, Inter, Oswald, Syne, Outfit, Archivo, Playfair Display, JetBrains Mono, Poppins Bold (700), Roboto (400/300), dan 10 font OFL lainnya tersedia lokal. Helvetica memakai instalasi lokal berlisensi, dengan fallback Roboto jika tidak tersedia.</p><div class="font-shelf">{''.join(fonts)}</div></details>
+<div class="asset-header" id="assets"><h2>Peralatan kreatif lokal.</h2><p>23 keluarga font berlisensi terbuka + 30 aksen suara antarmuka.</p></div>
+<details class="asset-group"><summary>01 / Koleksi font · 23 keluarga OFL (termasuk Arimo / Helvetica Twin) <span>+</span></summary><p class="asset-note">Seluruh 23 keluarga font dibundel langsung sebagai file <code>.ttf</code> lokal berlisensi OFL—termasuk <b>Arimo</b> (kembaran metrik Swiss Neo-Grotesque untuk Helvetica), Montserrat, Bebas Neue, Anton, Inter, Oswald, Syne, Outfit, Archivo, Playfair Display, JetBrains Mono, Poppins Bold (700), dan Roboto (400/300).</p><div class="font-shelf">{''.join(fonts)}</div></details>
 <details class="asset-group"><summary>02 / Tiga puluh aksen suara <span>+</span></summary><p class="asset-note">Kenney Interface Sounds · CC0 (30 file .ogg). Efek mengikuti aksi dan tetap di bawah narasi.</p><div class="sound-shelf">{''.join(sounds)}</div></details>
 <footer><span>MR LABS / DAYLIGHT STUDIO EDITION 05.</span><p>Font <a href="https://github.com/google/fonts">Google Fonts / OFL</a> · SFX <a href="https://kenney.nl/assets/interface-sounds">Kenney / CC0</a> · <a href="catalog.json">Sumber &amp; lisensi</a></p><p>Base foto kreator: <code>assets/previews/creator.png</code> + <code>creator-cutout.png</code>.</p></footer>
 </main>

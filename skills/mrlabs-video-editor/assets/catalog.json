@@ -304,6 +304,29 @@
       "upstream_filename": "JetBrainsMono[wght].ttf"
     },
     {
+      "file": "assets/fonts/arimo.ttf",
+      "sha256": "e43898b143ec826ac8cb4034816458a7047fbe0836558de2a1f8c6223ae3e0ca",
+      "bytes": 496268,
+      "kind": "font",
+      "family": "Arimo",
+      "id": "arimo",
+      "license": "OFL-1.1",
+      "license_file": "assets/fonts/arimo-OFL.txt",
+      "source_url": "https://raw.githubusercontent.com/google/fonts/9862abc066c9b83bf84c3e8ed1fc2d8d48f9bbf0/ofl/arimo/Arimo%5Bwght%5D.ttf",
+      "source_page": "https://github.com/google/fonts/tree/9862abc066c9b83bf84c3e8ed1fc2d8d48f9bbf0/ofl/arimo",
+      "upstream_filename": "Arimo[wght].ttf",
+      "specimens": [
+        {
+          "label": "Arimo (Helvetica Twin)",
+          "weight": 400
+        },
+        {
+          "label": "Arimo Bold (Helvetica Twin)",
+          "weight": 700
+        }
+      ]
+    },
+    {
       "file": "assets/sfx/click_001.ogg",
       "sha256": "ccfb7fa0cccdd9faec0eb16033c732b1e308d139d80f799161495d58f7adcdb9",
       "bytes": 4876,

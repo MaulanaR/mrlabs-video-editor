@@ -1,6 +1,6 @@
 # MR Labs Video Editor — Pro Talking-Head & Captioning Studio
 
-Skill AI Video Editor untuk mengubah rekaman *talking-head* asli menjadi video vertikal `1080×1920` (Reels / Shorts / TikTok) menggunakan **HyperFrames + GSAP + Faster-Whisper**, lengkap dengan **30 Mode Pro Talking-Head**, **6 Mode Posisi & Tipografi Caption**, **13 Efek Depth Viral**, **22 keluarga font OFL** (+ Helvetica lokal), dan **30 SFX CC0**.
+Skill AI Video Editor untuk mengubah rekaman *talking-head* asli menjadi video vertikal `1080×1920` (Reels / Shorts / TikTok) menggunakan **HyperFrames + GSAP + Faster-Whisper**, lengkap dengan **30 Mode Pro Talking-Head**, **6 Mode Posisi & Tipografi Caption**, **13 Efek Depth Viral**, **23 keluarga font OFL** (termasuk **Arimo**, kembaran metrik Helvetica), dan **30 SFX CC0**.
 
 ---
 

@@ -112,7 +112,7 @@ class ThemeMotion(unittest.TestCase):
         catalog_assets = mrlabs_read(MRLABS_ROOT / "assets/catalog.json")["assets"]
         font_families = {a["family"] for a in catalog_assets if a["kind"] == "font"} | {"Helvetica"}
         sfx_ids = {a["id"] for a in catalog_assets if a["kind"] == "sfx"}
-        self.assertEqual(len([a for a in catalog_assets if a["kind"] == "font"]), 22)
+        self.assertEqual(len([a for a in catalog_assets if a["kind"] == "font"]), 23)
         self.assertEqual(len(sfx_ids), 30)
         self.assertEqual(len(themes_data), 30)
         self.assertEqual(tuple(t["id"] for t in themes_data), self.ALL_PRO_IDS)

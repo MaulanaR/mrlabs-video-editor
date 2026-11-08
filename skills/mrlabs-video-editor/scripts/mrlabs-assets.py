@@ -33,6 +33,7 @@ FONTS = [
     ("archivo", "Archivo", "Archivo[wdth,wght].ttf"),
     ("playfairdisplay", "Playfair Display", "PlayfairDisplay[wght].ttf"),
     ("jetbrainsmono", "JetBrains Mono", "JetBrainsMono[wght].ttf"),
+    ("arimo", "Arimo", "Arimo[wght].ttf"),
 ]
 SOUNDS = [
     "click_001", "confirmation_001", "open_001", "close_001", "maximize_001",
@@ -75,12 +76,12 @@ def mrlabs_collect():
                 selected = "Poppins-Bold.ttf"
         url = base + quote(selected)
         target = ROOT / "assets" / "fonts" / f"{slug}.ttf"
-        data = mrlabs_fetch(url)
+        data = target.read_bytes() if target.is_file() else mrlabs_fetch(url)
         if data[:4] not in (b"\x00\x01\x00\x00", b"OTTO"):
             raise ValueError(f"Invalid font response: {family}")
         license_path = ROOT / "assets" / "fonts" / f"{slug}-OFL.txt"
         license_path.parent.mkdir(parents=True, exist_ok=True)
-        license_data = mrlabs_fetch(base + "OFL.txt")
+        license_data = license_path.read_bytes() if license_path.is_file() else mrlabs_fetch(base + "OFL.txt")
         if b"SIL OPEN FONT LICENSE" not in license_data.upper():
             raise ValueError(f"Unexpected font license: {family}")
         license_path.write_bytes(license_data)
@@ -88,9 +89,13 @@ def mrlabs_collect():
                                       license_file=license_path.relative_to(ROOT).as_posix(), source_url=url,
                                       source_page=f"https://github.com/google/fonts/tree/{REF}/ofl/{slug}",
                                       upstream_filename=selected))
-        if slug in ("poppins", "roboto"):
-            records[-1]["specimens"] = ([{"label": "Poppins Bold", "weight": 700}] if slug == "poppins" else
-                                       [{"label": "Roboto", "weight": 400}, {"label": "Roboto Light", "weight": 300}])
+        if slug in ("poppins", "roboto", "arimo"):
+            if slug == "poppins":
+                records[-1]["specimens"] = [{"label": "Poppins Bold", "weight": 700}]
+            elif slug == "roboto":
+                records[-1]["specimens"] = [{"label": "Roboto", "weight": 400}, {"label": "Roboto Light", "weight": 300}]
+            else:
+                records[-1]["specimens"] = [{"label": "Arimo (Helvetica Twin)", "weight": 400}, {"label": "Arimo Bold (Helvetica Twin)", "weight": 700}]
         variable = "[" in selected
         weight = "100 900" if variable else ("700" if slug == "poppins" else "400")
         css.append(f'@font-face{{font-family:"{family}";src:url("{slug}.ttf") format("truetype");font-weight:{weight};font-display:block;}}')
@@ -111,7 +116,7 @@ def mrlabs_collect():
                                       source_page="https://opengameart.org/content/interface-sounds",
                                       publisher_page="https://kenney.nl/assets/interface-sounds",
                                       archive_entry=entry, archive_sha256=hashlib.sha256(archive_bytes).hexdigest()))
-    css.append('@font-face{font-family:"Helvetica";src:local("Helvetica"),local("Helvetica-Regular");font-weight:400;font-display:swap;}')
+    css.append('@font-face{font-family:"Helvetica";src:url("arimo.ttf") format("truetype");font-weight:100 900;font-display:block;}')
     (ROOT / "assets" / "fonts" / "fonts.css").write_text("\n".join(css) + "\n", encoding="utf-8")
     (ROOT / "assets" / "catalog.json").write_text(json.dumps({"schema": 1, "assets": records}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Collected {len(FONTS)} font families and {len(SOUNDS)} SFX.")
