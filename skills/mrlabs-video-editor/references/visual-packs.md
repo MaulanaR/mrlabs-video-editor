@@ -36,5 +36,15 @@ Buka `../assets/theme-gallery.html` untuk membandingkan tiga puluh mode Pro Talk
 | 28 | **Beast Retention** / `beast-retention` | Anton + Montserrat; latar hitam `#0A0A0A`, hyper-cyan `#00F0FF` | Kombinasi Anton & Montserrat ExtraBold dengan glow cyan elektrik (`hierarchy-glow`) | `digital-zoom` |
 | 29 | **Editorial Opinion** / `nyt-opinion` | Playfair Display + DM Sans; latar putih `#FFFFFF`, emas `#FBBF24` | Kolom opini dengan callout bahu bergaya dokumenter (`shoulder-note`) | `headline-wall` |
 | 30 | **Agency Pitch Deck** / `agency-pitch` | Syne + Archivo; latar hitam `#0A0A0C`, acid-lime `#BEF264` | Panggung komparasi agensi kreatif untuk audit kreatif & ROAS (`hierarchy-glow`) | `before-after` |
+| 31 | **Kinetic Ping-Pong** / `kinetic-pingpong` | Montserrat 900 + JetBrains Mono; `#0A0A0A`, neon coral `#FF4D6D` | Posisi teks otomatis lompat Kiri ↔ Kanan ↔ Tengah (`ping-pong`) + kamera `beat-punch` | `kinetic-bounce` |
+| 32 | **Cinema Dolly Push** / `dolly-monologue` | Playfair Display + Inter; `#0A0A0C`, warm amber `#F59E0B` | Kamera `dolly-push` mendekat perlahan + teks berpindah 4 kuadran (`orbit-drift`) | `spotlight-dim` |
+| 33 | **Whip-Pan Director** / `whip-cut-pro` | Anton + Syne; `#0A0A0A`, acid volt `#D9F99D` | Transisi kamera `whip-pan` horizontal + kata raksasa menghantam sudut (`word-slam`) | `whip-pan` |
+| 34 | **Split-Screen Keynote** / `split-stage-ai` | Inter + Space Grotesk; `#FFFFFF`, cobalt `#2563EB` | Kamera `split-cam` geser ke bawah membuka panggung teks kinetik atas (`bento-scatter`) | `split-canvas` |
+| 35 | **Handheld Vlog Rig** / `handheld-docu` | Fraunces + DM Sans; `#0A0A0A`, terracotta `#FB923C` | Gerakan kamera `handheld-float` organik + HUD REC + teks bergantian sudut (`ping-pong`) | `camera-handheld` |
+| 36 | **Dutch Tilt Hype** / `dutch-hype` | Bebas Neue + Outfit; `#0A0A0C`, crimson pink `#F43F5E` | Kemiringan kamera `dutch-tilt` (-3.2° ↔ +3.2°) + kata eksplosif (`word-slam`) | `kinetic-bounce` |
+| 37 | **Tokyo Vertical Rail** / `vertical-rail` | Archivo 900 + IBM Plex Mono; `#0A0A0A`, cyber cyan `#06B6D4` | Teks tepi vertikal 90° bergantian dengan horizontal (`vertical-rail`) + `beat-punch` | `side-stack` |
+| 38 | **Bento Scatter UI** / `bento-motion` | Plus Jakarta Sans + JetBrains Mono; `#FFFFFF`, emerald `#10B981` | Kartu caption melompat ke kuadran bento berbeda (`bento-scatter`) + `dolly-push` | `kinetic-bounce` |
+| 39 | **Noir Spotlight Stage** / `noir-spotlight` | DM Serif Display + Manrope; `#0A0A0A`, gold `#EAB308` | Sorotan panggung radial + `dolly-push` lambat + teks berpindah lembut (`orbit-drift`) | `spotlight-dim` |
+| 40 | **AI Director Cut** / `ai-director-cut` | Syne + JetBrains Mono; `#0A0A0C`, electric indigo `#818CF8` | Viewfinder sutradara AI + `whip-pan` + teks telemetri berpindah (`typewriter-hud`) | `camera-handheld` |
 
 `assets/themes.json` menyimpan token warna, font, durasi dan rotasi. `assets/render-themes.css` menyimpan geometri yang dipakai bersama oleh renderer dan galeri. Setelah mengubah token/CSS, jalankan `python scripts/mrlabs-gallery.py` dari folder skill untuk memperbarui HTML galeri, lalu build ulang proyek video yang relevan.

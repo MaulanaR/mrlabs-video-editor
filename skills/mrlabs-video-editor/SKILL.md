@@ -1,6 +1,6 @@
 ---
 name: mrlabs-video-editor
-description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, thirty Pro Talking-Head & Captioning visual modes, thirteen viral depth effects, six caption layout modes, local open-license fonts and SFX, and final-render verification. When invoked without a video path or theme context, automatically open assets/theme-gallery.html (`python "SK/scripts/mrlabs-gallery.py" --open`) so the user can pick their raw video, theme, caption mode, and effects and copy the ready-to-use prompt.
+description: Edit original talking-head footage into Indonesian or English vertical videos with reviewed cuts, contextual B-roll, forty Pro & Creative Kinetic visual modes (30 Pro Talking-Head + 10 Kinetic & Camera Lab with shifting text choreography and programmatic camera movement), eighteen viral & kinetic effects, seven caption layout modes, local open-license fonts and SFX, and final-render verification. When invoked without a video path or theme context, automatically open assets/theme-gallery.html (`python "SK/scripts/mrlabs-gallery.py" --open`) so the user can pick their raw video, theme, camera movement, text choreography, and effects and copy the ready-to-use prompt.
 ---
 
 # MR Labs Video Editor
@@ -74,10 +74,20 @@ Show [assets/theme-gallery.html](assets/theme-gallery.html) when the user needs 
 | Beast Retention / `beast-retention` | `Anton` + `Montserrat` 800 with hyper-cyan `#00F0FF` hierarchy glow and zoom punch |
 | Editorial Opinion / `nyt-opinion` | Op-ed `Playfair Display` + `DM Sans` column with warm gold `#FBBF24` shoulder callout |
 | Agency Pitch Deck / `agency-pitch` | Creative agency `Syne` + `Archivo` conversion stage with acid-lime `#BEF264` accent |
+| **31. Kinetic Ping-Pong** / `kinetic-pingpong` | Alternating left-shoulder ↔ right-shoulder ↔ center punch captions (`ping-pong`) + `beat-punch` camera |
+| **32. Cinema Dolly Push** / `dolly-monologue` | Continuous slow `dolly-push` camera zoom + spotlight dim + 4-quadrant drifting editorial text (`orbit-drift`) |
+| **33. Whip-Pan Director** / `whip-cut-pro` | Fast horizontal `whip-pan` camera cuts + diagonal giant `word-slam` kinetic captions |
+| **34. Split-Screen Keynote** / `split-stage-ai` | `split-cam` slides speaker into rounded lower card while upper half becomes a kinetic headline stage (`bento-scatter`) |
+| **35. Handheld Vlog Rig** / `handheld-docu` | Organic `handheld-float` documentary camera sway + REC viewfinder HUD + alternating corner text (`ping-pong`) |
+| **36. Dutch Tilt Hype** / `dutch-hype` | Dynamic `-3.2° ↔ +3.2°` `dutch-tilt` camera framing + explosive jumping `word-slam` captions |
+| **37. Tokyo Vertical Rail** / `vertical-rail` | Alternates horizontal chest captions with giant `90°` edge-locked vertical rail typography (`vertical-rail`) + `beat-punch` |
+| **38. Bento Scatter UI** / `bento-motion` | Glass caption pills scatter cleanly across screen quadrants (`bento-scatter`) + `dolly-push` camera |
+| **39. Noir Spotlight Stage** / `noir-spotlight` | Dramatic radial spotlight vignette + slow `dolly-push` + high-contrast serif shifting captions (`orbit-drift`) |
+| **40. AI Director Cut** / `ai-director-cut` | Flagship AI director viewfinder + `whip-pan` camera + shifting telemetry `typewriter-hud` captions |
 
-Read [references/visual-packs.md](references/visual-packs.md) for treatment details. Choose one coherent pack unless the brief calls for a purposeful section change. Font, accent, geometry, caption and motion differ; do not present palette swaps as new themes.
+Read [references/visual-packs.md](references/visual-packs.md) for treatment details. Choose one coherent pack unless the brief calls for a purposeful section change. Font, accent, geometry, caption, camera movement, and text choreography differ; do not present palette swaps as new themes.
 
-## Viral Talking-Head Effects (`effects` in `visual.json` or `project.json`)
+## Viral & Kinetic Talking-Head Effects (`effects`, `camera_motion`, `caption_choreography`)
 
 | Effect ID | Behavior | Depth / Cutout |
 |---|---|---|
@@ -94,8 +104,13 @@ Read [references/visual-packs.md](references/visual-packs.md) for treatment deta
 | `side-stack` | **Side Block & Starburst** — vertical condensed block text flanking left/right shoulders + rotating geometric starburst behind | Uses `subject.webm` (`z-index: 2`) |
 | `tactile-board` | **Tactile Sticky & Wireframe** — pinned yellow sticky-note checklist and paper wireframe storyboard card flanking speaker | Foreground (`z-index: 7`) |
 | `before-after` | **Before / After Stage** — split portfolio showcase with muted `🔴 Before` card on left and `🟢 After` badge above hero frame | Foreground (`z-index: 8`) |
+| `kinetic-bounce` | **Kinetic Text Ping-Pong** — captions automatically alternate left-shoulder, right-shoulder, upper-left, and center chest on every phrase | Dynamic Caption Rig |
+| `camera-handheld` | **Handheld Cinema Rig** — organic handheld camera sway (`handheld-float`) + cinema REC viewfinder HUD | Animates `aroll` + `subject` |
+| `whip-pan` | **Whip-Pan Snap Cut** — fast horizontal camera whip-pans + speed streaks synced with phrase cuts | Animates `aroll` + `subject` |
+| `split-canvas` | **Dynamic Split Stage** — camera slides into rounded lower card while top half becomes a kinetic headline stage | Animates `aroll` + `subject` |
+| `spotlight-dim` | **Cinematic Spotlight** — radial stage spotlight vignette paired with a slow cinematic dolly push-in | Animates `aroll` + `subject` |
 
-Caption positions (`caption_position` in `visual.json` or `project.json`): `"below-face"` / `"chest-float"` (below face / across chest at `y=1050`), `"above-head"` (above head at `y=310`), `"bottom"` (lower third at `y=1265`), `"split-script"` (glowing cursive `Caveat` neon script across chest), `"hierarchy-glow"` (2-line setup + glowing gold/accent keyword), or `"shoulder-note"` (chest caption + 3-line floating callout beside temple/shoulder).
+Caption positions (`caption_position`): `"below-face"` / `"chest-float"`, `"above-head"`, `"bottom"`, `"split-script"`, `"hierarchy-glow"`, `"shoulder-note"`, or `"dynamic-kinetic"` (shifts every phrase using `caption_choreography`: `"ping-pong"`, `"orbit-drift"`, `"bento-scatter"`, `"vertical-rail"`, `"word-slam"`, `"typewriter-hud"`). Programmatic camera movements (`camera_motion`): `"none"`, `"handheld-float"`, `"dolly-push"`, `"whip-pan"`, `"dutch-tilt"`, `"beat-punch"`, `"split-cam"`.
 
 ## Edit workflow
 

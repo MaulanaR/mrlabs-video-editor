@@ -99,6 +99,41 @@ MRLABS_EFFECTS = {
         "summary_en": "Portfolio comparison stage with a muted 🔴 Before card on the left and 🟢 After badge.",
         "uses_depth": False,
     },
+    "kinetic-bounce": {
+        "id": "kinetic-bounce",
+        "name": "Kinetic Text Ping-Pong",
+        "summary_id": "Posisi caption otomatis berpindah-pindah kiri ↔ kanan ↔ atas ↔ dada mengikuti ritme bicara.",
+        "summary_en": "Captions dynamically jump left, right, upper corner, and center chest on every phrase.",
+        "uses_depth": False,
+    },
+    "camera-handheld": {
+        "id": "camera-handheld",
+        "name": "Handheld Cinema Rig",
+        "summary_id": "Gerakan kamera handheld organik + viewfinder REC sinema agar rekaman tripod terasa hidup.",
+        "summary_en": "Organic handheld camera sway + cinema viewfinder HUD so static tripod footage feels alive.",
+        "uses_depth": False,
+    },
+    "whip-pan": {
+        "id": "whip-pan",
+        "name": "Whip-Pan Snap Cut",
+        "summary_id": "Kamera menyapu cepat horizontal (whip-pan) + kemiringan dinamis di setiap pergantian poin.",
+        "summary_en": "Snappy horizontal camera whip-pans and subtle directional tilts on key phrase transitions.",
+        "uses_depth": False,
+    },
+    "split-canvas": {
+        "id": "split-canvas",
+        "name": "Dynamic Split Stage",
+        "summary_id": "Video presenter meluncur jadi bingkai kartu di bawah sementara setengah layar jadi panggung teks besar.",
+        "summary_en": "Slides the presenter into a rounded lower frame while the upper half becomes a kinetic headline stage.",
+        "uses_depth": False,
+    },
+    "spotlight-dim": {
+        "id": "spotlight-dim",
+        "name": "Cinematic Spotlight",
+        "summary_id": "Latar meredup dramatis dengan sorotan radial & kamera dolly push-in lambat ke ekspresi wajah.",
+        "summary_en": "Dramatic radial stage spotlight vignette paired with a slow cinematic dolly push-in.",
+        "uses_depth": False,
+    },
 }
 
 CAPTION_POSITIONS = (
@@ -109,6 +144,27 @@ CAPTION_POSITIONS = (
     "split-script",
     "hierarchy-glow",
     "shoulder-note",
+    "dynamic-kinetic",
+)
+
+CAMERA_MOTIONS = (
+    "none",
+    "handheld-float",
+    "dolly-push",
+    "whip-pan",
+    "dutch-tilt",
+    "beat-punch",
+    "split-cam",
+)
+
+CAPTION_CHOREOGRAPHIES = (
+    "static",
+    "ping-pong",
+    "orbit-drift",
+    "bento-scatter",
+    "vertical-rail",
+    "word-slam",
+    "typewriter-hud",
 )
 
 
@@ -358,8 +414,136 @@ def mrlabs_effect_specimen_html(theme=None, visual=None):
         '<div id="fx-shoulder-callout" class="fx-shoulder-callout">'
         '<span>dikerjakan sekitar</span><b>3–4 bulan sebelumnya</b><span>secara terjadwal</span>'
         '</div>'
+        # 14. KINETIC BOUNCE (Dynamic shifting kinetic chips showing alternating positions)
+        '<div id="fx-kinetic-bounce" class="fx-item fx-kinetic-bounce">'
+        '<div class="fx-kb-tag kb-left">01 · KIRI BAHU</div>'
+        '<div class="fx-kb-tag kb-right">02 · KANAN BAHU</div>'
+        '<div class="fx-kb-tag kb-center">03 · CENTER PUNCH</div>'
+        '</div>'
+        # 15. CAMERA HANDHELD (Cinema viewfinder brackets + REC indicator + live lens metadata)
+        '<div id="fx-camera-handheld" class="fx-item fx-camera-handheld">'
+        '<div class="fx-ch-corner tl"></div><div class="fx-ch-corner tr"></div>'
+        '<div class="fx-ch-corner bl"></div><div class="fx-ch-corner br"></div>'
+        '<div class="fx-ch-top"><span class="fx-ch-rec">● REC · 24MM F/1.4</span><span>ISO 400 · HANDHELD RIG</span></div>'
+        '<div class="fx-ch-bottom"><span>AF-TRACK: FACE</span><span>STABILIZER: ORGANIC</span></div>'
+        '</div>'
+        # 16. WHIP PAN (Directional speed streak + motion HUD indicator)
+        '<div id="fx-whip-pan" class="fx-item fx-whip-pan">'
+        '<div class="fx-wp-streaks"><i></i><i></i><i></i></div>'
+        '<div class="fx-wp-badge">⚡ WHIP-PAN DIRECTOR · AUTO CUT</div>'
+        '</div>'
+        # 17. SPLIT CANVAS (Upper kinetic typography stage while video slides to lower card)
+        '<div id="fx-split-canvas" class="fx-item fx-split-canvas">'
+        '<div class="fx-sc-stage">'
+        '<span class="fx-sc-kicker">● DYNAMIC SPLIT STAGE · AI KEYNOTE</span>'
+        '<strong class="fx-sc-headline">TEKS BERGERAK.<br>KAMERA MENGIKUTI.</strong>'
+        '<div class="fx-sc-pills"><span>01 / HOOK</span><span>02 / CAMERA</span><span>03 / RETENTION</span></div>'
+        '</div>'
+        '</div>'
+        # 18. SPOTLIGHT DIM (Radial cinematic stage spotlight overlay)
+        '<div id="fx-spotlight-dim" class="fx-item fx-spotlight-dim">'
+        '<div class="fx-sl-vignette"></div>'
+        '<div class="fx-sl-badge">◉ SPOTLIGHT FOCUS · DOLLY IN</div>'
+        '</div>'
         '</div>'
     )
+
+
+def mrlabs_caption_slot(choreography, index):
+    """Return dynamic (top, left, width, align, rotation, extra_class) for a caption group index."""
+    patterns = {
+        "ping-pong": [
+            (960, 48, 520, "left", -2, "choreo-left"),
+            (880, 512, 520, "right", 2, "choreo-right"),
+            (1070, 50, 980, "center", 0, "choreo-center"),
+            (520, 48, 490, "left", -1.5, "choreo-upper-left"),
+        ],
+        "orbit-drift": [
+            (1050, 50, 980, "center", 0, "choreo-center"),
+            (540, 530, 500, "right", 1.5, "choreo-upper-right"),
+            (1140, 48, 560, "left", -1.5, "choreo-lower-left"),
+            (320, 65, 950, "center", 0, "choreo-top"),
+        ],
+        "bento-scatter": [
+            (1020, 52, 560, "left", -1.5, "choreo-pill"),
+            (490, 488, 540, "right", 1.5, "choreo-pill"),
+            (1160, 120, 840, "center", 0, "choreo-pill"),
+            (500, 52, 540, "left", -1, "choreo-pill"),
+        ],
+        "vertical-rail": [
+            (1040, 50, 980, "center", 0, "choreo-center"),
+            (480, 875, 160, "center", 0, "choreo-rail-right"),
+            (1040, 50, 980, "center", 0, "choreo-center"),
+            (480, 45, 160, "center", 0, "choreo-rail-left"),
+        ],
+        "word-slam": [
+            (980, 50, 980, "center", -3, "choreo-slam"),
+            (520, 48, 560, "left", 3, "choreo-slam"),
+            (1120, 472, 560, "right", -2.5, "choreo-slam"),
+            (310, 65, 950, "center", 2, "choreo-slam"),
+        ],
+        "typewriter-hud": [
+            (1060, 50, 980, "center", 0, "choreo-hud"),
+            (325, 65, 950, "center", 0, "choreo-hud"),
+            (1020, 48, 580, "left", 0, "choreo-hud"),
+            (1020, 452, 580, "right", 0, "choreo-hud"),
+        ],
+    }
+    slots = patterns.get(choreography)
+    if not slots:
+        return None
+    return slots[index % len(slots)]
+
+
+def mrlabs_camera_timeline(camera_motion, targets, duration, groups):
+    """Return GSAP timeline snippets for continuous or phrase-synced camera movements."""
+    if not camera_motion or camera_motion == "none" or duration <= 0:
+        return []
+    lines = []
+    if camera_motion == "handheld-float":
+        step = 1.6
+        t = 0.0
+        idx = 0
+        waypoints = [
+            (1.06, 14, -10, 0.7),
+            (1.075, -12, 8, -0.8),
+            (1.055, 10, 12, 0.5),
+            (1.07, -14, -8, -0.6),
+        ]
+        lines.append(f"tl.set({targets},{{scale:1.06,x:0,y:0,rotation:0}},0);")
+        while t < duration:
+            sc, dx, dy, rot = waypoints[idx % len(waypoints)]
+            seg = min(step, duration - t)
+            lines.append(f"tl.to({targets},{{scale:{sc},x:{dx},y:{dy},rotation:{rot},duration:{seg:.2f},ease:'sine.inOut'}},{t:.2f});")
+            t += step
+            idx += 1
+    elif camera_motion == "dolly-push":
+        lines.append(f"tl.fromTo({targets},{{scale:1.0,y:0}},{{scale:1.18,y:28,duration:{duration:.2f},ease:'none',immediateRender:false}},0);")
+    elif camera_motion == "whip-pan":
+        beats = [g["start"] for g in groups[1::2]] or [round(duration * 0.33, 2), round(duration * 0.66, 2)]
+        lines.append(f"tl.set({targets},{{scale:1.08,x:0,rotation:0}},0);")
+        for idx, beat in enumerate(beats):
+            direction = 1 if idx % 2 == 0 else -1
+            lines.append(f"tl.to({targets},{{x:{direction * 58},rotation:{direction * 1.8},scale:1.14,duration:.14,ease:'power3.in'}},{max(0.0, beat - 0.14):.2f});")
+            lines.append(f"tl.to({targets},{{x:0,rotation:0,scale:1.08,duration:.28,ease:'power3.out'}},{beat:.2f});")
+    elif camera_motion == "dutch-tilt":
+        beats = [g["start"] for g in groups[::2]] or [0.0, round(duration * 0.5, 2)]
+        for idx, beat in enumerate(beats):
+            angle = -3.2 if idx % 2 == 0 else 3.2
+            lines.append(f"tl.to({targets},{{scale:1.13,rotation:{angle},y:14,duration:.36,ease:'power2.out'}},{beat:.2f});")
+    elif camera_motion == "beat-punch":
+        beats = [g["start"] for g in groups] or [0.0, round(duration * 0.4, 2), round(duration * 0.75, 2)]
+        scales = [1.0, 1.14, 1.04, 1.18]
+        for idx, beat in enumerate(beats):
+            sc = scales[idx % len(scales)]
+            dy = int((sc - 1.0) * 160)
+            lines.append(f"tl.to({targets},{{scale:{sc},y:{dy},duration:.24,ease:'back.out(1.4)'}},{beat:.2f});")
+    elif camera_motion == "split-cam":
+        split_in = min(0.6, duration * 0.15)
+        split_out = max(split_in + 0.5, duration - 0.6)
+        lines.append(f"tl.to({targets},{{scale:.72,y:340,borderRadius:'36px',duration:.45,ease:'power3.out'}},{split_in:.2f});")
+        lines.append(f"tl.to({targets},{{scale:1.0,y:0,borderRadius:'0px',duration:.42,ease:'power2.inOut'}},{split_out:.2f});")
+    return lines
 
 
 def mrlabs_copy_assets(project):
@@ -424,12 +608,21 @@ def mrlabs_build(project, theme_id=None, safe=False):
     caption_pos = visual.get("caption_position") or config.get("caption_position") or theme.get("caption_position", "bottom")
     if caption_pos not in CAPTION_POSITIONS:
         raise ValueError(f"caption_position harus salah satu dari: {', '.join(CAPTION_POSITIONS)}")
+    camera_motion = visual.get("camera_motion") or config.get("camera_motion") or theme.get("camera_motion", "none")
+    if camera_motion not in CAMERA_MOTIONS:
+        raise ValueError(f"camera_motion harus salah satu dari: {', '.join(CAMERA_MOTIONS)}")
+    caption_choreography = visual.get("caption_choreography") or config.get("caption_choreography") or theme.get("caption_choreography", "static")
+    if caption_choreography not in CAPTION_CHOREOGRAPHIES:
+        raise ValueError(f"caption_choreography harus salah satu dari: {', '.join(CAPTION_CHOREOGRAPHIES)}")
     caption_top = mrlabs_caption_top(project, config, visual)
     has_cutout = (project / "assets/subject.webm").exists()
     caption_behind = bool(visual.get("caption_behind_subject", False))
     if caption_behind and not has_cutout:
         raise ValueError("Caption behind subject requires a verified subject.webm")
     effects = mrlabs_normalize_effects(visual, config, duration)
+    effect_types = {fx["type"] for fx in effects}
+    if (caption_pos == "dynamic-kinetic" or "kinetic-bounce" in effect_types) and caption_choreography == "static":
+        caption_choreography = "ping-pong"
     broll_file = project / "broll.json"
     broll = mrlabs_validate_broll(mrlabs_read(broll_file).get("cues", []), duration, project) if broll_file.exists() else []
     mrlabs_copy_assets(project)
@@ -443,11 +636,18 @@ def mrlabs_build(project, theme_id=None, safe=False):
     timeline.append("tl.from('#brand',{opacity:0,y:16,duration:.35,ease:'power3.out'},.1);")
     timeline.append("tl.from('#credit',{opacity:0,y:10,duration:.4,ease:'sine.out'},.2);")
     caption_z = 2 if caption_behind else 9
-    for index, group in enumerate(mrlabs_caption_groups(words)):
+    groups = mrlabs_caption_groups(words)
+    for index, group in enumerate(groups):
         name = f"caption-{index}"
         spans = " ".join(f'<span id="{name}-w{k}">{html.escape(word["text"])}</span>' for k, word in enumerate(group["words"]))
-        markup.append(f'<div id="{name}" class="caption {theme["caption_style"]}" style="opacity:0;z-index:{caption_z}">{spans}</div>')
+        slot = mrlabs_caption_slot(caption_choreography, index) if caption_choreography != "static" else None
+        extra_cls = f" {slot[5]}" if slot else ""
+        slot_style = f";top:{slot[0]}px;left:{slot[1]}px;width:{slot[2]}px;text-align:{slot[3]}" if slot else ""
+        markup.append(f'<div id="{name}" class="caption {theme["caption_style"]}{extra_cls}" style="opacity:0;z-index:{caption_z}{slot_style}">{spans}</div>')
         initial, final = mrlabs_entrance(theme, "caption", group["end"]-group["start"])
+        if slot and slot[4]:
+            initial["rotation"] = initial.get("rotation", 0) + slot[4]
+            final["rotation"] = slot[4]
         timeline.append(f"tl.fromTo('#{name}',{json.dumps(initial)},{json.dumps(final)},{group['start']});")
         for k, word in enumerate(group["words"]):
             timeline.append(f"tl.set('#{name}-w{k}',{{color:'{theme['highlight']}'}},{word['start']});")
@@ -475,11 +675,16 @@ def mrlabs_build(project, theme_id=None, safe=False):
     if used_behind:
         markup.append(f'<video id="subject" class="subject" style="z-index:3" src="assets/subject.webm" muted playsinline data-start="0" data-duration="{duration}" data-track-index="2"></video>')
 
-    # Wire timeline cues for all 13 viral effects when specified in visual.json / config.json
+    cam_targets = "['#aroll','#subject']" if used_behind else "['#aroll']"
+    if camera_motion != "none":
+        timeline.extend(mrlabs_camera_timeline(camera_motion, cam_targets, duration, groups))
+
+    # Wire timeline cues for all 18 viral & kinetic effects when specified in visual.json / config.json
     timeline.append(
         "tl.set(['.fx-orbit-card','#fx-ui-world','#fx-zoom-hud','.fx-headline-card','#fx-pullback',"
         "'#fx-echo-wall','#fx-cover-story','#fx-grid-3x3','#fx-prompt-bar','#fx-grade-hud',"
-        "'#fx-side-stack','#fx-tactile-board','#fx-before-after','#fx-profile-card'],{display:'none',opacity:0},0);"
+        "'#fx-side-stack','#fx-tactile-board','#fx-before-after','#fx-profile-card',"
+        "'#fx-kinetic-bounce','#fx-camera-handheld','#fx-whip-pan','#fx-split-canvas','#fx-spotlight-dim'],{display:'none',opacity:0},0);"
     )
     simple_block_fx = {
         "echo-wall": ("#fx-echo-wall", "flex"),
@@ -489,17 +694,46 @@ def mrlabs_build(project, theme_id=None, safe=False):
         "side-stack": ("#fx-side-stack", "block"),
         "tactile-board": ("#fx-tactile-board", "block"),
         "before-after": ("#fx-before-after", "block"),
+        "kinetic-bounce": ("#fx-kinetic-bounce", "block"),
     }
     for fx in effects:
         fx_type, start, end = fx["type"], fx["start"], fx["end"]
         if fx_type == "digital-zoom":
-            targets = "['#aroll','#subject']" if used_behind else "['#aroll']"
+            targets = cam_targets
             timeline.append(f"tl.set('#fx-zoom-hud',{{display:'flex',opacity:0}},{start});")
             timeline.append(f"tl.to('#fx-zoom-hud',{{opacity:1,duration:.2}},{start});")
             timeline.append(f"tl.fromTo({targets},{{scale:1,y:0}},{{scale:1.24,y:42,duration:.38,ease:'power3.out',immediateRender:false}},{start});")
             timeline.append(f"tl.to({targets},{{scale:1,y:0,duration:.42,ease:'power2.inOut'}},{max(start + 0.4, end - 0.42)});")
             timeline.append(f"tl.to('#fx-zoom-hud',{{opacity:0,duration:.2}},{max(start + 0.3, end - 0.2)});")
             timeline.append(f"tl.set('#fx-zoom-hud',{{display:'none'}},{end});")
+        elif fx_type == "camera-handheld":
+            timeline.append(f"tl.set('#fx-camera-handheld',{{display:'block',opacity:0}},{start});")
+            timeline.append(f"tl.to('#fx-camera-handheld',{{opacity:1,duration:.3}},{start});")
+            if camera_motion == "none":
+                timeline.extend(mrlabs_camera_timeline("handheld-float", cam_targets, end - start, groups))
+            timeline.append(f"tl.to('#fx-camera-handheld',{{opacity:0,duration:.25}},{max(start + 0.4, end - 0.25)});")
+            timeline.append(f"tl.set('#fx-camera-handheld',{{display:'none'}},{end});")
+        elif fx_type == "whip-pan":
+            timeline.append(f"tl.set('#fx-whip-pan',{{display:'block',opacity:0}},{start});")
+            timeline.append(f"tl.to('#fx-whip-pan',{{opacity:1,duration:.22}},{start});")
+            if camera_motion == "none":
+                timeline.extend(mrlabs_camera_timeline("whip-pan", cam_targets, end - start, groups))
+            timeline.append(f"tl.to('#fx-whip-pan',{{opacity:0,duration:.22}},{max(start + 0.4, end - 0.22)});")
+            timeline.append(f"tl.set('#fx-whip-pan',{{display:'none'}},{end});")
+        elif fx_type == "split-canvas":
+            timeline.append(f"tl.set('#fx-split-canvas',{{display:'block',opacity:0,y:-24}},{start});")
+            timeline.append(f"tl.to('#fx-split-canvas',{{opacity:1,y:0,duration:.38,ease:'power3.out'}},{start});")
+            timeline.append(f"tl.to({cam_targets},{{scale:.72,y:340,borderRadius:'36px',duration:.45,ease:'power3.out'}},{start});")
+            timeline.append(f"tl.to({cam_targets},{{scale:1,y:0,borderRadius:'0px',duration:.4,ease:'power2.inOut'}},{max(start + 0.5, end - 0.4)});")
+            timeline.append(f"tl.to('#fx-split-canvas',{{opacity:0,y:-16,duration:.28}},{max(start + 0.45, end - 0.28)});")
+            timeline.append(f"tl.set('#fx-split-canvas',{{display:'none'}},{end});")
+        elif fx_type == "spotlight-dim":
+            timeline.append(f"tl.set('#fx-spotlight-dim',{{display:'block',opacity:0}},{start});")
+            timeline.append(f"tl.to('#fx-spotlight-dim',{{opacity:1,duration:.45,ease:'sine.out'}},{start});")
+            if camera_motion == "none":
+                timeline.append(f"tl.to({cam_targets},{{scale:1.15,y:24,duration:{max(0.5, end - start):.2f},ease:'none'}},{start});")
+            timeline.append(f"tl.to('#fx-spotlight-dim',{{opacity:0,duration:.35}},{max(start + 0.5, end - 0.35)});")
+            timeline.append(f"tl.set('#fx-spotlight-dim',{{display:'none'}},{end});")
         elif fx_type == "ui-world":
             timeline.append(f"tl.set('#fx-ui-world',{{display:'flex',opacity:0,y:-36,scale:.95}},{start});")
             timeline.append(f"tl.to('#fx-ui-world',{{opacity:1,y:0,scale:1,duration:.35,ease:'back.out(1.4)'}},{start});")
@@ -611,14 +845,16 @@ def mrlabs_build(project, theme_id=None, safe=False):
     fx_attr_str = ""
     document = f'''<!doctype html><html lang="{language}"><head><meta charset="utf-8"><title>MR Labs — {html.escape(theme['name'])}</title>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script><style>{mrlabs_css(theme, portrait=portrait, caption_top=caption_top)}</style></head>
-    <body><div id="main" data-theme="{theme['id']}" data-talking-head="{'true' if theme.get('talking_head') else 'false'}" data-portrait="{'true' if portrait else 'false'}" data-caption-pos="{caption_pos}"{fx_attr_str} data-composition-id="main" data-start="0" data-duration="{duration}" data-width="1080" data-height="1920">{''.join(markup)}</div>
+    <body><div id="main" data-theme="{theme['id']}" data-talking-head="{'true' if theme.get('talking_head') else 'false'}" data-portrait="{'true' if portrait else 'false'}" data-caption-pos="{caption_pos}" data-camera="{camera_motion}" data-choreo="{caption_choreography}"{fx_attr_str} data-composition-id="main" data-start="0" data-duration="{duration}" data-width="1080" data-height="1920">{''.join(markup)}</div>
     <script>const tl=gsap.timeline({{paused:true}});{''.join(timeline)}window.__timelines={{main:tl}};</script></body></html>'''
     (project / "index.html").write_text(document, encoding="utf-8")
     mrlabs_write(project / "hyperframes.json", {"width":1080,"height":1920,"fps":30})
-    mrlabs_write(project / "build-report.json", {"theme": theme["id"], "theme_edition": theme.get("edition", 5),
+    mrlabs_write(project / "build-report.json", {"theme": theme["id"], "theme_edition": theme.get("edition", 6),
                                                  "portrait_video": portrait, "background_applied": not portrait,
                                                  "caption_position": caption_pos,
-                                                 "caption_top": caption_top if caption_pos == "above-head" else (1050 if caption_pos in ("below-face", "chest-float", "split-script", "hierarchy-glow", "shoulder-note") else 1265),
+                                                 "camera_motion": camera_motion,
+                                                 "caption_choreography": caption_choreography,
+                                                 "caption_top": caption_top if caption_pos == "above-head" else (1050 if caption_pos in ("below-face", "chest-float", "split-script", "hierarchy-glow", "shoulder-note", "dynamic-kinetic") else 1265),
                                                  "effects": [fx["type"] for fx in effects],
                                                  "duration": duration, "safe_guide": safe,
                                                  "broll": references, "captions": len(words), "needs_visual_audio_review": True})

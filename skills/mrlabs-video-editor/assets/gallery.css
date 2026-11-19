@@ -412,13 +412,13 @@ button:focus-visible,a:focus-visible,summary:focus-visible,textarea:focus-visibl
   font-weight:700;
 }
 
-/* 02 & 03. CAPTION POSITION & BG MODE CHIPS */
+/* 02 & 03. CAPTION POSITION, CAMERA, CHOREOGRAPHY & BG MODE CHIPS */
 .pos-chip-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(165px,1fr));
   gap:10px;
 }
-.pos-chip,.bg-chip{
+.pos-chip,.bg-chip,.cam-chip,.choreo-chip{
   display:flex;
   flex-direction:column;
   align-items:flex-start;
@@ -429,21 +429,62 @@ button:focus-visible,a:focus-visible,summary:focus-visible,textarea:focus-visibl
   background:#FFFFFF;
   text-align:left;
 }
-.pos-chip strong,.bg-chip strong{
+.pos-chip strong,.bg-chip strong,.cam-chip strong,.choreo-chip strong{
   font:700 12.5px "Plus Jakarta Sans",sans-serif;
   color:#181816;
 }
-.pos-chip small,.bg-chip small{
+.pos-chip small,.bg-chip small,.cam-chip small,.choreo-chip small{
   font:500 11px/1.4 Manrope,sans-serif;
   color:#6E6B62;
 }
-.pos-chip[aria-pressed="true"],.bg-chip[aria-pressed="true"]{
+.pos-chip[aria-pressed="true"],.bg-chip[aria-pressed="true"],.cam-chip[aria-pressed="true"],.choreo-chip[aria-pressed="true"]{
   border-color:#D94E28;
   background:#FFF6F3;
   box-shadow:inset 0 0 0 1px #D94E28,0 6px 14px rgba(217,78,40,.08);
 }
-.pos-chip[aria-pressed="true"] strong,.bg-chip[aria-pressed="true"] strong{
+.pos-chip[aria-pressed="true"] strong,.bg-chip[aria-pressed="true"] strong,.cam-chip[aria-pressed="true"] strong,.choreo-chip[aria-pressed="true"] strong{
   color:#B83B1A;
+}
+
+/* THEME COLLECTION FILTER TABS & KINETIC BADGES */
+.filter-tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.filter-tab{
+  padding:6px 13px;
+  border-radius:99px;
+  border:1px solid #DCD8CC;
+  background:#FFFFFF;
+  color:#4F4C44;
+  font:700 11.5px "Plus Jakarta Sans",sans-serif;
+  cursor:pointer;
+}
+.filter-tab[aria-pressed="true"]{
+  background:#181816;
+  border-color:#181816;
+  color:#FFFFFF;
+}
+.theme-chip[data-collection="kinetic"]{
+  border-color:#F3C6B8;
+  background:#FFFDFB;
+}
+.motion-badges{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:8px 0 4px;
+}
+.motion-badges span{
+  font:700 10px "IBM Plex Mono",monospace;
+  letter-spacing:.06em;
+  padding:3px 8px;
+  border-radius:6px;
+  background:#FFF4F0;
+  color:#B83B1A;
+  border:1px solid #F6C5B5;
 }
 
 /* 04. VIRAL EFFECTS CHIPS */

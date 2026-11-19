@@ -39,6 +39,16 @@ DEFAULT_PRO_FX = {
     "beast-retention": "digital-zoom",
     "nyt-opinion": "headline-wall",
     "agency-pitch": "before-after",
+    "kinetic-pingpong": "kinetic-bounce",
+    "dolly-monologue": "spotlight-dim",
+    "whip-cut-pro": "whip-pan",
+    "split-stage-ai": "split-canvas",
+    "handheld-docu": "camera-handheld",
+    "dutch-hype": "kinetic-bounce",
+    "vertical-rail": "side-stack",
+    "bento-motion": "kinetic-bounce",
+    "noir-spotlight": "spotlight-dim",
+    "ai-director-cut": "camera-handheld",
 }
 
 
@@ -57,13 +67,15 @@ def mrlabs_bilingual_title(theme):
 
 
 def mrlabs_specimen(theme, number):
-    """Build a 1080x1920 talking-head specimen using previews/creator.png + previews/creator-cutout.png and 13 toggleable effects."""
+    """Build a 1080x1920 talking-head specimen using previews/creator.png + previews/creator-cutout.png and 18 toggleable effects."""
     css = mrlabs_css(theme).replace('assets/mrlabs/fonts/', 'fonts/')
     motion = mrlabs_motion(theme)
     raw_pos = theme.get('caption_position', 'below-face')
     caption_pos = 'below-face' if raw_pos in ('chest-float', 'below-face') else raw_pos
     default_portrait = 'true'
     default_fx = DEFAULT_PRO_FX.get(theme['id'], '')
+    default_cam = theme.get('camera_motion', 'none')
+    default_choreo = theme.get('caption_choreography', 'static')
     fx_attr = f' data-default-fx="{default_fx}" data-fx-{default_fx}="true"' if default_fx else ''
     transform = f'translate({motion.get("x",0)}px,{motion.get("y",0)}px) scale({motion.get("scale",1)}) rotate({motion.get("rotation",0)}deg)'
     title = mrlabs_bilingual_title(theme)
@@ -79,7 +91,7 @@ def mrlabs_specimen(theme, number):
     .replay .caption{{animation-delay:.22s}}
     @keyframes entrance{{from{{opacity:0;transform:{transform};filter:{motion.get('filter','none')}}}to{{opacity:1;transform:translate(0,0) scale(1) rotate(0);filter:none}}}}
     @media(prefers-reduced-motion:reduce){{*{{animation:none!important}}}}
-    </style></head><body><div id="main" data-theme="{theme['id']}" data-talking-head="true" data-portrait="{default_portrait}" data-default-portrait="{default_portrait}" data-caption-pos="{caption_pos}" data-default-caption-pos="{caption_pos}"{fx_attr}><div class="preview-bg"></div><video id="user-preview-video" class="base" muted loop playsinline style="display:none"></video><img id="default-base-img" class="base" src="previews/creator.png" alt="Foto kreator"><div class="shade"></div><div class="art-direction"></div><img id="default-subject-img" class="subject" src="previews/creator-cutout.png" alt="Cutout kreator"><div id="fx-profile-card" class="fx-profile-card" style="display:none;opacity:0;z-index:9"><img id="user-profile-img" src="" alt="Profile IG"></div>{fx_html}<div class="brand">MR LABS</div>{title}{caption}<div class="credit">by @maulanarahman_</div><div class="specimen-index">{number:02d}</div><div class="specimen-note">VISUAL STUDY<br>PRO CAPTIONING</div></div></body></html>'''
+    </style></head><body><div id="main" data-theme="{theme['id']}" data-talking-head="true" data-portrait="{default_portrait}" data-default-portrait="{default_portrait}" data-caption-pos="{caption_pos}" data-default-caption-pos="{caption_pos}" data-camera="{default_cam}" data-default-camera="{default_cam}" data-choreo="{default_choreo}" data-default-choreo="{default_choreo}"{fx_attr}><div class="preview-bg"></div><video id="user-preview-video" class="base" muted loop playsinline style="display:none"></video><img id="default-base-img" class="base" src="previews/creator.png" alt="Foto kreator"><div class="shade"></div><div class="art-direction"></div><img id="default-subject-img" class="subject" src="previews/creator-cutout.png" alt="Cutout kreator"><div id="fx-profile-card" class="fx-profile-card" style="display:none;opacity:0;z-index:9"><img id="user-profile-img" src="" alt="Profile IG"></div>{fx_html}<div class="brand">MR LABS</div>{title}{caption}<div class="credit">by @maulanarahman_</div><div class="specimen-index">{number:02d}</div><div class="specimen-note">VISUAL STUDY<br>{"KINETIC & CAMERA" if theme.get("collection") == "kinetic" else "PRO CAPTIONING"}</div></div></body></html>'''
 
 
 def mrlabs_main():
@@ -87,6 +99,7 @@ def mrlabs_main():
     themes = mrlabs_read(MRLABS_ROOT / 'assets/themes.json')['themes']
     assets = mrlabs_read(MRLABS_ROOT / 'assets/catalog.json')['assets']
     pro_cards = []
+    kinetic_cards = []
     theme_pills = []
     specimens_map = {}
 
@@ -97,16 +110,21 @@ def mrlabs_main():
         raw_specimen = mrlabs_specimen(t, number)
         raw_pos = t.get("caption_position", "below-face")
         norm_pos = "below-face" if raw_pos in ("chest-float", "below-face") else raw_pos
+        cam = t.get("camera_motion", "none")
+        choreo = t.get("caption_choreography", "static")
+        col = t.get("collection", "pro")
         specimens_map[t['id']] = {
             "id": t["id"],
             "name": t["name"],
-            "collection": t.get("collection", "pro"),
+            "collection": col,
             "tagline": t["tagline"],
             "background": t["background"],
             "accent": t["accent"],
             "talking_head": True,
             "default_fx": DEFAULT_PRO_FX.get(t["id"], ""),
             "caption_position": norm_pos,
+            "camera_motion": cam,
+            "caption_choreography": choreo,
             "srcdoc": raw_specimen,
         }
         specimen = html.escape(raw_specimen, quote=True)
@@ -114,18 +132,25 @@ def mrlabs_main():
         is_selected = (t['id'] == default_theme_id)
         fx_badge = DEFAULT_PRO_FX.get(t['id'])
         fx_label = f' · FX: {MRLABS_EFFECTS[fx_badge]["name"].upper()}' if fx_badge else ''
-        pro_cards.append(
-            f'<article class="package" data-card-theme="{t["id"]}" style="--accent:{t["accent"]}">'
+        motion_badges = ''
+        if col == 'kinetic':
+            motion_badges = f'<div class="motion-badges"><span>🎥 CAM: {cam.upper()}</span><span>✦ TEXT: {choreo.upper()}</span></div>'
+        card_html = (
+            f'<article class="package" data-card-theme="{t["id"]}" data-collection="{col}" style="--accent:{t["accent"]}">'
             f'<div class="card-heading"><span>{number:02d}</span><span>{t["energy"].upper()}{fx_label}</span></div>'
             f'<div class="screen"><iframe title="{t["name"]} — contoh komposisi" tabindex="-1" srcdoc="{specimen}"></iframe></div>'
-            f'<div class="details"><h2>{t["name"]}</h2><p class="tagline">{t["tagline"]}</p><p class="use">{t["use_for"]}</p>'
+            f'<div class="details"><h2>{t["name"]}</h2><p class="tagline">{t["tagline"]}</p>{motion_badges}<p class="use">{t["use_for"]}</p>'
             f'<div class="swatches">{swatches}<span>{t["heading_font"]}</span></div>'
             f'<button class="pick" data-theme="{t["id"]}" aria-pressed="{"true" if is_selected else "false"}">{"Terpilih" if is_selected else "Gunakan Mode Ini"}<span aria-hidden="true">↗</span></button>'
             f'</div></article>'
         )
+        if col == 'kinetic':
+            kinetic_cards.append(card_html)
+        else:
+            pro_cards.append(card_html)
         theme_pills.append(
-            f'<button type="button" class="theme-chip" data-theme="{t["id"]}" aria-pressed="{"true" if is_selected else "false"}">'
-            f'<i style="background:{t["accent"]}"></i><span>{t["name"]}</span><small>{number:02d}</small></button>'
+            f'<button type="button" class="theme-chip" data-theme="{t["id"]}" data-collection="{col}" aria-pressed="{"true" if is_selected else "false"}">'
+            f'<i style="background:{t["accent"]}"></i><span>{"⚡ " if col == "kinetic" else ""}{t["name"]}</span><small>{number:02d}</small></button>'
         )
 
     effect_cards = []
@@ -151,23 +176,24 @@ def mrlabs_main():
     default_srcdoc = html.escape(specimens_map[default_theme_id]["srcdoc"], quote=True)
     specimens_json = json.dumps(specimens_map, ensure_ascii=False)
 
-    document = f'''<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>MR Labs — Pro Talking-Head &amp; Captioning Studio</title><link rel="stylesheet" href="fonts/fonts.css"><link rel="stylesheet" href="gallery.css"></head><body><main>
+    document = f'''<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>MR Labs — Pro Talking-Head &amp; Kinetic Camera Studio</title><link rel="stylesheet" href="fonts/fonts.css"><link rel="stylesheet" href="gallery.css"></head><body><main>
 <nav>
   <a class="wordmark" href="#">MR<span>↗</span>LABS</a>
-  <span>PRO TALKING-HEAD STUDIO &amp; PROMPT GENERATOR</span>
+  <span>PRO TALKING-HEAD · KINETIC CAMERA STUDIO</span>
   <div class="nav-links">
     <a href="#studio">01. Studio Builder</a>
-    <a href="#pro">02. 30 Mode Visual</a>
-    <a href="#assets">03. Font &amp; SFX</a>
+    <a href="#kinetic">02. Kinetic &amp; Camera (10)</a>
+    <a href="#pro">03. Pro Modes (30)</a>
+    <a href="#assets">04. Font &amp; SFX</a>
   </div>
-  <span class="edition">30 PRO MODES · EDITION 05</span>
+  <span class="edition">40 PRO MODES · EDITION 06</span>
 </nav>
 
 <header>
   <div>
-    <div class="kicker">✦ DAYLIGHT STUDIO · 30 MODE PRO + 13 EFEK VIRAL</div>
+    <div class="kicker">✦ DAYLIGHT STUDIO · 40 MODE VISUAL + 18 EFEK + KAMERA &amp; TEKS DINAMIS</div>
     <h1>Pilih videomu.<br><span>Salin prompt murninya.</span></h1>
-    <p>Pilih langsung file <b>video raw</b> dari komputermu, tentukan <b>1 dari 30 mode visual</b>, atur <b>6 posisi caption</b>, dan nyalakan <b>13 efek viral</b>. Prompt yang dihasilkan sudah terisi lengkap dengan path file, resolusi, dan konfigurasi murni yang siap langsung ditempel ke chat AI Agent tanpa perlu mengedit kurung siku lagi.</p>
+    <p>Pilih langsung file <b>video raw</b> dari komputermu, tentukan <b>1 dari 40 mode visual</b> (termasuk <b>10 Mode Kinetic &amp; Camera Lab</b> dengan posisi teks berubah-ubah &amp; gerakan kamera otomatis), atur <b>7 mode caption</b>, dan nyalakan <b>18 efek viral</b>. Prompt murni siap langsung ditempel ke chat AI Agent.</p>
   </div>
   <div class="controls">
     <button id="language" type="button">Bahasa Prompt: Indonesia</button>
@@ -262,13 +288,18 @@ def mrlabs_main():
     </div>
 
     <div class="builder-group">
-      <div class="builder-label"><span>01 / PILIH MODE PRO TALKING-HEAD (30 MODE)</span><small id="selected-theme-label">Creator Hook (obsidian-studio)</small></div>
+      <div class="builder-label"><span>01 / PILIH MODE VISUAL (40 MODE · 30 PRO + 10 KINETIC &amp; CAMERA)</span><small id="selected-theme-label">Creator Hook (obsidian-studio)</small></div>
+      <div class="filter-tabs" role="tablist" aria-label="Filter Koleksi Tema">
+        <button type="button" class="filter-tab" data-filter="all" aria-pressed="true">Semua (40)</button>
+        <button type="button" class="filter-tab" data-filter="kinetic" aria-pressed="false">⚡ Kinetic &amp; Camera Lab (10 Baru)</button>
+        <button type="button" class="filter-tab" data-filter="pro" aria-pressed="false">Pro Talking-Head (30)</button>
+      </div>
       <div class="theme-chip-grid">{''.join(theme_pills)}</div>
     </div>
 
     <div class="builder-row-2">
       <div class="builder-group">
-        <div class="builder-label"><span>02 / POSISI &amp; MODE CAPTION (6 MODE)</span><small>Sesuaikan tipografi &amp; letak</small></div>
+        <div class="builder-label"><span>02 / POSISI &amp; MODE CAPTION (7 MODE)</span><small>Termasuk posisi teks berubah-ubah</small></div>
         <div class="pos-chip-grid" role="radiogroup" aria-label="Posisi Caption">
           <button type="button" class="pos-chip" data-pos="below-face" aria-pressed="true">
             <strong>Di Bawah Muka / Dada</strong>
@@ -294,6 +325,10 @@ def mrlabs_main():
             <strong>Shoulder Callout Note</strong>
             <small>Caption dada + catatan mikro di samping bahu</small>
           </button>
+          <button type="button" class="pos-chip" data-pos="dynamic-kinetic" aria-pressed="false">
+            <strong>⚡ Dynamic Kinetic Shift</strong>
+            <small>Posisi teks otomatis berpindah-pindah tiap frasa</small>
+          </button>
         </div>
       </div>
 
@@ -312,9 +347,79 @@ def mrlabs_main():
       </div>
     </div>
 
+    <div class="builder-row-2">
+      <div class="builder-group">
+        <div class="builder-label"><span>03B / GERAKAN KAMERA PROGRAMATIK (CAMERA RIG)</span><small>Live di monitor &amp; render GSAP</small></div>
+        <div class="pos-chip-grid" role="radiogroup" aria-label="Gerakan Kamera">
+          <button type="button" class="cam-chip" data-cam="none" aria-pressed="true">
+            <strong>Statis (Tripod Bersih)</strong>
+            <small>Tanpa gerakan kamera kontinu</small>
+          </button>
+          <button type="button" class="cam-chip" data-cam="handheld-float" aria-pressed="false">
+            <strong>🎥 Handheld Organic</strong>
+            <small>Goyang halus ala kamera genggam sinema</small>
+          </button>
+          <button type="button" class="cam-chip" data-cam="dolly-push" aria-pressed="false">
+            <strong>🎥 Cinema Dolly Push</strong>
+            <small>Zoom mendekat perlahan secara dramatis</small>
+          </button>
+          <button type="button" class="cam-chip" data-cam="whip-pan" aria-pressed="false">
+            <strong>🎥 Whip-Pan Snap</strong>
+            <small>Geser cepat horizontal tiap pergantian poin</small>
+          </button>
+          <button type="button" class="cam-chip" data-cam="dutch-tilt" aria-pressed="false">
+            <strong>🎥 Dutch-Angle Tilt</strong>
+            <small>Miring dinamis -3.2° ↔ +3.2° penuh energi</small>
+          </button>
+          <button type="button" class="cam-chip" data-cam="beat-punch" aria-pressed="false">
+            <strong>🎥 Beat Punch Zoom</strong>
+            <small>Zoom ritmis bergantian tiap frasa</small>
+          </button>
+          <button type="button" class="cam-chip" data-cam="split-cam" aria-pressed="false">
+            <strong>🎥 Split-Screen Slide</strong>
+            <small>Frame video meluncur ke bawah untuk ruang teks</small>
+          </button>
+        </div>
+      </div>
+
+      <div class="builder-group">
+        <div class="builder-label"><span>03C / KOREOGRAFI POSISI TEKS (BERUBAH-UBAH)</span><small>Pola loncatan caption per frasa</small></div>
+        <div class="pos-chip-grid" role="radiogroup" aria-label="Koreografi Posisi Teks">
+          <button type="button" class="choreo-chip" data-choreo="static" aria-pressed="true">
+            <strong>Tetap (1 Posisi)</strong>
+            <small>Mengikuti posisi caption di langkah 02</small>
+          </button>
+          <button type="button" class="choreo-chip" data-choreo="ping-pong" aria-pressed="false">
+            <strong>✦ Ping-Pong Kiri ↔ Kanan</strong>
+            <small>Bergantian kiri bahu, kanan bahu &amp; tengah</small>
+          </button>
+          <button type="button" class="choreo-chip" data-choreo="orbit-drift" aria-pressed="false">
+            <strong>✦ Orbit 4 Kuadran</strong>
+            <small>Teks berpindah lembut di 4 sudut layar</small>
+          </button>
+          <button type="button" class="choreo-chip" data-choreo="bento-scatter" aria-pressed="false">
+            <strong>✦ Bento Scatter Cards</strong>
+            <small>Kartu caption menyebar dinamis antar sudut</small>
+          </button>
+          <button type="button" class="choreo-chip" data-choreo="vertical-rail" aria-pressed="false">
+            <strong>✦ Tokyo Vertical Rail</strong>
+            <small>Bergantian horizontal &amp; teks tepi vertikal 90°</small>
+          </button>
+          <button type="button" class="choreo-chip" data-choreo="word-slam" aria-pressed="false">
+            <strong>✦ Word Slam Diagonal</strong>
+            <small>Kata raksasa menghantam sudut miring berbeda</small>
+          </button>
+          <button type="button" class="choreo-chip" data-choreo="typewriter-hud" aria-pressed="false">
+            <strong>✦ Typewriter AI HUD</strong>
+            <small>Teks telemetri + kursor aktif berpindah posisi</small>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="builder-group">
       <div class="builder-label">
-        <span>04 / PILIH EFEK VIDEO (13 EFEK VIRAL · BISA PILIH BANYAK)</span>
+        <span>04 / PILIH EFEK VIDEO (18 EFEK VIRAL &amp; KINETIK · BISA PILIH BANYAK)</span>
         <div style="display:flex;gap:8px">
           <button type="button" id="all-fx" class="mini-btn">✨ Semua Efek</button>
           <button type="button" id="clear-fx" class="mini-btn">Reset Efek</button>
@@ -329,24 +434,27 @@ def mrlabs_main():
         <span class="status" role="status" aria-live="polite">✓ Prompt murni siap dipakai</span>
       </div>
       <label for="prompt-output" class="sr-only">Prompt AI</label>
-      <p class="asset-note">Prompt di bawah ini sudah otomatis berisi nama/lokasi file video, resolusi, mode tema, posisi caption, efek terpilih, serta blok konfigurasi JSON—langsung salin dan tempel ke chat.</p>
+      <p class="asset-note">Prompt di bawah ini sudah otomatis berisi nama/lokasi file video, resolusi, mode tema, gerakan kamera, koreografi posisi teks dinamis, efek terpilih, serta blok konfigurasi JSON—langsung salin dan tempel ke chat.</p>
       <textarea id="prompt-output" rows="9" readonly></textarea>
       <div class="prompt-actions">
         <button type="button" id="copy-prompt" class="primary-btn">📋 Salin Prompt Murni ke Chat ↗</button>
-        <input id="config" readonly value='{{"theme":"obsidian-studio","caption_position":"below-face","effects":["orbit"],"language":"id"}}'>
+        <input id="config" readonly value='{{"theme":"obsidian-studio","caption_position":"below-face","camera_motion":"none","caption_choreography":"static","effects":["orbit"],"language":"id"}}'>
         <button type="button" id="copy">Salin JSON Saja ↗</button>
       </div>
     </div>
   </div>
 </section>
 
-<div class="collection-heading" id="pro"><div><span class="kicker">PRO TALKING-HEAD / 01—30</span><h2>30 Mode Talking-Head, Depth Hook &amp; 13 Efek Viral.</h2></div><p>30 kurasi mode visual talking-head &amp; captioning dari referensi kreator global. Klik kartu mana saja untuk memuat tema &amp; efek bawaannya ke Studio di atas.</p></div>
+<div class="collection-heading" id="kinetic"><div><span class="kicker">⚡ NEW · KINETIC &amp; CAMERA LAB / 31—40</span><h2>10 Mode Kreatif: Posisi Teks Berubah-Ubah &amp; Gerakan Kamera Dinamis.</h2></div><p>Terinspirasi website showcase AI video editing modern: posisi caption otomatis melompat (Ping-Pong, Bento Scatter, Vertical Rail 90°, Word Slam) dipadu kamera Handheld, Dolly Push, Whip-Pan, Dutch Tilt, hingga Split-Screen Slide. Semua animasi berjalan live pada kartu di bawah!</p></div>
+<section class="packages" aria-label="Sepuluh tema Creative Kinetic &amp; Camera Lab">{''.join(kinetic_cards)}</section>
+
+<div class="collection-heading" id="pro"><div><span class="kicker">PRO TALKING-HEAD / 01—30</span><h2>30 Mode Talking-Head, Depth Hook &amp; 18 Efek Viral.</h2></div><p>30 kurasi mode visual talking-head &amp; captioning dari referensi kreator global. Klik kartu mana saja untuk memuat tema &amp; efek bawaannya ke Studio di atas.</p></div>
 <section class="packages" aria-label="Tiga puluh tema Pro Influencer">{''.join(pro_cards)}</section>
 
 <div class="asset-header" id="assets"><h2>Peralatan kreatif lokal.</h2><p>23 keluarga font berlisensi terbuka + 30 aksen suara antarmuka.</p></div>
 <details class="asset-group"><summary>01 / Koleksi font · 23 keluarga OFL (termasuk Arimo / Helvetica Twin) <span>+</span></summary><p class="asset-note">Seluruh 23 keluarga font dibundel langsung sebagai file <code>.ttf</code> lokal berlisensi OFL—termasuk <b>Arimo</b> (kembaran metrik Swiss Neo-Grotesque untuk Helvetica), Montserrat, Bebas Neue, Anton, Inter, Oswald, Syne, Outfit, Archivo, Playfair Display, JetBrains Mono, Poppins Bold (700), dan Roboto (400/300).</p><div class="font-shelf">{''.join(fonts)}</div></details>
 <details class="asset-group"><summary>02 / Tiga puluh aksen suara <span>+</span></summary><p class="asset-note">Kenney Interface Sounds · CC0 (30 file .ogg). Efek mengikuti aksi dan tetap di bawah narasi.</p><div class="sound-shelf">{''.join(sounds)}</div></details>
-<footer><span>MR LABS / DAYLIGHT STUDIO EDITION 05.</span><p>Font <a href="https://github.com/google/fonts">Google Fonts / OFL</a> · SFX <a href="https://kenney.nl/assets/interface-sounds">Kenney / CC0</a> · <a href="catalog.json">Sumber &amp; lisensi</a></p><p>Base foto kreator: <code>assets/previews/creator.png</code> + <code>creator-cutout.png</code>.</p></footer>
+<footer><span>MR LABS / DAYLIGHT STUDIO EDITION 06.</span><p>Font <a href="https://github.com/google/fonts">Google Fonts / OFL</a> · SFX <a href="https://kenney.nl/assets/interface-sounds">Kenney / CC0</a> · <a href="catalog.json">Sumber &amp; lisensi</a></p><p>Base foto kreator: <code>assets/previews/creator.png</code> + <code>creator-cutout.png</code>.</p></footer>
 </main>
 <script>window.__MRLABS_SPECIMENS={specimens_json};</script>
 <script src="gallery.js?v={script_version}"></script></body></html>'''

@@ -13,9 +13,11 @@ sys.path.insert(0, str(SCRIPTS))
 from mrlabs_core import (MRLABS_ROOT, mrlabs_read, mrlabs_language, mrlabs_transcribe, mrlabs_caption_groups,
                          mrlabs_validate_words, mrlabs_export_srt, mrlabs_config)
 from mrlabs_broll import mrlabs_broll_plan, mrlabs_validate_broll
-from mrlabs_visual import (MRLABS_EFFECTS, CAPTION_POSITIONS, mrlabs_theme, mrlabs_entrance, mrlabs_is_portrait,
+from mrlabs_visual import (MRLABS_EFFECTS, CAPTION_POSITIONS, CAMERA_MOTIONS, CAPTION_CHOREOGRAPHIES,
+                           mrlabs_theme, mrlabs_entrance, mrlabs_is_portrait,
                            mrlabs_css, mrlabs_caption_top, mrlabs_format_title_html,
-                           mrlabs_normalize_effects, mrlabs_effect_specimen_html)
+                           mrlabs_normalize_effects, mrlabs_effect_specimen_html,
+                           mrlabs_caption_slot, mrlabs_camera_timeline)
 
 SPEC = importlib.util.spec_from_file_location("mrlabs_assemble", SCRIPTS / "mrlabs-assemble.py")
 ASSEMBLE = importlib.util.module_from_spec(SPEC)
@@ -104,23 +106,29 @@ class ThemeMotion(unittest.TestCase):
         'claude-grid', 'colorist-grade', 'sticker-pop', 'shoulder-note', 'before-after-stage',
         'hormozi-punch', 'bebas-tower', 'anton-slam', 'inter-minimal', 'oswald-press',
         'syne-avant', 'outfit-creator', 'archivo-kinetic', 'playfair-luxury', 'jetbrains-dev',
-        'iman-cinema', 'abdaal-desk', 'beast-retention', 'nyt-opinion', 'agency-pitch'
+        'iman-cinema', 'abdaal-desk', 'beast-retention', 'nyt-opinion', 'agency-pitch',
+        'kinetic-pingpong', 'dolly-monologue', 'whip-cut-pro', 'split-stage-ai', 'handheld-docu',
+        'dutch-hype', 'vertical-rail', 'bento-motion', 'noir-spotlight', 'ai-director-cut'
     )
 
-    def test_thirty_pro_modes_exist_and_short_cues_leave_time_to_read(self):
+    def test_forty_pro_and_kinetic_modes_exist_and_short_cues_leave_time_to_read(self):
         themes_data = mrlabs_read(MRLABS_ROOT / "assets/themes.json")["themes"]
         catalog_assets = mrlabs_read(MRLABS_ROOT / "assets/catalog.json")["assets"]
         font_families = {a["family"] for a in catalog_assets if a["kind"] == "font"} | {"Helvetica"}
         sfx_ids = {a["id"] for a in catalog_assets if a["kind"] == "sfx"}
         self.assertEqual(len([a for a in catalog_assets if a["kind"] == "font"]), 23)
         self.assertEqual(len(sfx_ids), 30)
-        self.assertEqual(len(themes_data), 30)
+        self.assertEqual(len(themes_data), 40)
         self.assertEqual(tuple(t["id"] for t in themes_data), self.ALL_PRO_IDS)
         for theme_id in self.ALL_PRO_IDS:
             theme = mrlabs_theme(theme_id)
             self.assertIn(theme["heading_font"], font_families)
             self.assertIn(theme["body_font"], font_families)
             self.assertIn(theme["label_font"], font_families)
+            if "camera_motion" in theme:
+                self.assertIn(theme["camera_motion"], CAMERA_MOTIONS)
+            if "caption_choreography" in theme:
+                self.assertIn(theme["caption_choreography"], CAPTION_CHOREOGRAPHIES)
             for sfx in theme["sfx"]:
                 self.assertIn(sfx, sfx_ids)
             for role in ('caption', 'title', 'broll'):
@@ -159,27 +167,36 @@ class ThemeMotion(unittest.TestCase):
             (project / "head-samples.json").write_text(json.dumps([{"segment": "s1", "time": 0.5, "bounds": [300, 480, 780, 1800]}]), encoding="utf-8")
             self.assertEqual(mrlabs_caption_top(project), 330)
 
-    def test_thirteen_viral_effects_and_caption_positions(self):
+    def test_eighteen_viral_and_kinetic_effects_and_camera_choreography(self):
         expected = {
             'orbit', 'ui-world', 'digital-zoom', 'headline-wall', 'pull-back-reveal',
             'echo-wall', 'cover-story', 'grid-3x3', 'prompt-bar', 'grade-hud',
-            'side-stack', 'tactile-board', 'before-after'
+            'side-stack', 'tactile-board', 'before-after',
+            'kinetic-bounce', 'camera-handheld', 'whip-pan', 'split-canvas', 'spotlight-dim'
         }
         self.assertEqual(set(MRLABS_EFFECTS.keys()), expected)
         normalized = mrlabs_normalize_effects(
-            {"effects": ["orbit", "echo-wall", {"type": "cover-story", "start": 0.5, "end": 3.0}]},
+            {"effects": ["orbit", "whip-pan", {"type": "split-canvas", "start": 0.5, "end": 3.0}]},
             duration=5.0
         )
-        self.assertEqual([fx["type"] for fx in normalized], ["orbit", "echo-wall", "cover-story"])
+        self.assertEqual([fx["type"] for fx in normalized], ["orbit", "whip-pan", "split-canvas"])
         self.assertEqual(normalized[0]["end"], 5.0)
         self.assertEqual(normalized[2]["start"], 0.5)
         specimen_html = mrlabs_effect_specimen_html()
         for marker in (
             "fx-orbit-card", "fx-ui-world", "fx-zoom-hud", "fx-headline-card", "fx-pullback",
             "fx-echo-wall", "fx-cover-story", "fx-grid-3x3", "fx-prompt-bar", "fx-grade-hud",
-            "fx-side-stack", "fx-tactile-board", "fx-before-after", "fx-shoulder-callout"
+            "fx-side-stack", "fx-tactile-board", "fx-before-after", "fx-shoulder-callout",
+            "fx-kinetic-bounce", "fx-camera-handheld", "fx-whip-pan", "fx-split-canvas", "fx-spotlight-dim"
         ):
             self.assertIn(marker, specimen_html)
+        for choreo in ("ping-pong", "orbit-drift", "bento-scatter", "vertical-rail", "word-slam", "typewriter-hud"):
+            s0, s1 = mrlabs_caption_slot(choreo, 0), mrlabs_caption_slot(choreo, 1)
+            self.assertNotEqual(s0, s1)
+        groups = [{"start": 0.0, "end": 1.5}, {"start": 1.5, "end": 3.0}, {"start": 3.0, "end": 4.5}]
+        for cam in ("handheld-float", "dolly-push", "whip-pan", "dutch-tilt", "beat-punch", "split-cam"):
+            tl_lines = mrlabs_camera_timeline(cam, "['#aroll']", 5.0, groups)
+            self.assertTrue(len(tl_lines) > 0)
         with self.assertRaises(ValueError):
             mrlabs_normalize_effects({"effects": ["unknown-effect"]}, duration=5.0)
 

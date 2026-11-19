@@ -2,9 +2,13 @@ let selected = 'obsidian-studio';
 let language = 'id';
 let forceNonPortrait = false;
 let captionPos = 'below-face';
+let cameraMotion = 'none';
+let captionChoreography = 'static';
 let activeEffects = new Set(['orbit']);
 let userCustomizedEffects = false;
 let userCustomizedCaptionPos = false;
+let userCustomizedCamera = false;
+let userCustomizedChoreo = false;
 
 let userVideoMeta = null; // { name, width, height, duration, objectUrl }
 let showUserVideoInMonitor = false;
@@ -24,7 +28,12 @@ const ALL_FX = [
   'grade-hud',
   'side-stack',
   'tactile-board',
-  'before-after'
+  'before-after',
+  'kinetic-bounce',
+  'camera-handheld',
+  'whip-pan',
+  'split-canvas',
+  'spotlight-dim'
 ];
 
 const FX_NAMES = {
@@ -40,7 +49,12 @@ const FX_NAMES = {
   'grade-hud': 'Colorist Tone Curve HUD',
   'side-stack': 'Side Block & Starburst',
   'tactile-board': 'Tactile Sticky & Wireframe',
-  'before-after': 'Before / After Stage'
+  'before-after': 'Before / After Stage',
+  'kinetic-bounce': 'Kinetic Text Ping-Pong',
+  'camera-handheld': 'Handheld Cinema Rig',
+  'whip-pan': 'Whip-Pan Snap Cut',
+  'split-canvas': 'Dynamic Split Stage',
+  'spotlight-dim': 'Cinematic Spotlight'
 };
 
 const POS_SHORT = {
@@ -49,7 +63,28 @@ const POS_SHORT = {
   'bottom': 'Di Bawah Frame',
   'split-script': 'Split Script Neon',
   'hierarchy-glow': 'Hierarchy Glow',
-  'shoulder-note': 'Shoulder Callout'
+  'shoulder-note': 'Shoulder Callout',
+  'dynamic-kinetic': 'Dynamic Kinetic'
+};
+
+const CAMERA_LABELS = {
+  'none': 'Statis (Tripod Bersih)',
+  'handheld-float': 'Handheld Organic Rig (goyang halus sinematik)',
+  'dolly-push': 'Cinema Dolly Push-In (zoom mendekat perlahan)',
+  'whip-pan': 'Whip-Pan Snap Cut (geser cepat horizontal antar poin)',
+  'dutch-tilt': 'Dutch-Angle Tilt (kemiringan dinamis -3.2° ↔ +3.2°)',
+  'beat-punch': 'Beat Punch Zoom (zoom ritmis tiap pergantian frasa)',
+  'split-cam': 'Dynamic Split-Screen Slide (kamera geser jadi kartu bawah)'
+};
+
+const CHOREO_LABELS = {
+  'static': 'Tetap (1 Posisi Konsisten)',
+  'ping-pong': 'Ping-Pong (lompat Kiri Bahu ↔ Kanan Bahu ↔ Tengah)',
+  'orbit-drift': 'Orbit Drift (berpindah halus 4 kuadran layar)',
+  'bento-scatter': 'Bento Scatter (kartu poin menyebar antar sudut)',
+  'vertical-rail': 'Vertical Rail (bergantian teks horizontal ↔ tepi vertikal 90°)',
+  'word-slam': 'Word Slam (hantaman kata besar berpindah sudut miring)',
+  'typewriter-hud': 'Typewriter HUD (teks telemetri + kursor aktif berpindah posisi)'
 };
 
 const configInput = document.querySelector('#config');
@@ -136,6 +171,10 @@ function syncFrameState(frame, isStudio = false) {
   main.dataset.portrait = forceNonPortrait ? 'false' : 'true';
   const defaultCardPos = main.dataset.defaultCaptionPos || 'below-face';
   main.dataset.captionPos = (isStudio || userCustomizedCaptionPos) ? captionPos : defaultCardPos;
+  const defaultCardCam = main.dataset.defaultCamera || 'none';
+  main.dataset.camera = (isStudio || userCustomizedCamera) ? cameraMotion : defaultCardCam;
+  const defaultCardChoreo = main.dataset.defaultChoreo || 'static';
+  main.dataset.choreo = (isStudio || userCustomizedChoreo) ? captionChoreography : defaultCardChoreo;
 
   const brandEl = doc.querySelector('.brand');
   if (brandEl && brandInput) {
@@ -214,6 +253,8 @@ function buildStatefulSrcdoc(rawSrcdoc) {
   if (main) {
     main.dataset.portrait = forceNonPortrait ? 'false' : 'true';
     main.dataset.captionPos = captionPos;
+    main.dataset.camera = cameraMotion;
+    main.dataset.choreo = captionChoreography;
     ALL_FX.forEach(fx => {
       if (activeEffects.has(fx)) {
         main.setAttribute(`data-fx-${fx}`, 'true');
@@ -245,7 +286,8 @@ function buildPromptText() {
       'bottom': 'di bagian bawah frame (`bottom`, Y: 1265px)',
       'split-script': 'di depan dada dengan gaya Split Script Neon (`split-script`, font cursive Caveat menyala)',
       'hierarchy-glow': 'di depan dada dengan gaya Hierarchy Glow 2-baris (`hierarchy-glow`, baris pengantar kecil + kata kunci emas menyala)',
-      'shoulder-note': 'di depan dada disertai catatan mikro 3 baris di samping bahu/pelipis (`shoulder-note`)'
+      'shoulder-note': 'di depan dada disertai catatan mikro 3 baris di samping bahu/pelipis (`shoulder-note`)',
+      'dynamic-kinetic': `secara dinamis berpindah-pindah posisi mengikuti ritme kalimat (\`dynamic-kinetic\`, pola: **${CHOREO_LABELS[captionChoreography] || captionChoreography}**)`
     },
     en: {
       'above-head': 'above my head (`above-head`, Y: 310px)',
@@ -253,7 +295,8 @@ function buildPromptText() {
       'bottom': 'in the lower part of the frame (`bottom`, Y: 1265px)',
       'split-script': 'across my chest in Split Script Neon style (`split-script`, glowing Caveat cursive script)',
       'hierarchy-glow': 'across my chest in 2-line Hierarchy Glow style (`hierarchy-glow`, small setup line + glowing accent keyword)',
-      'shoulder-note': 'across my chest paired with a 3-line micro Shoulder Callout note beside my temple/shoulder (`shoulder-note`)'
+      'shoulder-note': 'across my chest paired with a 3-line micro Shoulder Callout note beside my temple/shoulder (`shoulder-note`)',
+      'dynamic-kinetic': `dynamically shifting screen positions on every phrase (\`dynamic-kinetic\`, choreography: \`${captionChoreography}\`)`
     }
   };
   const effectNames = fxArray.map(fx => `${FX_NAMES[fx] || fx} (\`${fx}\`)`).join(', ');
@@ -262,6 +305,8 @@ function buildPromptText() {
     source_video: videoPath,
     theme: selected,
     caption_position: captionPos,
+    camera_motion: cameraMotion,
+    caption_choreography: captionChoreography,
     effects: fxArray,
     portrait: !forceNonPortrait,
     language,
@@ -277,8 +322,9 @@ function buildPromptText() {
   configInput.value = JSON.stringify(payload);
 
   const posShort = POS_SHORT[captionPos] || captionPos;
+  const camBadge = cameraMotion && cameraMotion !== 'none' ? ` · CAM: ${cameraMotion}` : '';
   if (studioBadge) {
-    studioBadge.textContent = `${spec.name} · ${posShort}${fxArray.length ? ` · +${fxArray.length} FX` : ''}`;
+    studioBadge.textContent = `${spec.name} · ${posShort}${camBadge}${fxArray.length ? ` · +${fxArray.length} FX` : ''}`;
   }
   if (selectedThemeLabel) {
     selectedThemeLabel.textContent = `${spec.name} (${selected})`;
@@ -297,6 +343,7 @@ function buildPromptText() {
       '',
       `Source video: \`${videoPath}\`${metaLineEn}`,
       `Theme mode: **${themeName}** (\`${selected}\`)`,
+      `Camera movement: \`${cameraMotion}\` · Text choreography: \`${captionChoreography}\``,
       `Brand & credit: \`${brandVal}\` · \`${creditVal}\``,
       `Transcript keywords: ${kwList.join(', ')}`
     ];
@@ -310,12 +357,15 @@ function buildPromptText() {
       '',
       'Visual & editing rules:',
       `- Place conversational captions ${positions.en[captionPos] || positions.en['below-face']}. Keep phrases short and timed to actual speech.`,
+      cameraMotion !== 'none'
+        ? `- Apply programmatic **${cameraMotion}** camera movement cleanly across \`#aroll\` and \`#subject\` so the shot stays kinetic and engaging.`
+        : '- Keep camera framing steady unless triggered by an emphasis effect.',
       `- Highlight key spoken moments with large **${creatorHook ? 'yellow (#FCE373)' : `theme-accent (${spec.accent || spec.background})`}** depth titles behind my head and shoulders using a subject cutout (\`subject.webm\`), so my head naturally occludes part of the letters.`,
       forceNonPortrait
         ? `- Place my subject cutout over the **${themeName}** studio background (\`${spec.background}\`).`
         : '- Keep my original portrait video background without adding a synthetic canvas background (`data-portrait="true"`).',
       fxArray.length
-        ? `- Activate these viral effects at relevant moments in the timeline (spaced cleanly, never all overlapping at once): ${effectNames}.`
+        ? `- Activate these viral/kinetic effects at relevant moments in the timeline (spaced cleanly, never all overlapping at once): ${effectNames}.`
         : '- No extra overlay effects; focus purely on clean typography and depth behind the subject.',
       '- Do not invent numbers, statistics, or words not present in my actual speech.',
       '',
@@ -334,6 +384,8 @@ function buildPromptText() {
     '',
     `File video utama: \`${videoPath}\`${metaLineId}`,
     `Mode tema: **${themeName}** (\`${selected}\`)`,
+    `Gerakan kamera: **${CAMERA_LABELS[cameraMotion] || cameraMotion}** (\`${cameraMotion}\`)`,
+    `Koreografi posisi teks: **${CHOREO_LABELS[captionChoreography] || captionChoreography}** (\`${captionChoreography}\`)`,
     `Brand & credit: \`${brandVal}\` · \`${creditVal}\``,
     `Kata kunci transkrip (Whisper): ${kwList.join(', ')}`
   ];
@@ -347,6 +399,9 @@ function buildPromptText() {
     '',
     'Aturan visual & komposisi:',
     `- Letakkan caption percakapan ${positions.id[captionPos] || positions.id['below-face']}. Gunakan potongan frasa pendek yang mengikuti waktu ucapan.`,
+    cameraMotion !== 'none'
+      ? `- Terapkan gerakan kamera programatik **${CAMERA_LABELS[cameraMotion] || cameraMotion}** (\`${cameraMotion}\`) secara halus pada \`#aroll\` dan \`#subject\`.`
+      : '- Pertahankan framing kamera statis kecuali saat efek zoom/transisi aktif.',
     `- Pada poin penting yang diucapkan, tampilkan kata kunci besar berwarna **${creatorHook ? 'kuning (#FCE373)' : `aksen tema (${spec.accent || spec.background})`}** di belakang kepala dan bahu saya menggunakan cutout subjek (\`subject.webm\`), sehingga sebagian huruf tertutup alami oleh kepala.`,
     forceNonPortrait
       ? `- Tempatkan cutout subjek di atas latar belakang studio tema **${themeName}** (\`${spec.background}\`).`
@@ -382,6 +437,12 @@ function updateUI() {
   document.querySelectorAll('.pos-chip').forEach(chip => {
     chip.setAttribute('aria-pressed', String(chip.dataset.pos === captionPos));
   });
+  document.querySelectorAll('.cam-chip').forEach(chip => {
+    chip.setAttribute('aria-pressed', String(chip.dataset.cam === cameraMotion));
+  });
+  document.querySelectorAll('.choreo-chip').forEach(chip => {
+    chip.setAttribute('aria-pressed', String(chip.dataset.choreo === captionChoreography));
+  });
   document.querySelectorAll('.bg-chip').forEach(chip => {
     const isStudioBg = chip.dataset.bgMode === 'studio';
     chip.setAttribute('aria-pressed', String(isStudioBg === forceNonPortrait));
@@ -405,6 +466,12 @@ function selectTheme(themeId, scrollStudio = false) {
     }
     if (!userCustomizedCaptionPos && spec.caption_position) {
       captionPos = spec.caption_position;
+    }
+    if (!userCustomizedCamera) {
+      cameraMotion = spec.camera_motion || 'none';
+    }
+    if (!userCustomizedChoreo) {
+      captionChoreography = spec.caption_choreography || 'static';
     }
     if (studioFrame) {
       studioFrame.srcdoc = buildStatefulSrcdoc(spec.srcdoc);
@@ -514,8 +581,38 @@ document.querySelectorAll('.theme-chip').forEach(chip => chip.addEventListener('
 document.querySelectorAll('.pos-chip').forEach(chip => chip.addEventListener('click', () => {
   userCustomizedCaptionPos = true;
   captionPos = chip.dataset.pos;
+  if (captionPos === 'dynamic-kinetic' && captionChoreography === 'static') {
+    captionChoreography = 'ping-pong';
+  }
   updateUI();
   if (statusEl) statusEl.textContent = `Mode caption: ${captionPos}`;
+}));
+
+document.querySelectorAll('.cam-chip').forEach(chip => chip.addEventListener('click', () => {
+  userCustomizedCamera = true;
+  cameraMotion = chip.dataset.cam;
+  updateUI();
+  if (statusEl) statusEl.textContent = `Kamera: ${CAMERA_LABELS[cameraMotion] || cameraMotion}`;
+}));
+
+document.querySelectorAll('.choreo-chip').forEach(chip => chip.addEventListener('click', () => {
+  userCustomizedChoreo = true;
+  captionChoreography = chip.dataset.choreo;
+  if (captionChoreography !== 'static') {
+    userCustomizedCaptionPos = true;
+    captionPos = 'dynamic-kinetic';
+  }
+  updateUI();
+  if (statusEl) statusEl.textContent = `Koreografi teks: ${CHOREO_LABELS[captionChoreography] || captionChoreography}`;
+}));
+
+document.querySelectorAll('.filter-tab').forEach(tab => tab.addEventListener('click', () => {
+  const filter = tab.dataset.filter;
+  document.querySelectorAll('.filter-tab').forEach(t => t.setAttribute('aria-pressed', String(t === tab)));
+  document.querySelectorAll('.theme-chip').forEach(chip => {
+    const col = chip.dataset.collection || 'pro';
+    chip.style.display = (filter === 'all' || col === filter) ? '' : 'none';
+  });
 }));
 
 document.querySelectorAll('.bg-chip').forEach(chip => chip.addEventListener('click', () => {
