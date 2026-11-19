@@ -15,7 +15,8 @@ from mrlabs_core import (MRLABS_ROOT, mrlabs_read, mrlabs_language, mrlabs_trans
 from mrlabs_broll import mrlabs_broll_plan, mrlabs_validate_broll
 from mrlabs_visual import (MRLABS_EFFECTS, CAPTION_POSITIONS, CAMERA_MOTIONS, CAPTION_CHOREOGRAPHIES,
                            mrlabs_theme, mrlabs_entrance, mrlabs_is_portrait,
-                           mrlabs_css, mrlabs_caption_top, mrlabs_format_title_html,
+                           mrlabs_css, mrlabs_caption_top, mrlabs_title_top, mrlabs_title_layout,
+                           mrlabs_format_title_html,
                            mrlabs_normalize_effects, mrlabs_effect_specimen_html,
                            mrlabs_caption_slot, mrlabs_camera_timeline)
 
@@ -166,6 +167,15 @@ class ThemeMotion(unittest.TestCase):
             self.assertFalse(mrlabs_is_portrait(project))
             (project / "head-samples.json").write_text(json.dumps([{"segment": "s1", "time": 0.5, "bounds": [300, 480, 780, 1800]}]), encoding="utf-8")
             self.assertEqual(mrlabs_caption_top(project), 330)
+            self.assertEqual(mrlabs_title_top(project), 261)
+            # Head-aware title layout: close-up head_y=430 keeps text 100% above head
+            layout_ok = mrlabs_title_layout("BERANI\nEKSEKUSI", mrlabs_theme('obsidian-studio'), head_y=430)
+            self.assertTrue(layout_ok["clear_of_head"])
+            self.assertLessEqual(layout_ok["top"] + layout_ok["block_height"], 430 - 12)
+            # Extreme close-up head_y=240 (no empty headroom left) falls back to behind-head depth
+            layout_tight = mrlabs_title_layout("BERANI\nEKSEKUSI", mrlabs_theme('obsidian-studio'), head_y=240)
+            self.assertFalse(layout_tight["clear_of_head"])
+            self.assertEqual(layout_tight["top"], 185)
 
     def test_eighteen_viral_and_kinetic_effects_and_camera_choreography(self):
         expected = {

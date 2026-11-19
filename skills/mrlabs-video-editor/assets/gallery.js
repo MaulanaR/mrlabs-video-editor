@@ -360,7 +360,7 @@ function buildPromptText() {
       cameraMotion !== 'none'
         ? `- Apply programmatic **${cameraMotion}** camera movement cleanly across \`#aroll\` and \`#subject\` so the shot stays kinetic and engaging.`
         : '- Keep camera framing steady unless triggered by an emphasis effect.',
-      `- Highlight key spoken moments with large **${creatorHook ? 'yellow (#FCE373)' : `theme-accent (${spec.accent || spec.background})`}** depth titles behind my head and shoulders using a subject cutout (\`subject.webm\`), so my head naturally occludes part of the letters.`,
+      `- Highlight key spoken moments with large **${creatorHook ? 'yellow (#FCE373)' : `theme-accent (${spec.accent || spec.background})`}** titles positioned dynamically above my head using \`head-samples.json\` so the text stays 100% clear and readable (never blocked by my head unless there is genuinely no empty space above my head).`,
       forceNonPortrait
         ? `- Place my subject cutout over the **${themeName}** studio background (\`${spec.background}\`).`
         : '- Keep my original portrait video background without adding a synthetic canvas background (`data-portrait="true"`).',
@@ -402,7 +402,7 @@ function buildPromptText() {
     cameraMotion !== 'none'
       ? `- Terapkan gerakan kamera programatik **${CAMERA_LABELS[cameraMotion] || cameraMotion}** (\`${cameraMotion}\`) secara halus pada \`#aroll\` dan \`#subject\`.`
       : '- Pertahankan framing kamera statis kecuali saat efek zoom/transisi aktif.',
-    `- Pada poin penting yang diucapkan, tampilkan kata kunci besar berwarna **${creatorHook ? 'kuning (#FCE373)' : `aksen tema (${spec.accent || spec.background})`}** di belakang kepala dan bahu saya menggunakan cutout subjek (\`subject.webm\`), sehingga sebagian huruf tertutup alami oleh kepala.`,
+    `- Pada poin penting yang diucapkan, tampilkan kata kunci highlight besar berwarna **${creatorHook ? 'kuning (#FCE373)' : `aksen tema (${spec.accent || spec.background})`}** yang posisinya otomatis menyesuaikan tinggi kepala (\`head-samples.json\`) agar tetap 100% terlihat jelas di atas kepala dan tidak tertutup kepala (hanya memakai layer di belakang subjek jika ruang kosong di atas kepala memang sudah habis).`,
     forceNonPortrait
       ? `- Tempatkan cutout subjek di atas latar belakang studio tema **${themeName}** (\`${spec.background}\`).`
       : '- Pertahankan latar asli video karena sumber sudah vertikal/potrait (`data-portrait="true"`, tanpa tambahan latar belakang tema).',

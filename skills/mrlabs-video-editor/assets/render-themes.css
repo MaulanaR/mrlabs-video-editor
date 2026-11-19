@@ -17,17 +17,17 @@ video.subject,img.subject{z-index:3;pointer-events:none}
 
 .shade{position:absolute;inset:0;background:linear-gradient(180deg,#0000004d 0%,transparent 34%,transparent 62%,#00000088 100%);z-index:1;pointer-events:none}
 .art-direction{position:absolute;inset:0;z-index:2;pointer-events:none}
-.brand{position:absolute;top:215px;left:65px;width:950px;z-index:8;text-align:center;background:transparent;border:0;box-shadow:none;padding:0;font:500 21px var(--label-font);letter-spacing:.22em;color:#ffffff8c;text-shadow:0 2px 12px #0009}
+.brand{position:absolute;top:135px;left:65px;width:950px;z-index:8;text-align:center;background:transparent;border:0;box-shadow:none;padding:0;font:500 21px var(--label-font);letter-spacing:.22em;color:#ffffff8c;text-shadow:0 2px 12px #0009}
 .credit{position:absolute;top:1430px;left:65px;width:950px;z-index:8;text-align:center;background:transparent;border:0;box-shadow:none;padding:0;font:500 21px/1.2 var(--body-font);letter-spacing:.05em;color:#ffffff80;text-shadow:0 2px 10px #0009}
 
 /* PRO TALKING-HEAD & CAPTIONING SYSTEM:
-   - Setup line above head + massive hero metric/word behind the subject's head (z-index: 2 under subject z-index: 3).
+   - Highlight title automatically adapts to head position (--title-top from head-samples.json) so text stays cleanly visible above the head whenever headroom exists; only falls back behind head (z-index: 2) when no space remains above the crown.
    - Frameless floating caption below face / across the chest (top: 1050px, no box).
    - White/Black studio background when video is non-portrait; transparent when video is already portrait. */
-.title{position:absolute;top:410px;left:40px;width:1000px;z-index:2;text-align:center;background:transparent;border:0;box-shadow:none;padding:0;color:var(--accent);font:var(--heading-weight) 212px/.92 var(--heading-font);letter-spacing:-.055em;text-shadow:0 10px 36px #00000059;overflow-wrap:anywhere;white-space:pre-line}
+.title{position:absolute;top:var(--title-top,235px);left:40px;width:1000px;z-index:7;text-align:center;background:transparent;border:0;box-shadow:none;padding:0;color:var(--accent);font:var(--heading-weight) 184px/.92 var(--heading-font);letter-spacing:-.05em;text-shadow:0 10px 36px #00000059;overflow-wrap:anywhere;white-space:pre-line}
 .title-kicker,.title-hero{display:block}
-.title-kicker{font:700 54px/1.12 var(--body-font);letter-spacing:-.035em;color:#FFFFFF;margin-bottom:6px;text-shadow:0 4px 20px #00000099}
-.title-hero{font:var(--heading-weight) 220px/.9 var(--heading-font);letter-spacing:-.055em;color:var(--accent);text-shadow:0 12px 36px #00000066}
+.title-kicker{font:700 44px/1.12 var(--body-font);letter-spacing:-.03em;color:#FFFFFF;margin-bottom:6px;text-shadow:0 4px 20px #00000099}
+.title-hero{font:var(--heading-weight) 184px/.92 var(--heading-font);letter-spacing:-.05em;color:var(--accent);text-shadow:0 12px 36px #00000066}
 
 .caption{position:absolute;top:1050px;left:50px;width:980px;z-index:9;text-align:center;background:transparent;border:0;box-shadow:none;padding:0 20px;font:var(--caption-weight) var(--caption-size)/1.12 var(--body-font);letter-spacing:-.035em;color:#FFFFFF;text-shadow:0 5px 24px #000000cc,0 2px 8px #000000a6;overflow-wrap:anywhere;transition:top .3s cubic-bezier(.22,1,.36,1)}
 .caption span{display:inline}.caption .active{color:var(--highlight)}
@@ -47,10 +47,10 @@ video.subject,img.subject{z-index:3;pointer-events:none}
    5. hierarchy-glow: 2-line bertingkat dengan warm gold/accent bloom ala MrBeast (@mahdiology.edit)
    6. shoulder-note: Caption dada + catatan mikro 3 baris di samping bahu/pelipis
    ========================================================================== */
-#main[data-caption-pos="above-head"] .brand{top:215px}
+#main[data-caption-pos="above-head"] .brand{top:135px}
 #main[data-caption-pos="above-head"] .caption{top:var(--caption-top,310px)!important;left:65px;width:950px;text-align:center}
 #main[data-caption-pos="above-head"] .broll:not(.full){top:885px;height:280px}
-#main[data-caption-pos="above-head"] .title{top:435px}
+#main[data-caption-pos="above-head"] .title{top:var(--title-top,250px)}
 #main[data-caption-pos="above-head"] .title-kicker{display:none}
 #main:is([data-caption-pos="below-face"],[data-caption-pos="chest-float"]) .caption{top:1050px!important;left:50px;width:980px;text-align:center}
 #main[data-caption-pos="bottom"] .caption{top:1265px!important;left:65px;width:950px;text-align:center}
@@ -89,14 +89,14 @@ video.subject,img.subject{z-index:3;pointer-events:none}
 [data-theme="echo-pulse"] .title-hero{font-size:152px;letter-spacing:-.04em;color:#FF6B4A;text-shadow:0 10px 36px rgba(255,107,74,.45)}
 
 /* 08. Cover Story (@chandlerintelligence CLAUDE magazine masthead style) */
-[data-theme="vogue-cover"] .title{top:390px}
+[data-theme="vogue-cover"] .title{top:var(--title-top,230px)}
 [data-theme="vogue-cover"] .title-kicker{font:500 34px/1.15 var(--body-font);letter-spacing:.02em;color:#E7E5E4}
-[data-theme="vogue-cover"] .title-hero{font:400 248px/.86 "Instrument Serif",serif;letter-spacing:.01em;color:#F5E6C8;text-shadow:0 14px 40px rgba(0,0,0,.75)}
+[data-theme="vogue-cover"] .title-hero{font:400 218px/.88 "Instrument Serif",serif;letter-spacing:.01em;color:#F5E6C8;text-shadow:0 14px 40px rgba(0,0,0,.75)}
 
 /* 09. Pixel Creator (@chandlerintelligence Chandler / Intelligence hybrid mono + sans title) */
-[data-theme="pixel-creator"] .title{top:355px}
-[data-theme="pixel-creator"] .title-kicker{font:700 104px/.96 "IBM Plex Mono",monospace;letter-spacing:-.04em;color:#A3E635;text-shadow:0 8px 28px rgba(0,0,0,.8)}
-[data-theme="pixel-creator"] .title-hero{font:800 132px/.96 "Plus Jakarta Sans",sans-serif;letter-spacing:-.045em;color:#FFFFFF;text-shadow:0 10px 32px rgba(0,0,0,.85)}
+[data-theme="pixel-creator"] .title{top:var(--title-top,230px)}
+[data-theme="pixel-creator"] .title-kicker{font:700 84px/.98 "IBM Plex Mono",monospace;letter-spacing:-.04em;color:#A3E635;text-shadow:0 8px 28px rgba(0,0,0,.8)}
+[data-theme="pixel-creator"] .title-hero{font:800 116px/.98 "Plus Jakarta Sans",sans-serif;letter-spacing:-.045em;color:#FFFFFF;text-shadow:0 10px 32px rgba(0,0,0,.85)}
 
 /* 10. Tactile Paper (@mahdiology.edit warm paper desk & gold glow hierarchy) */
 [data-theme="tactile-paper"] .title-hero{font-size:184px;letter-spacing:-.04em;color:#FBBF24;text-shadow:0 0 34px rgba(251,191,36,.55),0 10px 30px rgba(0,0,0,.65)}

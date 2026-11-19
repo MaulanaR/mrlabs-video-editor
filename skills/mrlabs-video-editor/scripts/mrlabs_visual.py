@@ -217,11 +217,73 @@ def mrlabs_caption_top(project=None, config=None, visual=None):
     return 310
 
 
-def mrlabs_format_title_html(text, theme):
-    """Format two-line talking-head hook titles as kicker + giant hero behind head."""
+def mrlabs_title_top(project=None, config=None, visual=None, block_height=195):
+    """Place highlight title cleanly above head crown when headroom exists; only fall back to overlap if no space remains."""
+    explicit = (visual or {}).get("title_top") or (config or {}).get("title_top")
+    if explicit is not None:
+        return max(185, min(520, int(explicit)))
+    head_y = mrlabs_head_top(project)
+    if head_y is not None:
+        return max(185, min(420, int(head_y - block_height - 24)))
+    return 235
+
+
+def mrlabs_title_layout(text, theme, head_y=None, explicit_top=None):
+    """Compute non-occluded (top, kicker_size, hero_size, clear_of_head) adapting to sampled head_y."""
+    two_line = bool(theme.get("talking_head") and "\n" in text)
+    if two_line:
+        _, hero = text.split("\n", 1)
+        hero_len = max(1, len(hero.strip()))
+        kicker_size = 44
+        if hero_len >= 10:
+            hero_size = max(92, min(130, int(1320 / hero_len)))
+        elif hero_len >= 7:
+            hero_size = max(132, min(158, int(1220 / hero_len)))
+        else:
+            hero_size = 184
+        block_h = int(kicker_size * 1.15 + 6 + hero_size * 0.92)
+    else:
+        kicker_size = 0
+        hero_size = int(min(112, max(65, 1800 / max(1, len(text)))))
+        block_h = int(hero_size * 1.1)
+
+    min_top = 185
+    margin = 24
+    if explicit_top is not None:
+        top = max(min_top, min(520, int(explicit_top)))
+        clear_of_head = True if head_y is None else ((top + block_h) <= (head_y - 12))
+        return {"top": top, "kicker_size": kicker_size, "hero_size": hero_size, "block_height": block_h, "clear_of_head": clear_of_head}
+
+    if head_y is not None:
+        available = (head_y - margin) - min_top
+        if available >= 110 and block_h > available:
+            scale = max(0.62, available / block_h)
+            if two_line:
+                kicker_size = max(28, int(kicker_size * scale))
+                hero_size = max(84, int(hero_size * scale))
+                block_h = int(kicker_size * 1.15 + 6 + hero_size * 0.92)
+            else:
+                hero_size = max(56, int(hero_size * scale))
+                block_h = int(hero_size * 1.1)
+        top = max(min_top, min(420, int(head_y - block_h - margin)))
+        clear_of_head = (top + block_h) <= (head_y - 12)
+        return {"top": top, "kicker_size": kicker_size, "hero_size": hero_size, "block_height": block_h, "clear_of_head": clear_of_head}
+
+    return {"top": 235, "kicker_size": kicker_size, "hero_size": hero_size, "block_height": block_h, "clear_of_head": True}
+
+
+def mrlabs_format_title_html(text, theme, kicker_size=None, hero_size=None):
+    """Format two-line talking-head hook titles as kicker + auto-fitted hero."""
     if theme.get("talking_head") and "\n" in text:
         kicker, hero = text.split("\n", 1)
-        return f'<span class="title-kicker">{html.escape(kicker)}</span><span class="title-hero">{html.escape(hero)}</span>'
+        if kicker_size is None or hero_size is None:
+            layout = mrlabs_title_layout(text, theme)
+            kicker_size = kicker_size or layout["kicker_size"]
+            hero_size = hero_size or layout["hero_size"]
+        return (
+            f'<span class="title-kicker" style="font-size:{int(kicker_size)}px">{html.escape(kicker)}</span>'
+            f'<span class="title-hero" style="font-size:{int(hero_size)}px">{html.escape(hero)}</span>'
+        )
     return html.escape(text)
 
 
@@ -569,7 +631,7 @@ def mrlabs_entrance(theme, role, cue_duration, full=False):
     return initial, final
 
 
-def mrlabs_css(theme, portrait=False, caption_top=310):
+def mrlabs_css(theme, portrait=False, caption_top=310, title_top=235):
     font_css = (MRLABS_ROOT / "assets/fonts/fonts.css").read_text(encoding="utf-8").replace('url("', 'url("assets/mrlabs/fonts/')
     tokens = {}
     for key in ("background", "panel", "foreground", "muted", "accent", "ink",
@@ -590,6 +652,7 @@ def mrlabs_css(theme, portrait=False, caption_top=310):
     tokens["pattern"] = "none" if portrait else theme.get("pattern", "none")
     tokens["pattern-size"] = theme.get("pattern_size", "auto")
     tokens["caption-top"] = f"{int(caption_top)}px"
+    tokens["title-top"] = f"{int(title_top)}px"
     variables = ":root{" + ";".join("--" + key + ":" + value for key, value in tokens.items()) + "}"
     return font_css + variables + (MRLABS_ROOT / "assets/render-themes.css").read_text(encoding="utf-8")
 
@@ -614,7 +677,9 @@ def mrlabs_build(project, theme_id=None, safe=False):
     caption_choreography = visual.get("caption_choreography") or config.get("caption_choreography") or theme.get("caption_choreography", "static")
     if caption_choreography not in CAPTION_CHOREOGRAPHIES:
         raise ValueError(f"caption_choreography harus salah satu dari: {', '.join(CAPTION_CHOREOGRAPHIES)}")
+    head_y = mrlabs_head_top(project)
     caption_top = mrlabs_caption_top(project, config, visual)
+    title_top = mrlabs_title_top(project, config, visual)
     has_cutout = (project / "assets/subject.webm").exists()
     caption_behind = bool(visual.get("caption_behind_subject", False))
     if caption_behind and not has_cutout:
@@ -658,17 +723,23 @@ def mrlabs_build(project, theme_id=None, safe=False):
         start, end = title["start"], title["end"]
         if not 0 <= start < end <= duration or len(title["text"]) > 100:
             raise ValueError("Invalid title length/timing")
+        explicit_t_top = title.get("top") if "top" in title else (visual.get("title_top") or config.get("title_top"))
+        layout = mrlabs_title_layout(title["text"], theme, head_y=head_y, explicit_top=explicit_t_top)
         if "behind_subject" in title:
             behind = bool(title["behind_subject"])
             if behind and not has_cutout:
                 raise ValueError("Title behind subject requires a verified subject.webm")
         else:
-            behind = bool(theme.get("talking_head") and has_cutout)
+            # Keep highlight text cleanly visible above head whenever headroom exists;
+            # only layer behind subject if there truly is no empty space above the head.
+            behind = bool(has_cutout and not layout["clear_of_head"])
         used_behind = used_behind or behind
         name = f"title-{index}"
-        size = min(112, max(65, 1800 / max(1, len(title["text"]))))
-        style_size = "" if (theme.get("talking_head") and "\n" in title["text"]) else f";font-size:{size}px"
-        markup.append(f'<div id="{name}" class="title" style="opacity:0;z-index:{2 if behind else 7}{style_size}">{mrlabs_format_title_html(title["text"], theme)}</div>')
+        style_size = "" if (theme.get("talking_head") and "\n" in title["text"]) else f";font-size:{layout['hero_size']}px"
+        markup.append(
+            f'<div id="{name}" class="title" style="opacity:0;top:{layout["top"]}px;z-index:{2 if behind else 7}{style_size}">'
+            f'{mrlabs_format_title_html(title["text"], theme, kicker_size=layout["kicker_size"], hero_size=layout["hero_size"])}</div>'
+        )
         initial, final = mrlabs_entrance(theme, "title", end-start)
         timeline.append(f"tl.fromTo('#{name}',{json.dumps(initial)},{json.dumps(final)},{start});")
         timeline.append(f"tl.set('#{name}',{{opacity:0}},{end});")
@@ -844,7 +915,7 @@ def mrlabs_build(project, theme_id=None, safe=False):
     language = "en" if config["language"] == "en" else "id"
     fx_attr_str = ""
     document = f'''<!doctype html><html lang="{language}"><head><meta charset="utf-8"><title>MR Labs — {html.escape(theme['name'])}</title>
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script><style>{mrlabs_css(theme, portrait=portrait, caption_top=caption_top)}</style></head>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script><style>{mrlabs_css(theme, portrait=portrait, caption_top=caption_top, title_top=title_top)}</style></head>
     <body><div id="main" data-theme="{theme['id']}" data-talking-head="{'true' if theme.get('talking_head') else 'false'}" data-portrait="{'true' if portrait else 'false'}" data-caption-pos="{caption_pos}" data-camera="{camera_motion}" data-choreo="{caption_choreography}"{fx_attr_str} data-composition-id="main" data-start="0" data-duration="{duration}" data-width="1080" data-height="1920">{''.join(markup)}</div>
     <script>const tl=gsap.timeline({{paused:true}});{''.join(timeline)}window.__timelines={{main:tl}};</script></body></html>'''
     (project / "index.html").write_text(document, encoding="utf-8")
@@ -854,6 +925,8 @@ def mrlabs_build(project, theme_id=None, safe=False):
                                                  "caption_position": caption_pos,
                                                  "camera_motion": camera_motion,
                                                  "caption_choreography": caption_choreography,
+                                                 "head_top": head_y,
+                                                 "title_top": title_top,
                                                  "caption_top": caption_top if caption_pos == "above-head" else (1050 if caption_pos in ("below-face", "chest-float", "split-script", "hierarchy-glow", "shoulder-note", "dynamic-kinetic") else 1265),
                                                  "effects": [fx["type"] for fx in effects],
                                                  "duration": duration, "safe_guide": safe,
