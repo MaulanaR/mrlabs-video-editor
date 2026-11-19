@@ -38,8 +38,13 @@ def mrlabs_sync_global_skills():
 def mrlabs_main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--install", action="store_true", help="Create .venv, install dependencies, and register global skill copies.")
+    parser.add_argument("--sync", action="store_true", help="Sync this skill folder to global Antigravity/Gemini, Codex, and Claude skill directories.")
     parser.add_argument("--open", action="store_true", help="Open theme-gallery.html in browser after setup.")
     args = parser.parse_args()
+    if args.sync and not args.install:
+        synced = mrlabs_sync_global_skills()
+        if synced:
+            print("Global skill synced to:", ", ".join(synced))
     if args.install:
         target = MRLABS_ROOT / ".venv"
         venv.EnvBuilder(with_pip=True).create(target)
